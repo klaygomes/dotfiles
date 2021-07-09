@@ -1,0 +1,15 @@
+tap 'caskroom/cask'
+
+brew 'git'
+brew 'mas'
+brew 'neovim'
+
+cask 'appcleaner'
+cask 'flux'
+cask 'google-chrome'
+cask 'keka'
+cask 'spectacle'
+cask 'transmission'
+cask 'visual-studio-code'
+cask 'vlc'
+
