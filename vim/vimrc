@@ -1,46 +1,46 @@
-#  nice to have default configs
+"nice to have default configs
 set nocompatible
 filetype plugin on
-set hidden		# dont ask to save buffers before switching
-set number		# Show line numbers
-set linebreak		# Break lines at word (requires Wrap lines)
-set showbreak=+++	# Wrap-broken line prefix
-set textwidth=100	# Line wrap (number of cols)
-set showmatch		# Highlight matching brace
-set spell		# Enable spell-checking
-set visualbell		# Use visual bell (no beeping)
+set hidden		" dont ask to save buffers before switching
+set number		" Show line numbers
+set linebreak		" Break lines at word (requires Wrap lines)
+set showbreak=+++	" Wrap-broken line prefix
+set textwidth=100	" Line wrap (number of cols)
+set showmatch		" Highlight matching brace
+set spell		" Enable spell-checking
+set visualbell		" Use visual bell (no beeping)
  
-set hlsearch		# Highlight all search results
-set smartcase		# Enable smart-case search
-set ignorecase		# Always case-insensitive
-set incsearch		# Searches for strings incrementally
+set hlsearch		" Highlight all search results
+set smartcase		" Enable smart-case search
+set ignorecase		" Always case-insensitive
+set incsearch		" Searches for strings incrementally
  
-set autoindent		# Auto-indent new lines
-set expandtab		# Use spaces instead of tabs
-set shiftwidth=2	# Number of auto-indent spaces
-set smartindent		# Enable smart-indent
-set smarttab		# Enable smart-tabs
-set softtabstop=2	# Number of spaces per Tab::J
+set autoindent		" Auto-indent new lines
+set expandtab		" Use spaces instead of tabs
+set shiftwidth=2	" Number of auto-indent spaces
+set smartindent		" Enable smart-indent
+set smarttab		" Enable smart-tabs
+set softtabstop=2	" Number of spaces per Tab::J
 
-# default plugins
+" default plugins
 runtime macros/matchit.vim
 
-# shortcuts
+" shortcuts
 
-leader " "
+let mapleader=" "
 
-# Navigating between buffers
+" Navigating between buffers
 nnoremap <silent> [b :bp<CR>
 nnoremap <silent> [B :bn<CR>
 nnoremap <silent> ]b :bf<CR>
 nnoremap <silent> ]B :bl<CR>
 
-# Leaders key
+" Leaders key
 
-# window related
+" window related
 nnoremap <silent> <Leader>w <C-w>
 
-# files navigation
+" files navigation
 
-# change %:h (which expands to file directory) to %%
+" change %:h (which expands to file directory) to %%
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
