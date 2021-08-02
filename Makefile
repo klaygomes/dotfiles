@@ -1,17 +1,22 @@
 .PHONY: all
 
-CONFIG=$(HOME)/.config/
+CONFIG		:=	$(HOME)/.config/
+VIM 		:=	$(CONFIG)nvim/init.vim
+ZSH		:=	$(wildcard zsh/*.sh)
 
-VIM_FILE=$(CONFIG)nvim/init.vim
-
-all: $(VIM_FILE)
-
+all: $(addprefix ${CONFIG}, ${ZSH}) $(VIM)
 
 $(CONFIG)%:
 	@echo "Directory $@ was not found, creating..."
 	@mkdir -p $@
 
 .SECONDEXPANSION:
-$(VIM_FILE): $(PWD)/vim/vimrc $$(@D)
+$(VIM): $(PWD)/vim/init.vim $$(@D)
 	@cp $< $@ 
-	@echo "NVIM Configuration created"
+	@echo "Neo VIM Configuration created"
+
+.SECONDEXPANSION:
+$(addprefix ${CONFIG}, ${ZSH}): zsh/$$(@F) | $$(@D)
+	@echo "Including ${^} configuration to ${@}"
+	@cp "${^}" "${@}"
+	@file="source '${CONFIG}${^}'"  && ( grep -qF "${file}" ~/.zshrc || echo "${file}" >> ~/.zshrc )

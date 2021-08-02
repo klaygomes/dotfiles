@@ -7,28 +7,10 @@ alias nocors='open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\
 # are downloaded, but not installed, check system for potential problems
 alias brewup='brew update; brew upgrade; brew prune; brew cleanup; brew doctor'
 
-# GIT
-function gcb() {
-	if [ $# -ne 1 ]
-		then
-			echo "usage create <branch-name>"
-		return	
-	fi
-	(git checkout -b $1) && (git push --set-upstream origin $1)&
-}
-
-function gdb(){
-	if [ $# -ne 1 ]
-	then
-		echo "usage delete <branch-name>"
-   		return
-	fi
-	(git branch -D $1) && (git push origin :$1)&
-}
-
 alias gpf="git push -f"
 alias gcm="git checkout master"
 alias gc="git checkout"
+alias gsp="git branch --set-upstream-to=origin/$(git_current_branch) && git push"
 
 # GENERAL
 alias vim="nvim"
