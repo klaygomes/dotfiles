@@ -96,4 +96,4 @@ nnoremap <leader>ca :w <bar> %bd <bar> e# <bar> bd# <CR>
 
 
 " Set current pwd to the buffer I entered
-lua require("foo")
+lua require("lspinit")
