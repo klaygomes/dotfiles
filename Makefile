@@ -10,19 +10,6 @@ MAC		:=	$(CONFIG)configure.sh
 
 all: mac brew git vim;
 	
-
-vim: $(VIM)
-	
-
-git: $(GIT)
-	
-
-brew: $(BREW)
-	
-
-mac: $(MAC)
-	
-
 $(CONFIG)%:
 	@echo "Directory $@ was not found, creating..."
 	@mkdir -p $@
@@ -52,3 +39,8 @@ $(MAC): mac/configure.sh
 	@${@}
 
 mac/configure.sh: ;
+vim: $(VIM)
+git: $(GIT)
+brew: $(BREW)
+mac: $(MAC)
+

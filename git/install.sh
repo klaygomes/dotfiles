@@ -7,7 +7,7 @@ then
 fi
 
 # we use the company name as working directory
-[ -z ${work+x} ] && read -p "Where do you work?" work
+[ -z ${work+x} ] && read -p "Where do you work: " work
 
 if [ ! -d ${HOME}/${work} ]
 then
@@ -24,20 +24,20 @@ then
   if [ "$REPLY" == 'yes' ]
   then
     mv ${HOME}/.gitconfig ${HOME}/${work}/.gitconfig
-    echo -e '\n.gitconfig was moved to ${HOME}/${work}\n'
+    echo -e "\n.gitconfig moved to ${HOME}/${work}\n"
   fi
 fi
 
-[ -z ${email+x} ] && read -p "What is your personal email?" email
-[ -z ${name+x} ] && read -p "What is your name?" name
+[ -z ${email+x} ] && read -p "Your personal email: " email
+[ -z ${name+x} ] && read -p "Your name: " name
 
 # now we move the file we got as parameters and replace 
 [ -f "$1" ] && mv $1 ${HOME}/.gitconfig
 
 # we set our personal email as global
 git config --global user.email ${email}
-git config --global user.name ${name}
+git config --global user.name "${name}"
 
 # If you are inside ${HOME}/[company] use its configuration
-echo -e "\n[includeIf \"gitdir:${HOME}/${work}/**\"]\n\tpath = ${HOME}/${work}/.gitconfig" >> ${HOME}/.gitconfig
+echo -e "\n[includeIf \"gitdir:${HOME}/${work}/**\"]\n\tpath = ${HOME}/${work}/.gitconfig\n" >> ${HOME}/.gitconfig
 
