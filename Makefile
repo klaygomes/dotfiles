@@ -1,22 +1,54 @@
-.PHONY: all
-
 CONFIG		:=	$(HOME)/.config/
-VIM 		:=	$(CONFIG)nvim/init.vim
-ZSH		:=	$(wildcard zsh/*.sh)
 
-all: $(addprefix ${CONFIG}, ${ZSH}) $(VIM)
+VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/*))
+ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
+GIT		:=	${HOME}/.gitconfig
+BREW		:=	$(HOME)/Brewfile
+MAC		:=	$(CONFIG)configure.sh
+
+.PHONY: all mac brew git vim
+
+all: mac brew git vim;
+	
+
+vim: $(VIM)
+	
+
+git: $(GIT)
+	
+
+brew: $(BREW)
+	
+
+mac: $(MAC)
+	
 
 $(CONFIG)%:
 	@echo "Directory $@ was not found, creating..."
 	@mkdir -p $@
 
 .SECONDEXPANSION:
-$(VIM): $(PWD)/vim/init.vim $$(@D)
-	@cp $< $@ 
-	@echo "Neo VIM Configuration created"
+$(VIM): $$(subst ${CONFIG},, $$@) | $$(@D)
+	@if [ ! -d $< ]; then cp $< $@ ; fi
+	@echo "Including ${^} configuration to ${@}"
 
 .SECONDEXPANSION:
-$(addprefix ${CONFIG}, ${ZSH}): zsh/$$(@F) | $$(@D)
+$(ZSH): $$(subst ${CONFIG},, $$@) | $$(@D)
 	@echo "Including ${^} configuration to ${@}"
 	@cp "${^}" "${@}"
-	@file="source '${CONFIG}${^}'"  && ( grep -qF "${file}" ~/.zshrc || echo "${file}" >> ~/.zshrc )
+	@file="source '${CONFIG}${^}'"  && ( grep -qF "${file}" ${HOME}/.zshrc || echo "${file}" >> ${HOME}/.zshrc )
+
+$(GIT): $(wildcard git/*) 
+	@./git/install.sh ./git/.gitconfig
+
+$(BREW): $(wildcard brew/*)
+	@./brew/install.sh
+	@cp ./brew/Brewfile ${HOME}/Brewfile
+	@brew bundle --file ${HOME}/Brewfile 
+
+$(MAC): mac/configure.sh
+	@cp ${^} ${@}
+	@chmod +x "${@}"
+	@${@}
+
+mac/configure.sh: ;

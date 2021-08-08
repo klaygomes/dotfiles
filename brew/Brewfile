@@ -1,15 +1,77 @@
-tap 'caskroom/cask'
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-versions"
+tap "homebrew/core"
 
-brew 'git'
-brew 'mas'
-brew 'neovim'
+# Cross-platform make
+brew "cmake"
 
-cask 'appcleaner'
-cask 'flux'
-cask 'google-chrome'
-cask 'keka'
-cask 'spectacle'
-cask 'transmission'
-cask 'visual-studio-code'
-cask 'vlc'
+# Distributed revision control system
+brew "git"
 
+# Enable transparent encryption/decryption of files in a git repo
+brew "git-crypt"
+
+# GNU Transport Layer Security (TLS) Library
+brew "gnutls"
+
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
+
+# Image manipulation library
+brew "jpeg"
+
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+
+# Mac App Store command-line interface
+brew "mas"
+
+# Hash utilities
+brew "md5sha1sum"
+
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+
+# Internet file retriever
+brew "wget"
+
+# JavaScript package manager
+brew "yarn"
+
+# Application uninstaller
+cask "appcleaner"
+
+# Web browser
+cask "firefox"
+
+# Screen color temperature controller
+cask "flux"
+
+# Tool to prevent the system from going into sleep mode
+cask "keepingyouawake"
+
+# File archiver
+cask "keka"
+
+# Move and resize windows with ease
+cask "spectacle"
+
+# Open-source BitTorrent client
+cask "transmission"
+
+# Open-source code editor
+cask "visual-studio-code"
+
+# Multimedia player
+cask "vlc"
+
+
+# Apple App Store 
+mas "Be Focused Pro", id: 961632517
+mas "NordVPN IKE", id: 1116599239
+mas "Telegram", id: 747648890
+mas "Xcode", id: 497799835

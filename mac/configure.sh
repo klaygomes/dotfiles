@@ -1,3 +1,4 @@
+echo "Starting Mac configuration..."
 #################################
 #### FINDER
 #################################
@@ -102,12 +103,6 @@ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 #### OTHER
 #################################
 
-# Use plain text mode for new TextEdit documents
-defaults read com.apple.TextEdit RichText -int 0
-
-# Disable spelling check in TextEdit documents
-defaults read com.apple.TextEdit CheckSpellingWhileTyping -int 0
-
 # Expand save panel by default
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
@@ -141,3 +136,5 @@ applications_to_kill=(
 )
 
 killall "${applications_to_kill[@]}"
+
+echo "done!"

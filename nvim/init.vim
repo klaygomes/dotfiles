@@ -1,6 +1,7 @@
 "nice to have default configs
 set nocompatible
 filetype plugin on
+syntax enable
 set hidden		" dont ask to save buffers before switching
 set number		" Show line numbers
 set linebreak		" Break lines at word (requires Wrap lines)
@@ -40,10 +41,7 @@ call plug#begin('~/.vim/bundle')
 call plug#end()
 
 " Color Schema
-if (has("termguicolors"))
- set termguicolors
-endif
-syntax enable
+set termguicolors
 colorscheme tender
 " Status Bar
 let g:lightline = { 'colorscheme': 'tender' }
@@ -75,11 +73,27 @@ nnoremap <silent> <Leader>w <C-w>
 " Exit from terminal mode
 tnoremap <Esc> <C-\><C-n>
 
+" Makes Y behaves like others commands
+nnoremap Y y$
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
+
+" creates undo history as you go
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+inoremap ( (<c-g>u
+inoremap { {<c-g>u
+inoremap " "<c-g>u
+
 " files navigation
 
 " change %:h (which expands to file directory) to %%
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
-" Set current pwd to the buffer I entered
-" autocmd BufEnter * silent! lcd %:p:h
+" Closes all buffers but this current
+nnoremap <leader>ca :w <bar> %bd <bar> e# <bar> bd# <CR>
 
+
+" Set current pwd to the buffer I entered
+lua require("foo")
