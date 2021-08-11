@@ -12,7 +12,7 @@ fi
 if [ ! -d ${HOME}/${work} ]
 then
   mkdir -p "${HOME}/${work}"
-  echo "Directory ${HOME}/${REPLAY} was created"
+  echo "Directory ${HOME}/${REPLY} was created"
 fi
 
 # we assume the actual ${HOME}/.gitconfig is your work related one

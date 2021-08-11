@@ -1,7 +1,7 @@
 CONFIG		:=	$(HOME)/.config/
 
-VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/*))
-ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
+VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/**/*))
+ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/**/*))
 GIT		:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile
 MAC		:=	$(CONFIG)configure.sh
@@ -16,6 +16,7 @@ $(CONFIG)%:
 
 .SECONDEXPANSION:
 $(VIM): $$(subst ${CONFIG},, $$@) | $$(@D)
+	echo $(VIM)	
 	@if [ ! -d $< ]; then cp $< $@ ; fi
 	@echo "Including ${^} configuration to ${@}"
 
@@ -31,7 +32,7 @@ $(GIT): $(wildcard git/*)
 $(BREW): $(wildcard brew/*)
 	@./brew/install.sh
 	@cp ./brew/Brewfile ${HOME}/Brewfile
-	@brew bundle --file ${HOME}/Brewfile 
+	@/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile 
 
 $(MAC): mac/configure.sh
 	@cp ${^} ${@}
