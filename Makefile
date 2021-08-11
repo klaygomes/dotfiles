@@ -1,15 +1,15 @@
 CONFIG		:=	$(HOME)/.config/
 
 VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/**/*))
-ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/**/*))
+ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
 GIT		:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile
 MAC		:=	$(CONFIG)configure.sh
 
 .PHONY: all mac brew git vim
 
-all: mac brew git vim;
-	
+all: mac brew zsh git vim;
+
 $(CONFIG)%:
 	@echo "Directory $@ was not found, creating..."
 	@mkdir -p $@
@@ -24,7 +24,7 @@ $(VIM): $$(subst ${CONFIG},, $$@) | $$(@D)
 $(ZSH): $$(subst ${CONFIG},, $$@) | $$(@D)
 	@echo "Including ${^} configuration to ${@}"
 	@cp "${^}" "${@}"
-	@file="source '${CONFIG}${^}'"  && ( grep -qF "${file}" ${HOME}/.zshrc || echo "${file}" >> ${HOME}/.zshrc )
+	file="source '${CONFIG}${^}'" &&  (grep "$${file}" ${HOME}/.zshrc -q || echo "$${file}" >> ${HOME}/.zshrc)
 
 $(GIT): $(wildcard git/*) 
 	@./git/install.sh ./git/.gitconfig
@@ -44,4 +44,4 @@ vim: $(VIM)
 git: $(GIT)
 brew: $(BREW)
 mac: $(MAC)
-
+zsh: $(ZSH)
