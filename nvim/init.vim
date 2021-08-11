@@ -23,6 +23,10 @@ set smartindent		" Enable smart-indent
 set smarttab		" Enable smart-tabs
 set softtabstop=2	" Number of spaces per Tab::J
 
+" show all characters that aren't white-space. So spaces are the only thing that doesn't show up.
+set listchars=eol:$,tab:→\ ,trail:~,extends:>,precedes:<,nbsp:☠
+set list
+
 " this will install vim-plug if not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
     silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
@@ -34,6 +38,7 @@ call plug#begin('~/.vim/bundle')
 " here you'll add all the plugins needed
         Plug 'neovim/nvim-lspconfig'
 	Plug 'jacoborus/tender.vim'
+        Plug 'itchyny/vim-gitbranch'
 	Plug 'itchyny/lightline.vim'
         Plug 'nvim-lua/popup.nvim'
         Plug 'nvim-lua/plenary.nvim'
@@ -44,7 +49,16 @@ call plug#end()
 set termguicolors
 colorscheme tender
 " Status Bar
-let g:lightline = { 'colorscheme': 'tender' }
+let g:lightline = {
+      \ 'colorscheme': 'tender',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'gitbranch#name'
+      \ },
+      \ }
 
 " default plugins
 runtime macros/matchit.vim
