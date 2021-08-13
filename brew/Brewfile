@@ -45,6 +45,15 @@ brew "wget"
 # JavaScript package manager
 brew "yarn"
 
+# A general-purpose command-line fuzzy finder
+brew "fzf"
+
+# A simple, fast and user-friendly alternative to 'find'
+brew "fd"
+
+# A cat(1) clone with wings
+brew "bat"
+
 # Application uninstaller
 cask "appcleaner"
 
