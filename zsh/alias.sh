@@ -10,7 +10,6 @@ alias brewup='brew update; brew upgrade; brew prune; brew cleanup; brew doctor'
 alias gpf="git push -f"
 alias gcm="git checkout master"
 alias gc="git checkout"
-alias gsp="git branch --set-upstream-to=origin/$(git_current_branch) && git push"
 
 # GENERAL
 alias vim="nvim"

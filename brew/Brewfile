@@ -27,6 +27,9 @@ brew "jq"
 # Mac App Store command-line interface
 brew "mas"
 
+# Plataform built on V8 to build network applications
+brew "node"
+
 # Hash utilities
 brew "md5sha1sum"
 
