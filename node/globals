@@ -1,6 +1,6 @@
-vscode-langservers-extracted
 bash-language-server
-vim-language-server
 neovim
 typescript
 typescript-language-server
+vim-language-server
+vscode-langservers-extracted
