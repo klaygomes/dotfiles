@@ -51,6 +51,9 @@ brew "fzf"
 # A simple, fast and user-friendly alternative to 'find'
 brew "fd"
 
+# A viewer for git and diff output
+brew "git-delta"
+
 # A cat(1) clone with wings
 brew "bat"
 

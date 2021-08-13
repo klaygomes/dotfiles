@@ -38,7 +38,7 @@ $(GIT): $(wildcard git/*)
 $(BREW): $(wildcard brew/*)
 	@./brew/install.sh
 	@cp ./brew/Brewfile ${HOME}/Brewfile
-	@/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile --force
+	@/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0
 
 $(MAC): mac/configure.sh
 	@cp ${^} ${@}

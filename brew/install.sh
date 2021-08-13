@@ -8,3 +8,6 @@ then
 else
   echo "Brew is already installed"
 fi
+
+$(brew --prefix)/opt/fzf/install
+
