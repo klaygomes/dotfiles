@@ -5,7 +5,7 @@ ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
 GIT		:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile
 MAC		:=	$(CONFIG)configure.sh
-NODE		:=	$(CONFIG)/node/globais
+NODE		:=	$(CONFIG)/node/globals
 
 .PHONY: all mac brew git vim
 
@@ -28,7 +28,7 @@ $(ZSH): $$(subst ${CONFIG},, $$@) | $$(@D)
 	if [ "${@F}" = "install.sh" ] ; then 	 \
 		$(@) "$(HOME)" "$(CONFIG)" 	;\
 	else 					 \
-		file="source '${CONFIG}${^}'" &&  (grep "$${file}" ${HOME}/.zshrc -q || echo "$${file}" >> ${HOME}/.zshrc) ;\
+		file="source '${CONFIG}${^}';" &&  (grep "$${file}" ${HOME}/.zshrc -q || echo "$${file}" >> ${HOME}/.zshrc) ;\
  		source '${CONFIG}${^}' 		;\
 	fi
 
@@ -45,7 +45,7 @@ $(MAC): mac/configure.sh
 	@chmod +x "${@}"
 	@${@}
 
-$(NODE): node/globais
+$(NODE): node/globals
 	xargs -I {} npm install {} --global < "${^}"
 	@mkdir -p "${@}"
 	@cp "${^}" "${@}"
