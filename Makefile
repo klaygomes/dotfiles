@@ -4,7 +4,7 @@ VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/**))
 ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
 GIT		:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile
-MAC		:=	$(CONFIG)configure.sh
+MAC		:=	$(CONFIG)mac/install.sh
 NODE		:=	$(CONFIG)node/globals
 
 .PHONY: all mac brew git vim
@@ -39,7 +39,7 @@ $(BREW): $(wildcard brew/*)
 	@cp ./brew/Brewfile ${HOME}/Brewfile
 	@/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0
 
-$(MAC): mac/configure.sh
+$(MAC): mac/install.sh
 	@cp ${^} ${@}
 	@chmod +x "${@}"
 	@${@}
