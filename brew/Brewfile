@@ -51,6 +51,9 @@ brew "fzf"
 # A simple, fast and user-friendly alternative to 'find'
 brew "fd"
 
+#A modern replacement for 'ls'
+brew "exa"
+
 # A viewer for git and diff output
 brew "git-delta"
 

@@ -17,7 +17,6 @@ $(CONFIG)%:
 
 .SECONDEXPANSION:
 $(VIM): $$(subst ${CONFIG},, $$@) | $$(@D)
-	echo $(VIM)	
 	@if [ ! -d $< ]; then cp $< $@ ; fi
 	@echo "Including ${^} configuration to ${@}"
 
@@ -25,7 +24,7 @@ $(VIM): $$(subst ${CONFIG},, $$@) | $$(@D)
 $(ZSH): $$(subst ${CONFIG},, $$@) | $$(@D)
 	@echo "Including ${^} configuration to ${@}"
 	@cp "${^}" "${@}"
-	if [ "${@F}" = "install.sh" ] ; then 	 \
+	@if [ "${@F}" = "install.sh" ] ; then 	 \
 		$(@) "$(HOME)" "$(CONFIG)" 	;\
 	else 					 \
 		file="source '${CONFIG}${^}';" &&  (grep "$${file}" ${HOME}/.zshrc -q || echo "$${file}" >> ${HOME}/.zshrc) ;\
@@ -46,7 +45,7 @@ $(MAC): mac/configure.sh
 	@${@}
 
 $(NODE): node/globals
-	xargs -I {} npm install {} --global < "${^}"
+	@xargs -I {} npm install {} --global < "${^}"
 	@mkdir -p "${@}"
 	@cp "${^}" "${@}"
 

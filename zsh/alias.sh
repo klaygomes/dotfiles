@@ -17,3 +17,4 @@ alias vi="nvim"
 
 # NAVIGATION
 alias h="cd ~"
+alias ls="exa --tree -l --git"
