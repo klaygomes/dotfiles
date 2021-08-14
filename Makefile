@@ -31,6 +31,11 @@ $(ZSH): $$(subst ${CONFIG},, $$@) | $$(@D)
  		source '${CONFIG}${^}' 		;\
 	fi
 
+.SECONDEXPANSION:
+$(MAC): mac/install.sh | $$(@D)
+	@cp ${^} ${@}
+	@${@}
+
 $(GIT): $(wildcard git/*) 
 	@./git/install.sh ./git/.gitconfig
 
@@ -38,11 +43,6 @@ $(BREW): $(wildcard brew/*)
 	@./brew/install.sh
 	@cp ./brew/Brewfile ${HOME}/Brewfile
 	@/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0
-
-$(MAC): mac/install.sh
-	@cp ${^} ${@}
-	@chmod +x "${@}"
-	@${@}
 
 $(NODE): node/globals
 	@xargs -I {} npm install {} --global < "${^}"
