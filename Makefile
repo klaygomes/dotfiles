@@ -5,7 +5,7 @@ ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
 GIT		:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile
 MAC		:=	$(CONFIG)configure.sh
-NODE		:=	$(CONFIG)/node/globals
+NODE		:=	$(CONFIG)node/globals
 
 .PHONY: all mac brew git vim
 
@@ -25,7 +25,7 @@ $(ZSH): $$(subst ${CONFIG},, $$@) | $$(@D)
 	@echo "Including ${^} configuration to ${@}"
 	@cp "${^}" "${@}"
 	@if [ "${@F}" = "install.sh" ] ; then 	 \
-		$(@) "$(HOME)" "$(CONFIG)" 	;\
+		${@} "${HOME}" "${CONFIG}" 	;\
 	else 					 \
 		file="source '${CONFIG}${^}';" &&  (grep "$${file}" ${HOME}/.zshrc -q || echo "$${file}" >> ${HOME}/.zshrc) ;\
  		source '${CONFIG}${^}' 		;\
@@ -49,7 +49,6 @@ $(NODE): node/globals
 	@mkdir -p "${@}"
 	@cp "${^}" "${@}"
 
-mac/configure.sh: ;
 vim:  $(VIM)
 git:  $(GIT)
 brew: $(BREW)
