@@ -17,4 +17,4 @@ alias vi="nvim"
 
 # NAVIGATION
 alias h="cd ~"
-alias ls="exa --tree -l --git"
+alias ls="exa --tree --long --git --no-permissions --changed --no-user --sort type --level 10 -F"
