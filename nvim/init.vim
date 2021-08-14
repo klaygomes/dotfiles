@@ -43,6 +43,7 @@ call plug#begin('~/.vim/bundle')
         Plug 'nvim-lua/popup.nvim'
         Plug 'nvim-lua/plenary.nvim'
         Plug 'nvim-telescope/telescope.nvim'
+        Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npm i'  }
 call plug#end()
 
 " Color Schema
