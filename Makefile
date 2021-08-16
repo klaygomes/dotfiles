@@ -43,6 +43,7 @@ $(BREW): $(wildcard brew/*)
 	@./brew/install.sh
 	@cp ./brew/Brewfile ${HOME}/Brewfile
 	@/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0
+	@$(brew --prefix)/opt/fzf/install
 
 $(NODE): node/globals
 	@xargs -I {} npm install {} --global < "${^}"
