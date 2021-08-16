@@ -7,6 +7,7 @@ set number		" Show line numbers
 set linebreak		" Break lines at word (requires Wrap lines)
 set showbreak=+++	" Wrap-broken line prefix
 set textwidth=100	" Line wrap (number of cols)
+let &colorcolumn="100,".join(range(120,999),",")
 set showmatch		" Highlight matching brace
 set spell		" Enable spell-checking
 set visualbell		" Use visual bell (no beeping)
@@ -22,7 +23,11 @@ set shiftwidth=2	" Number of auto-indent spaces
 set smartindent		" Enable smart-indent
 set smarttab		" Enable smart-tabs
 set softtabstop=2	" Number of spaces per Tab::J
-
+set cursorline 		" Highlight current line
+set mouse=a		" Enable mouse in all modes
+set ruler		" Show the cursor position
+set termguicolors	" Color Schema
+set wildmenu		" Enhance command-line completion
 " show all characters that aren't white-space. So spaces are the only thing that doesn't show up.
 set listchars=eol:$,tab:→\ ,trail:~,extends:>,precedes:<,nbsp:☠
 set list
@@ -46,8 +51,7 @@ call plug#begin('~/.vim/bundle')
         Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npm i'  }
 call plug#end()
 
-" Color Schema
-set termguicolors
+
 colorscheme tender
 " Status Bar
 let g:lightline = {

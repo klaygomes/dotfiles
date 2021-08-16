@@ -14,10 +14,20 @@ alias gc="git checkout"
 # GENERAL
 alias vim="nvim"
 alias vi="nvim"
+alias vi="nvim"
 
 # NAVIGATION
 alias h="cd ~"
 alias ls="exa --tree --long --git --no-permissions --changed --no-user --sort type --level 10 -F"
 
+# well, I gave up not typing these
 alias :x="exit"
 alias :q="exit"
+
+# Show/hide hidden files in Finder
+alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
+# Hide/show all desktop icons (useful when presenting)
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"

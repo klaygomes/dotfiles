@@ -42,8 +42,13 @@ $(GIT): $(wildcard git/*)
 $(BREW): $(wildcard brew/*)
 	@./brew/install.sh
 	@cp ./brew/Brewfile ${HOME}/Brewfile
-	@/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0
-	@$(brew --prefix)/opt/fzf/install
+	@if [ -x /usr/local/bin/brew ] ; then \
+		/usr/local/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0 ; \
+		@/usr/local/opt/fzf/install \
+	else \
+		/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0 ; \
+		@$$(/opt/homebrew/bin/brew --prefix)/opt/fzf/install ; \
+	fi
 
 $(NODE): node/globals
 	@xargs -I {} npm install {} --global < "${^}"
