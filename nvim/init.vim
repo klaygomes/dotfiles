@@ -31,6 +31,8 @@ set wildmenu		" Enhance command-line completion
 " show all characters that aren't white-space. So spaces are the only thing that doesn't show up.
 set listchars=eol:$,tab:→\ ,trail:~,extends:>,precedes:<,nbsp:☠
 set list
+set updatetime=100	" To be able to see gitgutter signs more quickly
+set completeopt=menuone,noselect " completion menu like a IDE 
 
 " this will install vim-plug if not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -40,7 +42,6 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/bundle')
-" here you'll add all the plugins needed
         Plug 'neovim/nvim-lspconfig'
 	Plug 'jacoborus/tender.vim'
         Plug 'itchyny/vim-gitbranch'
@@ -48,7 +49,13 @@ call plug#begin('~/.vim/bundle')
         Plug 'nvim-lua/popup.nvim'
         Plug 'nvim-lua/plenary.nvim'
         Plug 'nvim-telescope/telescope.nvim'
+        Plug 'airblade/vim-gitgutter'
+        Plug 'tpope/vim-fugitive'
+        Plug 'hrsh7th/nvim-compe'
+        Plug 'tzachar/compe-tabnine', { 'do': './install.sh' }
         Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npm i'  }
+        Plug 'hrsh7th/vim-vsnip'
+        Plug 'hrsh7th/vim-vsnip-integ'
 call plug#end()
 
 
@@ -114,5 +121,16 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 nnoremap <leader>ca :w <bar> %bd <bar> e# <bar> bd# <CR>
 
 
-" Set current pwd to the buffer I entered
+" lsp servers configuration
 lua require("lspinit")
+
+" auto-complete based in lsp
+lua require("compecfg")
+
+" its mappings
+
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })

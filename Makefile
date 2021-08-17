@@ -1,6 +1,6 @@
 CONFIG		:=	$(HOME)/.config/
 
-VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/**))
+VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/* nvim/**/*))
 ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
 GIT		:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile

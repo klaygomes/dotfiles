@@ -15,6 +15,7 @@ alias gc="git checkout"
 alias vim="nvim"
 alias vi="nvim"
 alias vi="nvim"
+alias v="nvim"
 
 # NAVIGATION
 alias h="cd ~"
@@ -31,3 +32,8 @@ alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && kil
 # Hide/show all desktop icons (useful when presenting)
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+
+# Lock the screen (when going AFK)
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession
+-suspend"
+
