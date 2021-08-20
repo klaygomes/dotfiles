@@ -19,7 +19,7 @@ alias v="nvim"
 
 # NAVIGATION
 alias h="cd ~"
-alias ls="exa --tree --long --git --no-permissions --changed --no-user --sort type --level 10 -F"
+alias ls="exa --tree --long --git --no-permissions --changed --no-user --sort type --level 1 -F"
 
 # well, I gave up not typing these
 alias :x="exit"

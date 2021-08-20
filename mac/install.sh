@@ -29,7 +29,7 @@ defaults write com.apple.finder ShowRecentTags -int 0
 defaults write com.apple.dock tilesize -int 35
 
 # Auto-hide Dock
-defaults write com.apple.dock autohide -int 1
+defaults write com.apple.dock autohide -int 0
 
 # Disable animations
 defaults write com.apple.dock launchanim -int 0
@@ -41,7 +41,7 @@ defaults write com.apple.dock minimize-to-application -int 0
 defaults write com.apple.dock show-process-indicators -int 1
 
 # Change minimize/maximize window effect
-defaults write com.apple.dock mineffect -string "scale"
+defaults write com.apple.dock mineffect -string "suck"
 
 # Disable double-click on window's title bar to minimize it
 defaults write NSGlobalDomain AppleActionOnDoubleClick None

@@ -2,37 +2,43 @@ CONFIG		:=	$(HOME)/.config/
 
 VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/* nvim/**/*))
 ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
+ZSH_CONFIG	:=	${HOME}/.zshrc
 GIT		:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile
+BREW_ENV	:=	$(HOME)/.brewenv
 MAC		:=	$(CONFIG)mac/install.sh
 NODE		:=	$(CONFIG)node/globals
 
+CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then echo "Directory $(@D) was not found, creating..." && mkdir -p "$(@D)";fi;
+
 .PHONY: all mac brew git vim
 
-all: mac brew zsh git node vim;
-
-$(CONFIG)%:
-	@echo "Directory $@ was not found, creating..."
-	@mkdir -p $@
+all:| mac brew zsh git node vim;
 
 .SECONDEXPANSION:
-$(VIM): $$(subst ${CONFIG},, $$@) | $$(@D)
-	@if [ ! -d $< ]; then cp $< $@ ; fi
-	@echo "Including ${^} configuration to ${@}"
+$(VIM): $$(subst ${CONFIG},, $$@)
+	@$(call CREATE_TARGET_DIR)
+	@if [ ! -d $< ]; then 					 \
+		echo "Including ${^} configuration to ${@}" 	;\
+ 		cp $< $@					;\
+	fi							 
 
 .SECONDEXPANSION:
-$(ZSH): $$(subst ${CONFIG},, $$@) | $$(@D)
+$(ZSH): $$(subst ${CONFIG},, $$@)
+	@$(call CREATE_TARGET_DIR)
 	@echo "Including ${^} configuration to ${@}"
 	@cp "${^}" "${@}"
-	@if [ "${@F}" = "install.sh" ] ; then 	 \
+	@if [ "${@F}" = "setup.sh" ] ; then 	 \
 		${@} "${HOME}" "${CONFIG}" 	;\
 	else 					 \
-		file="source '${CONFIG}${^}';" &&  (grep "$${file}" ${HOME}/.zshrc -q || echo "$${file}" >> ${HOME}/.zshrc) ;\
- 		source '${CONFIG}${^}' 		;\
+		file="source '${CONFIG}${^}';" &&\
+		(                                \
+			grep "$${file}" ${ZSH_CONFIG} -q || echo "$${file}" >> ${ZSH_CONFIG} \
+		) ;                              \
 	fi
 
-.SECONDEXPANSION:
-$(MAC): mac/install.sh | $$(@D)
+$(MAC): mac/install.sh
+	@$(call CREATE_TARGET_DIR)
 	@cp ${^} ${@}
 	@${@}
 
@@ -42,16 +48,12 @@ $(GIT): $(wildcard git/*)
 $(BREW): $(wildcard brew/*)
 	@./brew/install.sh
 	@cp ./brew/Brewfile ${HOME}/Brewfile
-	@if [ -x /usr/local/bin/brew ] ; then \
-		/usr/local/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0 ; \
-		@/usr/local/opt/fzf/install \
-	else \
-		/opt/homebrew/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0 ; \
-		@$$(/opt/homebrew/bin/brew --prefix)/opt/fzf/install ; \
-	fi
+	@source ${BREW_ENV} 								&&\
+	($${HOMEBREW_PREFIX}/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0) &&\
+	./brew/setup.sh
 
 $(NODE): node/globals
-	@xargs -I {} npm install {} --global < "${^}"
+	@xargs -I {} -n 4 npm install {} --global < "${^}"
 	@mkdir -p "${@}"
 	@cp "${^}" "${@}"
 
@@ -61,3 +63,6 @@ brew: $(BREW)
 mac:  $(MAC)
 node: $(NODE)
 zsh:  $(ZSH)
+
+node/globals: ;
+mac/install: ;
