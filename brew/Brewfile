@@ -60,6 +60,10 @@ brew "git-delta"
 # A cat(1) clone with wings
 brew "bat"
 
+brew "ripgrep"
+
+brew "the_silver_searcher"
+
 # Application uninstaller
 cask "appcleaner"
 

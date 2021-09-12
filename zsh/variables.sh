@@ -7,6 +7,8 @@ export PATH=$ANDROID_HOME/platform-tools:$PATH
 # Compilation flags
 export ARCHFLAGS=$(uname -m)
 
-# fzf and fd integration
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-
+# fzf and rg integration
+if type rg &> /dev/null; then
+  export FZF_DEFAULT_COMMAND='rg --files'
+  export FZF_DEFAULT_OPTS='-m --height 50% --border'
+fi

@@ -2,6 +2,9 @@
 set nocompatible
 filetype plugin on
 syntax enable
+set path+=** 	"	" search recursively for files with :find
+set autoread		" automatically read file when changed outside of vim
+
 set hidden		" dont ask to save buffers before switching
 set number		" Show line numbers
 set linebreak		" Break lines at word (requires Wrap lines)
@@ -56,6 +59,9 @@ call plug#begin('~/.vim/bundle')
         Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npm i'  }
         Plug 'hrsh7th/vim-vsnip'
         Plug 'hrsh7th/vim-vsnip-integ'
+        Plug '/usr/local/opt/fzf'
+        Plug 'junegunn/fzf.vim'
+        Plug 'preservim/nerdtree'
 call plug#end()
 
 
@@ -72,9 +78,13 @@ let g:lightline = {
       \ },
       \ }
 
+" fzf search plugin
+set rtp+=/usr/local/opt/fzf
+
+let g:ackprg = 'ag --vimgrep'
 " default plugins
 runtime macros/matchit.vim
-
+hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 " shortcuts
 
 let mapleader=" "
@@ -134,3 +144,13 @@ inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+" NERDTree configurationo
+" close Vim or a tab automatically when NERDTree is the last window
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+" the same NERDTree on every tab automatically
+autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+"  If a file is specified, move the cursor to its window
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+

@@ -37,3 +37,5 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession
 -suspend"
 
+alias gfind="git checkout \$(git branch | fzf)"
+
