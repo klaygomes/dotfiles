@@ -62,6 +62,7 @@ call plug#begin('~/.vim/bundle')
         Plug '/usr/local/opt/fzf'
         Plug 'junegunn/fzf.vim'
         Plug 'preservim/nerdtree'
+        Plug 'pangloss/vim-javascript'
 call plug#end()
 
 
@@ -129,7 +130,6 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 " Closes all buffers but this current
 nnoremap <leader>ca :w <bar> %bd <bar> e# <bar> bd# <CR>
-
 
 " lsp servers configuration
 lua require("lspinit")
