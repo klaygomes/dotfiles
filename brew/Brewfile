@@ -64,6 +64,9 @@ brew "ripgrep"
 
 brew "the_silver_searcher"
 
+# C/C++/ObjC language server
+brew "ccls"
+
 # Application uninstaller
 cask "appcleaner"
 
