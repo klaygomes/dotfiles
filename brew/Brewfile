@@ -64,6 +64,9 @@ brew "ripgrep"
 
 brew "the_silver_searcher"
 
+# On-chip debugging, in-system programming and boundary-scan testing
+brew "open-ocd"
+
 # C/C++/ObjC language server
 brew "ccls"
 
@@ -94,6 +97,8 @@ cask "visual-studio-code"
 # Multimedia player
 cask "vlc"
 
+# Pre-built GNU bare-metal toolchain for 32-bit Arm processors
+cask "gcc-arm-embedded"
 
 # Apple App Store 
 mas "Be Focused Pro", id: 961632517

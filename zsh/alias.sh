@@ -19,6 +19,12 @@ alias v="nvim"
 
 # NAVIGATION
 alias h="cd ~"
+alias ...="cd ../.."
+alias 2..="cd ../.."
+alias 3..="cd ../../.."
+alias 4..="cd ../../../.."
+alias dotfiles="cd ${HOME}/dotfiles"
+
 alias ls="exa --tree --long --git --no-permissions --changed --no-user --sort type --level 1 -F"
 
 # well, I gave up not typing these
