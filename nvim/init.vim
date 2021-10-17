@@ -37,6 +37,7 @@ set list
 set updatetime=100	" To be able to see gitgutter signs more quickly
 set completeopt=menuone,noselect " completion menu like a IDE 
 set spelllang=en_us,pt_br
+set noswapfile	"	" no swap files, I like to live dangerously
 
 " this will install vim-plug if not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
