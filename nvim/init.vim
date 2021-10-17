@@ -62,7 +62,8 @@ call plug#begin('~/.vim/bundle')
         Plug 'hrsh7th/vim-vsnip-integ'
         Plug '/usr/local/opt/fzf'
         Plug 'junegunn/fzf.vim'
-        Plug 'preservim/nerdtree'
+        Plug 'preservim/nerdtree' |
+            \ Plug 'Xuyuanp/nerdtree-git-plugin'
         Plug 'pangloss/vim-javascript'
 call plug#end()
 
@@ -91,7 +92,7 @@ hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 
 let mapleader=" "
 
-" Find files using Telescope command-line sugar.
+" Find files using Telescope command line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope git_files<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
@@ -135,7 +136,7 @@ nnoremap <leader>ca :w <bar> %bd <bar> e# <bar> bd# <CR>
 " lsp servers configuration
 lua require("lspinit")
 
-" auto-complete based in lsp
+" autocomplete based in lsp
 lua require("compecfg")
 
 " its mappings
@@ -146,13 +147,13 @@ inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
-" NERDTree configurationo
-" close Vim or a tab automatically when NERDTree is the last window
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-" the same NERDTree on every tab automatically
-autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
-"  If a file is specified, move the cursor to its window
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+" NERDTree configuration
+" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 
-
+let NERDTreeShowHidden=1
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>

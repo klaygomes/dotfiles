@@ -1,8 +1,3 @@
-# My Personal 
-
-
-###### `figlet dotfiles -f basic`
----
 ```text
         d8888b.  .d88b.  d888888b d88888b d888888b db      d88888b .d8888. 
         88  `8D .8P  Y8. `~~88~~' 88'       `88'   88      88'     88'  YP 
@@ -12,7 +7,10 @@
         Y8888D'  `Y88P'     YP    YP      Y888888P Y88888P Y88888P `8888Y' 
 ```
 
-# How to use
+These are Mac only configuration files. If you, for some crazy reason, you want to use have it in
+mind.
+
+## How to use
 
 Clone this repository by typing:
 ```bash
@@ -37,5 +35,13 @@ You may also force a full update whenever you want by typing:
 ```bash
 make all -B
 ```
+## How it works
 
-If you have any question read the [Makefile](Makefile)
+If you want to understand how I'm managing my dotfiles, I wrote a [complete article
+teach](https://www.estacouveflor.com/dotfiles-configuration/) what each line of my Makefile does.
+
+## License
+
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE, Version 2, December 2004
+
+[READ MORE](/blob/master/LICENSE)
