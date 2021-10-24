@@ -25,7 +25,7 @@ alias 3..="cd ../../.."
 alias 4..="cd ../../../.."
 alias dotfiles="cd ${HOME}/dotfiles"
 
-alias ls="exa --tree --long --git --no-permissions --changed --no-user --sort type --level 1 -F"
+alias ls="exa --tree -F --sort type --group-directories-first --git -L 1"
 
 # well, I gave up not typing these
 alias :x="exit"
