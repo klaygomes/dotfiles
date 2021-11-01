@@ -7,7 +7,6 @@ set autoread		" automatically read file when changed outside of vim
 
 set hidden		" dont ask to save buffers before switching
 set number		" Show line numbers
-set linebreak		" Break lines at word (requires Wrap lines)
 set showbreak=+++	" Wrap-broken line prefix
 set textwidth=100	" Line wrap (number of cols)
 let &colorcolumn="100,".join(range(120,999),",")
@@ -38,6 +37,8 @@ set updatetime=100	" To be able to see gitgutter signs more quickly
 set completeopt=menuone,noselect " completion menu like a IDE 
 set spelllang=en_us,pt_br
 set noswapfile	"	" no swap files, I like to live dangerously
+" ignore files
+set wildignore+=*.pyc,*.o,*.obj,*.svn,*.swp,*.class,*.hg,*.DS_Store,*.min.*,node_files
 
 " this will install vim-plug if not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -48,9 +49,9 @@ endif
 
 call plug#begin('~/.vim/bundle')
         Plug 'neovim/nvim-lspconfig'
-	Plug 'jacoborus/tender.vim'
+        Plug 'jacoborus/tender.vim'
         Plug 'itchyny/vim-gitbranch'
-	Plug 'itchyny/lightline.vim'
+        Plug 'itchyny/lightline.vim'
         Plug 'nvim-lua/popup.nvim'
         Plug 'nvim-lua/plenary.nvim'
         Plug 'nvim-telescope/telescope.nvim'
@@ -158,3 +159,7 @@ nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
+
+" Nerdtree config for wildignore
+let NERDTreeRespectWildIgnore=1
+

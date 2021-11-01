@@ -45,7 +45,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "html", "bashls", "cssls", "vimls", "tsserver", "ccls", "pyright"}
+local servers = { "html", "bashls", "cssls", "vimls", "tsserver", "pyright"}
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -55,7 +55,7 @@ for _, lsp in ipairs(servers) do
     }
   }
 end
-
+--
 -- efm configuration
 -- Below is a variable in wich you specify where you have prettier installed
 -- make sure you update the formatCommand path to the location where you have installed prettier
@@ -101,10 +101,8 @@ local languages = {
 
 -- Below is where you setup the efm language server and add the on_attach function
 -- and add all the filetypes you want this server to be appended on.
-require'lspconfig'.efm.setup{
+nvim_lsp.efm.setup{
   on_attach = on_attach,
-
-  cmd = {'efm-langserver', '--logfile', os.getenv('HOME') .. "/logfile.txt", "--loglevel", "1000" },
 
   -- Tell efm what filetypes to append to
   filetypes = vim.tbl_keys(languages),
@@ -151,5 +149,17 @@ require'lspconfig'.efm.setup{
 
     -- Setting the languages
     languages = languages,
+  }
+}
+
+nvim_lsp.ccls.setup {
+  cmd = { 'ccls', '--log-file=' .. os.getenv('HOME')  .. 'ccls-log.txt' },
+  init_options = {
+    cache = {
+      directory = "/tmp/ccls-cache"
+    },
+    clang = {
+      extraArgs = {'--gcc-toolchain=/Applications/ARM/arm-none-eabi' }
+    }
   }
 }
