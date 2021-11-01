@@ -7,4 +7,4 @@ vscode-langservers-extracted
 serve
 pyright
 eslint_d
-prettierj
+prettier

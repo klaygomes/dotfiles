@@ -55,3 +55,101 @@ for _, lsp in ipairs(servers) do
     }
   }
 end
+
+-- efm configuration
+-- Below is a variable in wich you specify where you have prettier installed
+-- make sure you update the formatCommand path to the location where you have installed prettier
+local prettier = {
+  formatCommand = 'prettier --stdin-filepath ${FILENAME}',
+  formatStdin = true
+}
+
+-- Below is a variable in wich you specify where eslint_d is installed, you dont need to change this
+-- as it should be the same for you.
+local eslint = {
+  lintCommand = "eslint_d -f unix --stdin --stdin-filename ${FILENAME}",
+  lintStdin = true,
+  lintFormats = {"%f:%l:%c: %m"},
+  lintIgnoreExitCode = true,
+  formatCommand = "eslint_d --fix-to-stdout --stdin --stdin-filename ${FILENAME}",
+  formatStdin = true 
+}
+
+-- Below you can set some formatting options for prettier
+-- Format options for prettier
+local format_options_prettier = {
+  tabWidth = 2,
+  singleQuote = true,
+  trailingComma = 'all',
+  configPrecedence = 'prefer-file'
+}
+
+-- Below is a list of languages and a list of servers you want per language
+-- so for typescript we have prettier and eslint for example
+local languages = {
+  typescript = {prettier, eslint},
+  javascript = {prettier, eslint},
+  typescriptreact = {prettier, eslint},
+  javascriptreact = {prettier, eslint},
+  yaml = {prettier},
+  json = {prettier},
+  html = {prettier},
+  scss = {prettier},
+  css = {prettier},
+  markdown = {prettier}
+}
+
+-- Below is where you setup the efm language server and add the on_attach function
+-- and add all the filetypes you want this server to be appended on.
+require'lspconfig'.efm.setup{
+  on_attach = on_attach,
+
+  cmd = {'efm-langserver', '--logfile', os.getenv('HOME') .. "/logfile.txt", "--loglevel", "1000" },
+
+  -- Tell efm what filetypes to append to
+  filetypes = vim.tbl_keys(languages),
+
+  -- Set some extra settings
+  init_options = {
+    -- Enable document formatting
+    documentFormatting = true,
+
+    -- Enable hover information functionality
+    hover = true,
+
+    -- Enable the use of symbols
+    documentSymbol = true,
+
+    -- Enable the use of code actions
+    codeAction = true,
+
+    -- Enable autocompletion popup
+    completion = true
+  },
+
+  settings = {
+    -- This is the location where error messages wil be written to
+    -- this is nice for debugging your language server
+    log_file =  os.getenv('HOME') .. '/logfile.txt',
+
+    -- These are the paths efm will look for eslint settings and prettier settings
+    -- inside a project you are working on
+    rootMarkers = {
+      ".lua-format",
+      ".eslintrc.cjs",
+      ".eslintrc",
+      ".eslintrc.json",
+      ".eslintrc.js",
+      ".prettierrc",
+      ".prettierrc.js",
+      ".prettierrc.json",
+      ".prettierrc.yml",
+      ".prettierrc.yaml",
+      ".prettier.config.js",
+      ".prettier.config.cjs",
+    },
+
+    -- Setting the languages
+    languages = languages,
+  }
+}
