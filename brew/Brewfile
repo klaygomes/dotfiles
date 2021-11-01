@@ -21,6 +21,9 @@ brew "gnupg"
 # Image manipulation library
 brew "jpeg"
 
+# General purpose Language Server
+brew "efm-langserver"
+
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 

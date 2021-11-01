@@ -5,3 +5,6 @@ typescript-language-server
 vim-language-server
 vscode-langservers-extracted
 serve
+pyright
+eslint_d
+prettierj
