@@ -67,6 +67,11 @@ call plug#begin('~/.vim/bundle')
         Plug 'preservim/nerdtree' |
             \ Plug 'Xuyuanp/nerdtree-git-plugin'
         Plug 'pangloss/vim-javascript'
+
+        Plug 'folke/lsp-colors.nvim'
+        Plug 'kyazdani42/nvim-web-devicons'
+        Plug 'folke/trouble.nvim'
+ 
 call plug#end()
 
 
@@ -95,10 +100,10 @@ hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 let mapleader=" "
 
 " Find files using Telescope command line sugar.
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>ff <cmd>Telescope live_grep<cr>
 nnoremap <leader>fg <cmd>Telescope git_files<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fs <cmd>Telescope grep_string<cr>
 
 " Navigating between buffers
 nnoremap <silent> [b :bp<CR>
@@ -141,6 +146,14 @@ lua require("lspinit")
 " autocomplete based in lsp
 lua require("compecfg")
 
+lua require("lsp-colors").setup({
+      \  Error = "#db4b4b",
+      \ Warning = "#e0af68",
+      \ Information = "#0db9d7",
+      \ Hint = "#10B981"
+      \})
+
+lua require("trouble").setup { }
 " its mappings
 
 inoremap <silent><expr> <C-Space> compe#complete()
