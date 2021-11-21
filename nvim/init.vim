@@ -64,14 +64,11 @@ call plug#begin('~/.vim/bundle')
         Plug 'hrsh7th/vim-vsnip-integ'
         Plug '/usr/local/opt/fzf'
         Plug 'junegunn/fzf.vim'
-        Plug 'preservim/nerdtree' |
-            \ Plug 'Xuyuanp/nerdtree-git-plugin'
         Plug 'pangloss/vim-javascript'
-
         Plug 'folke/lsp-colors.nvim'
         Plug 'kyazdani42/nvim-web-devicons'
         Plug 'folke/trouble.nvim'
- 
+        Plug 'tpope/vim-vinegar'
 call plug#end()
 
 
@@ -162,17 +159,13 @@ inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
-" NERDTree configuration
-" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
-autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
-    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 
-let NERDTreeShowHidden=1
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-f> :NERDTreeFind<CR>
+" goodbye nerdtree
+let g:netrw_banner = 1
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
 
-" Nerdtree config for wildignore
-let NERDTreeRespectWildIgnore=1
+nnoremap <leader>n -<CR>
 
