@@ -17,6 +17,7 @@ alias vi="nvim"
 alias vi="nvim"
 alias v="nvim"
 
+
 # NAVIGATION
 alias h="cd ~"
 alias ...="cd ../.."
@@ -44,4 +45,4 @@ alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resource
 -suspend"
 
 alias gfind="git checkout \$(git branch | fzf)"
-
+alias termlog="pmset -g thermlog"

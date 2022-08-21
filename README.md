@@ -7,7 +7,7 @@
         Y8888D'  `Y88P'     YP    YP      Y888888P Y88888P Y88888P `8888Y' 
 ```
 
-These are Mac only configuration files. If you, for some crazy reason, you want to use have it in
+These are Mac only configuration files. If, for some crazy reason, you want to use have it in
 mind.
 
 ## How to use
@@ -28,7 +28,7 @@ You may also configure `nvim`, `git`, `brew`, `zsh` or `node` individually by ty
 ```bash
 make [ nvim | git | brew | zsh | node ]
 ```
-> You can type more than item at same time `make nvim git` for example
+> You can type more than one item at same time `make nvim git` for example
 
 You may also force a full update whenever you want by typing:
 
@@ -42,6 +42,6 @@ teach](https://www.estacouveflor.com/dotfiles-configuration/) what each line of 
 
 ## License
 
-DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE, Version 2, December 2004
+DO WHAT THE F**K YOU WANT TO PUBLIC LICENSE, Version 2, December 2004
 
 [READ MORE](/blob/master/LICENSE)
