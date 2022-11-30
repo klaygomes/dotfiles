@@ -14,7 +14,6 @@ if ! grep "${prompt_dir}" "${HOME}/.zshrc" -q ; then
   echo '[[ $- = *i* ]] && source '"'${prompt_dir}/liquidprompt'" >> "${HOME}/.zshrc"
 fi
 
-
 # Improve fzf completion with shell completion
 fzf_tab_dir=${CONFIG}zsh/fzf-tab-dir
 
