@@ -33,9 +33,6 @@ brew "mas"
 # Plataform built on V8 to build network applications
 brew "node"
 
-# Hash utilities
-brew "md5sha1sum"
-
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 

@@ -13,7 +13,6 @@ setopt longlistjobs         # Display PID when suspending processes
 setopt hash_list_all        # When command completion is attempted, make sure the entire command path is hashed first.
 setopt completeinword       # Complete at any position of the line
 setopt auto_param_slash     # Append a slash if complettion target was a directory
-bindkey -v                  # Set Vi mode in Zsh
 
 export EDITOR='nvim'
 
@@ -29,7 +28,3 @@ fi
 if [[ -z "$XDG_CACHE_HOME" ]]; then
     export XDG_CACHE_HOME="$HOME/.cache"
 fi
-
-#export NVM_DIR="$HOME/.nvm"
-#[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-#[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm" 

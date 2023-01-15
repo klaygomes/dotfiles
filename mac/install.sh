@@ -137,4 +137,6 @@ applications_to_kill=(
 
 killall "${applications_to_kill[@]}"
 
+curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
+
 echo "done!"

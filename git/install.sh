@@ -12,7 +12,7 @@ fi
 if [ ! -d ${HOME}/${work} ]
 then
   mkdir -p "${HOME}/${work}"
-  echo "Directory ${HOME}/${REPLY} was created"
+  echo "Directory ${HOME}/${work} was created"
 fi
 
 # we assume the actual ${HOME}/.gitconfig is your work related one
@@ -20,7 +20,7 @@ if [ -f ${HOME}/.gitconfig ]
 then
   echo "Warning: there is already a file named ${HOME}/.gitconfig."
   echo -e "Do you want to move to ${HOME}/${work}? (type yes)\n"
-  read  -n3 -r
+  read  -n3 -r REPLY
   if [ "$REPLY" == 'yes' ]
   then
 

@@ -25,5 +25,3 @@ fi
 if ! grep "${fzf_tab_dir}" "${HOME}/.zshrc" -q ; then
   echo 'source '"'${fzf_tab_dir}/fzf-tab.plugin.zsh'" >> "${HOME}/.zshrc"
 fi
-
-curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
