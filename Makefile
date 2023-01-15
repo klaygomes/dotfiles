@@ -28,7 +28,7 @@ $(ZSH): $$(subst ${CONFIG},, $$@)
 	@$(call CREATE_TARGET_DIR)
 	@echo "Including ${^} configuration to ${@}"
 	@cp "${^}" "${@}"
-	@if [ "${@F}" = "setup.sh" ] ; then 	 \
+	@if [ "${@F}" = "_setup.sh" ] ; then 	 \
 		${@} "${HOME}" "${CONFIG}" 	;\
 	else 					 \
 		file="source '${CONFIG}${^}';" &&\
@@ -43,14 +43,14 @@ $(MAC): mac/install.sh
 	@${@}
 
 $(GIT): $(wildcard git/*) 
-	@./git/install.sh ./git/.gitconfig
+	@(./git/install.sh ./git/.gitconfig) || :
 
 $(BREW): $(wildcard brew/*)
 	@./brew/install.sh
 	@cp ./brew/Brewfile ${HOME}/Brewfile
 	@source ${BREW_ENV} 								&&\
-	($${HOMEBREW_PREFIX}/bin/brew bundle --file ${HOME}/Brewfile --force || exit 0) &&\
-	./brew/setup.sh
+	($${HOMEBREW_PREFIX}/bin/brew bundle --file ${HOME}/Brewfile --force) || :	&&\
+	(./brew/_setup.sh) || :
 
 $(NODE): node/globals
 	@xargs -I {} -n 4 npm install {} --global < "${^}"

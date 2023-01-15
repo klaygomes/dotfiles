@@ -28,3 +28,8 @@ fi
 if [[ -z "$XDG_CACHE_HOME" ]]; then
     export XDG_CACHE_HOME="$HOME/.cache"
 fi
+
+# Liquid Prompt Plugin
+LP_ENABLE_RUBY_VENV=0
+# Replace LP_COLOR_SSH with a color based on the hash of the hostname.
+LP_ENABLE_SSH_COLORS=1

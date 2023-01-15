@@ -3,7 +3,8 @@ then
   echo "We are going to install Brew"
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
-  echo "Brew is already installed"
+  echo "Brew is already installed, we are going to prune and clean your installation."
+  brew update; brew upgrade; brew prune; brew cleanup; brew doctor
 fi
 
 if [[ "$(uname -m)" == "arm64" ]]; then
