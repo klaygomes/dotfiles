@@ -8,3 +8,4 @@ serve
 pyright
 eslint_d
 prettier
+spectacle-cli
