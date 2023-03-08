@@ -4,7 +4,7 @@ then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo "Brew is already installed, we are going to prune and clean your installation."
-  brew update; brew upgrade; brew prune; brew cleanup; brew doctor
+  brew update; brew upgrade; brew cleanup; brew doctor
 fi
 
 if [[ "$(uname -m)" == "arm64" ]]; then
@@ -18,3 +18,9 @@ brew_env_file="${HOME}/.brewenv"
 
 echo "${brew_env}" > "${brew_env_file}"
 grep -qF "${brew_env_file}" ${HOME}/.zshrc || echo "source '${brew_env_file}'\n" >> $HOME/.zshrc
+
+
+brew services start skhd
+brew services restart skhd
+
+

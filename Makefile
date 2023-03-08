@@ -4,6 +4,8 @@ VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/* nvim/**/*))
 ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
 ZSH_CONFIG	:=	${HOME}/.zshrc
 GIT		:=	${HOME}/.gitconfig
+YABAI		:=	${CONFIG}yabai/yabairc	
+SKHD		:=	${CONFIG}/.skhdrc
 BREW		:=	$(HOME)/Brewfile
 BREW_ENV	:=	$(HOME)/.brewenv
 MAC		:=	$(CONFIG)mac/install.sh
@@ -13,7 +15,7 @@ CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then echo "Directory $(@D) was not found
 
 .PHONY: all mac brew git vim
 
-all:| mac brew zsh git node vim;
+all:| mac brew yabai skhd zsh git node vim;
 
 .SECONDEXPANSION:
 $(VIM): $$(subst ${CONFIG},, $$@)
@@ -42,6 +44,14 @@ $(MAC): mac/install.sh
 	@cp ${^} ${@}
 	@${@}
 
+.SECONDEXPANSION:
+$(YABAI): $$(subst ${CONFIG},, $$@)
+	@$(call CREATE_TARGET_DIR)
+	@cp ${^} ${@}
+
+$(SKHD): skhd/skhdrc
+	@cp ${^} ${HOME}/.skhdrc
+
 $(GIT): $(wildcard git/*) 
 	@(./git/install.sh ./git/.gitconfig) || :
 
@@ -57,12 +67,13 @@ $(NODE): node/globals
 	@mkdir -p "${@}"
 	@cp "${^}" "${@}"
 
-vim:  $(VIM)
-git:  $(GIT)
-brew: $(BREW)
-mac:  $(MAC)
-node: $(NODE)
-zsh:  $(ZSH)
-
+vim:  $(VIM) ;
+git:  $(GIT) ;
+brew: $(BREW) ;
+mac:  $(MAC) ;
+node: $(NODE) ;
+zsh:  $(ZSH) ;
+yabai: $(YABAI) ;
+skhd: $(SKHD) ;
 node/globals: ;
 mac/install: ;
