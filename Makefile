@@ -1,79 +1,81 @@
-CONFIG		:=	$(HOME)/.config/
+CONFIG_PATH	?=	${HOME}/.config/
 
-VIM 		:=	$(addprefix ${CONFIG}, $(wildcard nvim/* nvim/**/*))
-ZSH		:=	$(addprefix ${CONFIG}, $(wildcard zsh/*))
-ZSH_CONFIG	:=	${HOME}/.zshrc
-GIT		:=	${HOME}/.gitconfig
-YABAI		:=	${CONFIG}yabai/yabairc	
-SKHD		:=	${CONFIG}/.skhdrc
+VIM 		:=	$(addprefix ${CONFIG_PATH}, $(shell find nvim -type f -print))
+ZSH			:=	$(addprefix ${CONFIG_PATH}, $(shell find zsh -type f -print))
+MAC			:=	$(CONFIG_PATH)mac/setup.sh
+
+GIT			:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile
-BREW_ENV	:=	$(HOME)/.brewenv
-MAC		:=	$(CONFIG)mac/install.sh
-NODE		:=	$(CONFIG)node/globals
+NODE		:=	$(CONFIG_PATH)/node/globals
 
-CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then echo "Directory $(@D) was not found, creating..." && mkdir -p "$(@D)";fi;
 
-.PHONY: all mac brew git vim
+# helper function to create target directory
+CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created.";fi;
 
-all:| mac brew yabai skhd zsh git node vim;
+.PHONY: vim zsh mac brew git node help
+.DEFAULT_GOAL := help
 
+define PRINT_HELP_PROLOGUE
++-----------------------------------------------------------------------------+
+|              This Makefile should work in most shell environments.          | 
+|             But it was only tested on Mac running with Apple sillicon.      |
++--------------------+--------------------------------------------------------+
+| commands:          | description:                                           |    
++--------------------+--------------------------------------------------------+
+endef
+export PRINT_HELP_PROLOGUE
+
+## The following lines
+vim:  $(VIM) ;@ ##     Install neovim configuration
 .SECONDEXPANSION:
-$(VIM): $$(subst ${CONFIG},, $$@)
+$(VIM): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
-	@if [ ! -d $< ]; then 					 \
-		echo "Including ${^} configuration to ${@}" 	;\
- 		cp $< $@					;\
-	fi							 
-
-.SECONDEXPANSION:
-$(ZSH): $$(subst ${CONFIG},, $$@)
-	@$(call CREATE_TARGET_DIR)
-	@echo "Including ${^} configuration to ${@}"
-	@cp "${^}" "${@}"
-	@if [ "${@F}" = "_setup.sh" ] ; then 	 \
-		${@} "${HOME}" "${CONFIG}" 	;\
-	else 					 \
-		file="source '${CONFIG}${^}';" &&\
-		(                                \
-			grep "$${file}" ${ZSH_CONFIG} -q || echo "$${file}" >> ${ZSH_CONFIG} \
-		) ;                              \
+	@if [ ! -d $< ]; then												 \
+		echo "Including '${^}' configuration to '${@}'"					;\
+		cp $< $@														;\
 	fi
-
-$(MAC): mac/install.sh
-	@$(call CREATE_TARGET_DIR)
-	@cp ${^} ${@}
-	@${@}
-
+## The following lines
+zsh: $(ZSH) ;@ ## Configure zsh default alias, functions and etc.
 .SECONDEXPANSION:
-$(YABAI): $$(subst ${CONFIG},, $$@)
+$(ZSH): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
-	@cp ${^} ${@}
-
-$(SKHD): skhd/skhdrc
-	@cp ${^} ${HOME}/.skhdrc
-
-$(GIT): $(wildcard git/*) 
-	@(./git/install.sh ./git/.gitconfig) || :
-
-$(BREW): $(wildcard brew/*)
-	@./brew/install.sh
-	@cp ./brew/Brewfile ${HOME}/Brewfile
-	@source ${BREW_ENV} 								&&\
-	($${HOMEBREW_PREFIX}/bin/brew bundle --file ${HOME}/Brewfile --force) || :	&&\
-	(./brew/_setup.sh) || :
-
-$(NODE): node/globals
-	@xargs -I {} -n 4 npm install {} --global < "${^}"
-	@mkdir -p "${@}"
+	@printf "Moving '${^F}' to '${@}'"
 	@cp "${^}" "${@}"
+	@. zsh/functions.sh && inject '${CONFIG_PATH}${^}'						\
+		&& echo " - injected"								\
+		|| echo " - already injected"
 
-vim:  $(VIM) ;
-git:  $(GIT) ;
-brew: $(BREW) ;
-mac:  $(MAC) ;
-node: $(NODE) ;
-zsh:  $(ZSH) ;
-yabai: $(YABAI) ;
-skhd: $(SKHD) ;
-node/globals: ;
-mac/install: ;
+## The following lines
+mac: $(MAC) ;@ ## Configure mac settings
+$(MAC): $$(subst ${CONFIG_PATH},, $$@)
+	@$(call CREATE_TARGET_DIR)
+	@cp -f ${^} ${@}
+	@${@} || : 
+
+## The following lines
+brew: $(BREW);@ ## Install brew packages
+$(BREW): brew/Brewfile
+	@./brew/install.sh
+	@cp -f $(^) $(@)
+	@source ./brew/shellenv.sh && brew bundle --file=$(@) --force && ./setup.sh || :
+
+## The following lines
+git: $(GIT); ## Install git configuration
+$(GIT): $(wildcard git/*) 
+	@source ./git/setup.sh || :
+
+## The following lines
+node: $(NODE);@ ## Install nvm, node lts and global packages
+$(NODE): node/globals
+	@./node/install.sh
+	@mkdir -p "${@}"
+	@cp -f "${^}" "${@}"
+
+## Install all configurations
+all: | mac zsh brew node git vim
+
+# https://michaelgoerz.net/notes/self-documenting-makefiles.html
+help:  ## Show this help
+	@echo "$$PRINT_HELP_PROLOGUE"
+	@grep -E '^([a-zA-Z_-]+):.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{gsub(/^[ \t]+/, "", $$2);printf "| %-19s| %-55s|\n", $$1, $$2}'
+	@printf "+%20s+%-56s+\n" | tr ' ' '-'

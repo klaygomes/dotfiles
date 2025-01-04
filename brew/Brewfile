@@ -1,7 +1,4 @@
 tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-versions"
-tap "homebrew/core"
 
 # Cross-platform make
 brew "cmake"
@@ -21,17 +18,11 @@ brew "gnupg"
 # Image manipulation library
 brew "jpeg"
 
-# General purpose Language Server
-brew "efm-langserver"
-
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 
 # Mac App Store command-line interface
 brew "mas"
-
-# Plataform built on V8 to build network applications
-brew "node"
 
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
@@ -42,17 +33,11 @@ brew "tree"
 # Internet file retriever
 brew "wget"
 
-# JavaScript package manager
-brew "yarn"
-
 # A general-purpose command-line fuzzy finder
 brew "fzf"
 
 # A simple, fast and user-friendly alternative to 'find'
 brew "fd"
-
-#A modern replacement for 'ls'
-brew "exa"
 
 # A viewer for git and diff output
 brew "git-delta"
@@ -60,36 +45,24 @@ brew "git-delta"
 # A cat(1) clone with wings
 brew "bat"
 
-brew "ripgrep"
+# A command-line tool that makes git easier to use with GitHub
+brew "gh"
 
+# A command-line fuzzy finder (it is like awk, but faster). 
+# eg.: ag 'search_string' file_name
 brew "the_silver_searcher"
-
-brew "koekeishiya/formulae/yabai"
-brew "koekeishiya/formulae/skhd"
 
 # On-chip debugging, in-system programming and boundary-scan testing
 brew "open-ocd"
 
-# C/C++/ObjC language server
-brew "ccls"
-
 # Application uninstaller
 cask "appcleaner"
-
-# Web browser
-cask "firefox"
-
-# Screen color temperature controller
-cask "flux"
 
 # Tool to prevent the system from going into sleep mode
 cask "keepingyouawake"
 
 # File archiver
 cask "keka"
-
-# Move and resize windows with ease
-cask "spectacle"
 
 # Open-source BitTorrent client
 cask "transmission"
@@ -103,8 +76,14 @@ cask "vlc"
 # Pre-built GNU bare-metal toolchain for 32-bit Arm processors
 cask "gcc-arm-embedded"
 
+# Warp Console
+cask "warp"
+
+# Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.
+cask "ghostty"
+
 # Apple App Store 
 mas "Be Focused Pro", id: 961632517
-mas "NordVPN IKE", id: 1116599239
-mas "Telegram", id: 747648890
 mas "Xcode", id: 497799835
+mas "Proton VPN: Fast & Secure", id: 1437005085
+mas "Dropzone 4 - Enhance Workflow", id: 1485052491

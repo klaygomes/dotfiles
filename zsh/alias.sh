@@ -1,3 +1,5 @@
+#!/bin/bash -euo pipefail
+
 # Chrome
 # Run Chrome browser without CORS 
 alias nocors='open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security'
@@ -17,6 +19,19 @@ alias vi="nvim"
 alias vi="nvim"
 alias v="nvim"
 
+alias c="clear"
+alias cl="clear"
+alias cls="clear"
+
+alias p="pwd"
+# copy with confirmation
+alias cp="cp -i"
+# move with confirmation
+alias mv="mv -i"
+# create parent directories if needed
+alias mkdir="mkdir -p"
+# list files with human-readable sizes, permissions, and modification times
+alias ls="ls -lahS"
 
 # NAVIGATION
 alias h="cd ~"
@@ -24,9 +39,9 @@ alias ...="cd ../.."
 alias 2..="cd ../.."
 alias 3..="cd ../../.."
 alias 4..="cd ../../../.."
-alias dotfiles="cd ${HOME}/dotfiles"
+alias 5..="cd ../../../../.."
 
-alias ls="exa --tree -F --sort type --group-directories-first --git -L 1"
+alias dotfiles="cd ${HOME}/dotfiles"
 
 # well, I gave up not typing these
 alias :x="exit"
@@ -44,5 +59,25 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession
 -suspend"
 
-alias gfind="git checkout \$(git branch | fzf)"
+if type git &> /dev/null;
+then
+
+    alias g="git"
+    alias gs="git status"
+    alias ga="git add"
+    alias gc="git commit"
+    alias gcm="git checkout master"
+    alias gco="git checkout"
+    alias gb="git branch"
+    alias gbd="git branch -d"
+    alias gba="git branch -a"
+
+    if type fzf &> /dev/null;
+    then
+
+        alias glog="git log --oneline --decorate --graph | fzf"
+        alias gfind="git checkout \$(git branch | fzf)"
+    fi
+fi
+
 alias termlog="pmset -g thermlog"

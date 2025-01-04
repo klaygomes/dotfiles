@@ -1,3 +1,6 @@
+#!/bin/bash -euo pipefail
+
+# Move one git repo into another
 function gmd(){
     echo "Enter the source repo url: "
     read source_repo_url
@@ -31,4 +34,44 @@ function gmd(){
     git remote rm $source_repo_name
     git branch -d $source_repo_name
     git commit -m "chore: move files from $source_repo_name into $target_repo_name"
+}
+
+# Function to prompt for input and validate
+# Arguments:
+#   $1: The prompt to display
+#   $2: The variable name to store the input in
+#   $3: The regex to validate the input against
+# eg. get_input "Enter your name" name '^[A-Za-z ]+$'
+function get_input() {
+  prompt="$1"
+  variable_name="$2"
+  validation_regex="$3"
+  default_value="${4-}"
+
+  while true; do
+    printf "%s (%s): " "$prompt" "${default_value:-empty}"
+    read -r input
+    input="${input:-$default_value}"
+    if expr "${input}" : "$validation_regex" >/dev/null; then
+      eval "export $variable_name=\"\$input\""
+      return 0
+    else
+      echo "Invalid $variable_name. Please try again."
+    fi
+  done
+}
+
+# Inject a file into the .zshrc file
+# Arguments:
+#   $1: The file to inject
+# eg. 
+#   inject "file.sh"
+function inject(){
+  file="$1"
+  dest="${2-${HOME}/.zshrc}"
+  if ! grep "${file}" ${dest} -q &> /dev/null; then
+    # only source if we are in an interactive shell
+    echo "" >> $HOME/.zshrc # add a new line
+    echo '[[ $- = *i* ]] && source '"'$file'" >> "${dest}"
+  fi
 }

@@ -12,6 +12,12 @@ mind.
 
 ## How to use
 
+Install Xcode Command Line Tools:
+
+```bash
+xcode-select --install
+```
+
 Clone this repository by typing:
 ```bash
 git clone git@github.com:klaygomes/dotfiles.git ~/dotfiles && cd $_
@@ -20,7 +26,7 @@ git clone git@github.com:klaygomes/dotfiles.git ~/dotfiles && cd $_
 If you want to configure everything just run:
 
 ```bash
-make
+make all
 ```
 
 You may also configure `nvim`, `git`, `brew`, `zsh` or `node` individually by typing
@@ -35,6 +41,13 @@ You may also force a full update whenever you want by typing:
 ```bash
 make all -B
 ```
+
+If you need help type:
+
+```bash
+make help
+```
+
 ## How it works
 
 If you want to understand how I'm managing my dotfiles, I wrote a [complete article
