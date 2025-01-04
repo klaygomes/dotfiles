@@ -1,4 +1,6 @@
-echo "Starting Mac configuration..."
+#!/bin/bash -euo pipefail
+
+printf "Starting Mac configuration..."
 #################################
 #### FINDER
 #################################
@@ -43,8 +45,14 @@ defaults write com.apple.dock show-process-indicators -int 1
 # Change minimize/maximize window effect
 defaults write com.apple.dock mineffect -string "suck"
 
-# Disable double-click on window's title bar to minimize it
-defaults write NSGlobalDomain AppleActionOnDoubleClick None
+# Move Dock to the right
+defaults write com.apple.dock orientation -string "right"
+
+# Double-click on window's title bar to maximize it
+defaults write -g AppleActionOnDoubleClick -string "Maximize"
+
+# Hide recent applications
+defaults write com.apple.dock show-recents -int 0
 
 #################################
 #### TRACKPAD
@@ -103,6 +111,12 @@ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 #### OTHER
 #################################
 
+# Disable spotlight keyboard shortcut
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 "{enabled = 0; value = { parameters = (65535, 49, 1048576); type = 'standard'; }; }"
+
+# Do a noise when changing volume
+defaults write NSGlobalDomain com.apple.sound.beep.feedback -int 1
+
 # Expand save panel by default
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
@@ -128,6 +142,10 @@ defaults write NSGlobalDomain com.apple.sound.beep.sound -string "/System/Librar
 # Set date format in menubar
 defaults write "com.apple.menuextra.clock" DateFormat -string "EEE d.MM  HH:mm"
 
+# Maps caps lock to escape
+# https://developer.apple.com/library/archive/technotes/tn2450/_index.html
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x700000029}]}' > /dev/null
+
 # apply the changes
 applications_to_kill=(
   "Activity Monitor"
@@ -137,6 +155,15 @@ applications_to_kill=(
 
 killall "${applications_to_kill[@]}"
 
-curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
+echo " - ok"
 
-echo "done!"
+# Disable spotlight indexing (We use Alfred, so it is not needed)
+printf "Disabling spotlight indexing... "
+    mdutil -i off -d / &> /dev/null
+    mdutil -E / &> /dev/null
+echo " - ok"
+
+# Remove spotlight icon from menu bar
+printf "Hide spotlight icon from menu bar... "
+defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+
