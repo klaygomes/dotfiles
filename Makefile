@@ -42,7 +42,7 @@ $(ZSH): $$(subst ${CONFIG_PATH},, $$@)
 	@printf "Moving '${^F}' to '${@}'"
 	@cp "${^}" "${@}"
 	@. zsh/functions.sh && inject '${CONFIG_PATH}${^}'						\
-		&& echo " - injected"								\
+		&& echo " - injected"												\
 		|| echo " - already injected"
 
 ## The following lines
@@ -56,8 +56,8 @@ $(MAC): $$(subst ${CONFIG_PATH},, $$@)
 brew: $(BREW);@ ## Install brew packages
 $(BREW): brew/Brewfile
 	@./brew/install.sh
+	@source ./brew/shellenv.sh && brew bundle --file=$(@) --force && ./setup.sh
 	@cp -f $(^) $(@)
-	@source ./brew/shellenv.sh && brew bundle --file=$(@) --force && ./setup.sh || :
 
 ## The following lines
 git: $(GIT); ## Install git configuration
