@@ -48,6 +48,23 @@ If you need help type:
 make help
 ```
 
+```text
++-----------------------------------------------------------------------------+
+|              This Makefile should work in most shell environments.          | 
+|             But it was only tested on Mac running with Apple sillicon.      |
++--------------------+--------------------------------------------------------+
+| commands:          | description:                                           |    
++--------------------+--------------------------------------------------------+
+| vim                | Install neovim configuration                           |
+| zsh                | Configure zsh default alias, functions and etc.        |
+| mac                | Configure mac settings                                 |
+| brew               | Install brew packages                                  |
+| git                | Install git configuration                              |
+| node               | Install nvm, node lts and global packages              |
+| help               | Show this help                                         |
++--------------------+--------------------------------------------------------+
+```
+
 ## How it works
 
 If you want to understand how I'm managing my dotfiles, I wrote a [complete article
