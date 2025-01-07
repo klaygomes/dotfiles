@@ -142,6 +142,10 @@ defaults write NSGlobalDomain com.apple.sound.beep.sound -string "/System/Librar
 # Set date format in menubar
 defaults write "com.apple.menuextra.clock" DateFormat -string "EEE d.MM  HH:mm"
 
+# Prevent Mac from changing the order of Desktops/Spaces
+defaults write com.apple.dock "mru-spaces" -bool "false"
+
+
 # Maps caps lock to escape
 # https://developer.apple.com/library/archive/technotes/tn2450/_index.html
 hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x700000029}]}' > /dev/null
