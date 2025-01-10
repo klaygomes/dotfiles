@@ -23,6 +23,15 @@ defaults write com.apple.finder NewWindowTarget -string "PfHm"
 # Disable showing tags
 defaults write com.apple.finder ShowRecentTags -int 0
 
+# Add home directory to Finder sidebar
+defaults write com.apple.finder SidebarPlaces -dict-add "Home" "{ 'enabled' = 1; 'path' = '~/'; 'show' = 1; }"
+
+# Show hidden files in Finder
+defaults write com.apple.finder AppleShowAllFiles -bool true
+
+# Show all filename extensions in Finder
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
 ########################################
 #### DOCK
 ########################################
@@ -133,7 +142,7 @@ defaults write com.apple.menuextra.battery ShowPercent YES
 # Close windows then quitting an app
 defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -int 0
 
-# Ask to kepp change when closing documents
+# Ask to keep change when closing documents
 defaults write NSGlobalDomain NSCloseAlwaysConfirmsChanges -int 1
 
 # Set alert sound
@@ -144,7 +153,6 @@ defaults write "com.apple.menuextra.clock" DateFormat -string "EEE d.MM  HH:mm"
 
 # Prevent Mac from changing the order of Desktops/Spaces
 defaults write com.apple.dock "mru-spaces" -bool "false"
-
 
 # Maps caps lock to escape
 # https://developer.apple.com/library/archive/technotes/tn2450/_index.html
