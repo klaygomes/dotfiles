@@ -75,3 +75,28 @@ function inject(){
     echo '[[ $- = *i* ]] && source '"'$file'" >> "${dest}"
   fi
 }
+
+# scrape entire website
+# Arguments:
+#   $1: The URL to scrape
+# eg.
+#   scrape "https://example.com"
+function scrape(){
+  if [ -z "$1" ]; then
+    echo "Please provide a URL"
+    return 1
+  fi
+  url=$1
+  domain=$(echo "$url" | sed 's/^\(https\?:\/\/\)\?\(www\.\)\?\([^:\/\n\?=\+]+\).*/\3/')
+
+  wget \
+      --recursive \
+      --no-clobber \
+      --page-requisites \
+      --html-extension \
+      --convert-links \
+      --restrict-file-names=windows \
+      --domains "$domain" \
+      --no-parent \
+          $url
+}
