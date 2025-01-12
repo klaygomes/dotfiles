@@ -92,7 +92,13 @@ function scrape(){
   wget \
       --recursive \
       --no-clobber \
+      --timestamping \
+      --no-if-modified-since \
+      --waitretry=3 \
+      --read-timeout=20 \
+      --timeout=15 \
       --page-requisites \
+      --retry-connrefused \
       --html-extension \
       --convert-links \
       --restrict-file-names=windows \
