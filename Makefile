@@ -55,9 +55,9 @@ $(MAC): $$(subst ${CONFIG_PATH},, $$@)
 ## The following lines
 brew: $(BREW);@ ## Install brew packages
 $(BREW): brew/Brewfile
+	@cp -f $(^) $(@)
 	@./brew/install.sh
 	@source ./brew/shellenv.sh && brew bundle --file=$(@) --force && ./setup.sh
-	@cp -f $(^) $(@)
 
 ## The following lines
 git: $(GIT); ## Install git configuration
