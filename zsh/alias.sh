@@ -9,13 +9,8 @@ alias nocors='open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\
 # are downloaded, but not installed, check system for potential problems
 alias brewup='brew update; brew upgrade; brew prune; brew cleanup; brew doctor'
 
-alias gpf="git push -f"
-alias gcm="git checkout master"
-alias gc="git checkout"
-
 # GENERAL
 alias vim="nvim"
-alias vi="nvim"
 alias vi="nvim"
 alias v="nvim"
 
@@ -68,6 +63,7 @@ then
     alias gc="git commit"
     alias gcm="git checkout master"
     alias gco="git checkout"
+    alias gpf="git push -f"
     alias gb="git branch"
     alias gbd="git branch -d"
     alias gba="git branch -a"
