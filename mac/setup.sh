@@ -69,17 +69,17 @@ defaults write com.apple.dock show-recents -int 0
 
 # Enable tap to click
 for trackpad in com.apple.AppleMultitouchTrackpad com.apple.driver.AppleBluetoothMultitouch.trackpad; do
-    defaults write $trackpad Clicking -int 1
+    defaults write "$trackpad" Clicking -int 1
 done
 
 # Enable right click (tap with two fingers)
 for trackpad in com.apple.AppleMultitouchTrackpad com.apple.driver.AppleBluetoothMultitouch.trackpad; do
-    defaults write $trackpad TrackpadRightClick -int 1
+    defaults write "$trackpad" TrackpadRightClick -int 1
 done
 
-# Enable application change (swipe horizontal witch three fingers)
+# Enable application change (swipe horizontal with three fingers)
 for trackpad in com.apple.AppleMultitouchTrackpad com.apple.driver.AppleBluetoothMultitouch.trackpad; do
-    defaults write $trackpad TrackpadThreeFingerHorizSwipeGesture -int 2
+    defaults write "$trackpad" TrackpadThreeFingerHorizSwipeGesture -int 2
 done
 
 # Enable the Launchpad gesture (pinch with thumb and three fingers)
