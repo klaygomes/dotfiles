@@ -61,7 +61,7 @@ function get_input() {
   done
 }
 
-# Inject a file into the .zshrc file
+# Inject a file into the .zshrc file before "source $ZSH/oh-my-zsh.sh"
 # Arguments:
 #   $1: The file to inject
 # eg. 
@@ -70,9 +70,15 @@ function inject(){
   file="$1"
   dest="${2-${HOME}/.zshrc}"
   if ! grep "${file}" ${dest} -q &> /dev/null; then
-    # only source if we are in an interactive shell
-    echo "" >> $HOME/.zshrc # add a new line
-    echo '[[ $- = *i* ]] && source '"'$file'" >> "${dest}"
+    # Find the line with "source $ZSH/oh-my-zsh.sh"
+    if grep -q "source \$ZSH/oh-my-zsh.sh" "${dest}"; then
+      # Insert before the oh-my-zsh source line using perl
+      perl -i -pe 'print "\n[[ \$- = *i* ]] && source '\'''"$file"''\''\n" if /source \$ZSH\/oh-my-zsh\.sh/' "${dest}"
+    else
+      # Fallback: append to end if oh-my-zsh line not found
+      echo "" >> "${dest}" # add a new line
+      echo '[[ $- = *i* ]] && source '"'$file'" >> "${dest}"
+    fi
   fi
 }
 
