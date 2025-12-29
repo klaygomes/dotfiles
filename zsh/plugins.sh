@@ -1,0 +1,1 @@
+plugins=(macos git gh docker docker-compose colored-man-pages)

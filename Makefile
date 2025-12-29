@@ -57,7 +57,7 @@ brew: $(BREW);@ ## Install brew packages
 $(BREW): brew/Brewfile
 	@cp -f $(^) $(@)
 	@./brew/install.sh
-	@source ./brew/shellenv.sh && brew bundle --file=$(@) --force && ./setup.sh
+	@source ./brew/shellenv.sh && brew bundle --file=$(@) --force && ./brew/setup.sh
 
 ## The following lines
 git: $(GIT); ## Install git configuration
