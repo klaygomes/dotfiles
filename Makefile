@@ -32,7 +32,7 @@ $(VIM): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
 	@if [ ! -d $< ]; then												 \
 		echo "Including '${^}' configuration to '${@}'"					;\
-		cp $< $@														;\
+		ln -sf "$(CURDIR)/$<" "$@"									;\
 	fi
 ## The following lines
 zsh: $(ZSH) ;@ ## Configure zsh default alias, functions and etc.
@@ -40,7 +40,7 @@ zsh: $(ZSH) ;@ ## Configure zsh default alias, functions and etc.
 $(ZSH): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
 	@printf "Moving '${^F}' to '${@}'"
-	@cp "${^}" "${@}"
+	@ln -sf "$(CURDIR)/${^}" "${@}"
 	@. zsh/functions.sh && inject '${CONFIG_PATH}${^}'						\
 		&& echo " - injected"												\
 		|| echo " - already injected"
@@ -49,13 +49,13 @@ $(ZSH): $$(subst ${CONFIG_PATH},, $$@)
 mac: $(MAC) ;@ ## Configure mac settings
 $(MAC): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
-	@cp -f ${^} ${@}
+	@ln -sf "$(CURDIR)/${^}" ${@}
 	@${@} || : 
 
 ## The following lines
 brew: $(BREW);@ ## Install brew packages
 $(BREW): brew/Brewfile
-	@cp -f $(^) $(@)
+	@ln -sf "$(CURDIR)/$(^)" $(@)
 	@./brew/install.sh
 	@source ./brew/shellenv.sh && brew bundle --file=$(@) --force && ./brew/setup.sh
 
@@ -68,11 +68,15 @@ $(GIT): $(wildcard git/*)
 node: $(NODE);@ ## Install nvm, node lts and global packages
 $(NODE): node/globals
 	@./node/install.sh
-	@mkdir -p "${@}"
-	@cp -f "${^}" "${@}"
+	@mkdir -p "$(@D)"
+	@ln -sf "$(CURDIR)/${^}" "${@}"
 
-## Install all configurations
-all: | mac zsh brew node git vim
+## Run all configurations
+all: ;@ ## Run all configurations
+	@for target in mac zsh brew node git vim; do \
+		echo "Running $$target..."; \
+		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
+	done
 
 # https://michaelgoerz.net/notes/self-documenting-makefiles.html
 help:  ## Show this help
