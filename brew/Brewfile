@@ -1,11 +1,11 @@
 # Cross-platform make
-brew "cmake"
+#brew "cmake"
 
 # Distributed revision control system
 brew "git"
 
 # Enable transparent encryption/decryption of files in a git repo
-brew "git-crypt"
+#brew "git-crypt"
 
 # GNU Transport Layer Security (TLS) Library
 brew "gnutls"
@@ -54,7 +54,7 @@ brew "the_silver_searcher"
 #brew "open-ocd"
 
 # Package manager for the Lua programming language
-brew "luarocks"
+#brew "luarocks"
 
 # a line-oriented search tool that recursively searches the current directory for a regex pattern
 brew "ripgrep"
@@ -69,7 +69,7 @@ cask "keepingyouawake"
 cask "keka"
 
 # Open-source BitTorrent client
-cask "transmission"
+#cask "transmission"
 
 # Open-source code editor
 cask "visual-studio-code"
@@ -80,17 +80,11 @@ cask "vlc"
 # Pre-built GNU bare-metal toolchain for 32-bit Arm processors
 cask "gcc-arm-embedded"
 
-# Warp Console
-cask "warp"
-
 # Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.
 cask "ghostty"
-
-
 
 # Apple App Store 
 mas "Be Focused Pro", id: 961632517
 mas "Xcode", id: 497799835
-mas "Proton VPN: Fast & Secure", id: 1437005085
 mas "Dropzone 4 - Enhance Workflow", id: 1485052491
 # mas "Amphetamine", id: 937984704 # keeps mac awake
