@@ -59,6 +59,8 @@ brew "the_silver_searcher"
 # a line-oriented search tool that recursively searches the current directory for a regex pattern
 brew "ripgrep"
 
+brew "rectangle"
+
 # Application uninstaller
 cask "appcleaner"
 
