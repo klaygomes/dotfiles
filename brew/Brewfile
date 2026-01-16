@@ -85,6 +85,10 @@ cask "gcc-arm-embedded"
 # Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.
 cask "ghostty"
 
+# An open-source IRC client written in Rust, with the iced GUI library
+cask "halloy"
+
+
 # Apple App Store 
 mas "Be Focused Pro", id: 961632517
 mas "Xcode", id: 497799835
