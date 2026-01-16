@@ -86,11 +86,11 @@ cask "gcc-arm-embedded"
 cask "ghostty"
 
 # An open-source IRC client written in Rust, with the iced GUI library
-cask "halloy"
-
+#cask "halloy"
 
 # Apple App Store 
 mas "Be Focused Pro", id: 961632517
 mas "Xcode", id: 497799835
 mas "Dropzone 4 - Enhance Workflow", id: 1485052491
+mas "UTM Virtual Machines", id: 1538878817
 # mas "Amphetamine", id: 937984704 # keeps mac awake
