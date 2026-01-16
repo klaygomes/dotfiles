@@ -174,11 +174,12 @@ applications_to_kill=(
 killall "${applications_to_kill[@]}"
 
 echo " - ok"
-
 # Disable spotlight indexing (We use Alfred, so it is not needed)
 printf "Disabling spotlight indexing... "
-    mdutil -i off -d / &> /dev/null
-    mdutil -E / &> /dev/null
+    sudo mdutil -i off -d / &> /dev/null
+    sudo mdutil -E / &> /dev/null
+    # Tahoe: https://eclecticlight.co/2026/01/16/can-you-disable-spotlight-and-siri-in-macos-tahoe/
+    sudo mdutil -a -d &> /dev/null
 echo " - ok"
 
 # Remove spotlight icon from menu bar
