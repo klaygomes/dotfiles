@@ -18,7 +18,7 @@ fi
 
 echo "> Feching nvm..."
 # I don't need to care if it is already installed, it will just update it
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash 
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
 echo "> Loading environment..."
 export NVM_DIR="$HOME/.nvm"

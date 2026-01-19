@@ -43,6 +43,11 @@ vim.opt.swapfile = false                  -- no swap files, I like to live dange
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Disable not used modules
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 -- ignore files
 vim.opt.wildignore:append({ "*.pyc", "*.o", "*.obj", "*.svn", "*.swp", "*.class", "*.hg", "*.DS_Store", "*.min.*", "node_files" })
 
@@ -91,5 +96,32 @@ require('lazy').setup({
         },
       }
     end
+  },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = { eslint = {} },
+      setup = {
+        eslint = function()
+          require("lazyvim.util").lsp.on_attach(function(client)
+            if client.name == "eslint" then
+              client.server_capabilities.documentFormattingProvider = true
+            elseif client.name == "tsserver" then
+              client.server_capabilities.documentFormattingProvider = false
+            end
+          end)
+        end,
+      },
+    },
+  },
+  {
+  "neovim/nvim-lspconfig",
+    opts = {
+      setup = {
+        clangd = function(_, opts)
+          opts.capabilities.offsetEncoding = { "utf-16" }
+        end,
+      },
+    },
   }
 })
