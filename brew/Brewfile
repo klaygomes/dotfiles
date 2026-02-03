@@ -10,6 +10,9 @@ brew "git"
 # GNU Transport Layer Security (TLS) Library
 brew "gnutls"
 
+# a terminal based markdown reader designed from the ground up to bring out the beauty—and power—of the CLI.
+brew "glow"
+
 # GNU Pretty Good Privacy (PGP) package
 brew "gnupg"
 
