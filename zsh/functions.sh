@@ -93,8 +93,13 @@ function scrape(){
     return 1
   fi
   url=$1
-  domain=$(echo "$url" | sed 's/^\(https\?:\/\/\)\?\(www\.\)\?\([^:\/\n\?=\+]+\).*/\3/')
+  domain=$(echo "$url" | sed -E 's/^(https?:\/\/)([^/]+).+$/\2/')
 
+  echo "---"
+  echo "domain: $domain"
+  echo "url: $url"
+  echo "---"
+  
   wget \
       --recursive \
       --no-clobber \
@@ -105,7 +110,6 @@ function scrape(){
       --timeout=15 \
       --page-requisites \
       --retry-connrefused \
-      --html-extension \
       --convert-links \
       --restrict-file-names=windows \
       --domains "$domain" \
