@@ -2,6 +2,7 @@ CONFIG_PATH	?=	${HOME}/.config/
 
 VIM 		:=	$(addprefix ${CONFIG_PATH}, $(shell find nvim -type f -print))
 ZSH			:=	$(addprefix ${CONFIG_PATH}, $(shell find zsh -type f -print))
+GHOSTYY		:=	$(addprefix ${CONFIG_PATH}, $(shell find ghostty -type f -print))
 MAC			:=	$(CONFIG_PATH)mac/setup.sh
 
 GIT			:=	${HOME}/.gitconfig
@@ -12,7 +13,7 @@ NODE		:=	$(CONFIG_PATH)/node/globals
 # helper function to create target directory
 CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created.";fi;
 
-.PHONY: vim zsh mac brew git node help
+.PHONY: ghostyy vim zsh mac brew git node help
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PROLOGUE
@@ -32,7 +33,15 @@ $(VIM): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
 	@if [ ! -d $< ]; then												 \
 		echo "Including '${^}' configuration to '${@}'"					;\
-		ln -sf "$(CURDIR)/$<" "$@"									;\
+		ln -sf "$(CURDIR)/$<" "$@"									    ;\
+	fi
+ghostyy:  $(GHOSTYY) ;@ ##     Install ghostyy configuration
+.SECONDEXPANSION:
+$(GHOSTYY): $$(subst ${CONFIG_PATH},, $$@)
+	@$(call CREATE_TARGET_DIR)
+	@if [ ! -d $< ]; then												 \
+		echo "Including '${^}' configuration to '${@}'"					;\
+		ln -sf "$(CURDIR)/$<" "$@"									    ;\
 	fi
 ## The following lines
 zsh: $(ZSH) ;@ ## Configure zsh default alias, functions and etc.
