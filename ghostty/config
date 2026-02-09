@@ -1,0 +1,16 @@
+theme=One Double Dark
+macos-icon = xray
+macos-icon-frame=plastic
+scrollback-limit = 12288000
+cursor-invert-fg-bg = true
+font-size = 16
+font-thicken = true
+
+
+window-padding-x = 16
+window-padding-y = 16
+window-padding-balance = true
+window-padding-color = background
+
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
