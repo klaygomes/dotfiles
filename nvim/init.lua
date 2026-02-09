@@ -51,77 +51,25 @@ vim.g.loaded_ruby_provider = 0
 -- ignore files
 vim.opt.wildignore:append({ "*.pyc", "*.o", "*.obj", "*.svn", "*.swp", "*.class", "*.hg", "*.DS_Store", "*.min.*", "node_files" })
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
-end
-vim.opt.rtp:prepend(lazypath)
 
--- [[ Configure and install plugins ]]
---
---  To check the current status of your plugins, run
---    :Lazy
---
---  You can press `?` in this menu for help. Use `:q` to close the window
---
---  To update plugins you can run
---    :Lazy update
---
--- NOTE: Here is where you install your plugins.
-require('lazy').setup({
-  {
-    'jacoborus/tender.vim',
-    config = function() vim.cmd([[colorscheme tender]]) end
+function gh(package)
+  return string.format("https://github.com/%s", package)
+end
+
+vim.g.lightline = {
+  colorscheme = 'tender',
+  active = {
+    left = { { 'mode', 'paste' }, { 'gitbranch', 'readonly', 'filename', 'modified' } }
   },
-  {
-    'itchyny/lightline.vim',
-    config = function()
-      vim.g.lightline = {
-        colorscheme = 'tender',
-        active = {
-          left = { { 'mode', 'paste' }, { 'gitbranch', 'readonly', 'filename', 'modified' } }
-        },
-        component_function = {
-          gitbranch = 'gitbranch#name'
-        },
-      }
-    end
+  component_function = {
+    gitbranch = 'gitbranch#name'
   },
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = { eslint = {} },
-      setup = {
-        eslint = function()
-          require("lazyvim.util").lsp.on_attach(function(client)
-            if client.name == "eslint" then
-              client.server_capabilities.documentFormattingProvider = true
-            elseif client.name == "tsserver" then
-              client.server_capabilities.documentFormattingProvider = false
-            end
-          end)
-        end,
-      },
-    },
-  },
-  {
-  "neovim/nvim-lspconfig",
-    opts = {
-      setup = {
-        clangd = function(_, opts)
-          opts.capabilities.offsetEncoding = { "utf-16" }
-        end,
-      },
-    },
-  }
-})
+}
+
+if(vim.pack ~= nil) then
+  vim.pack.add({ 
+    { src = gh("jacoborus/tender.vim") },
+    { src = gh("itchyny/lightline.vim") },
+  })
+  vim.cmd([[colorscheme tender]])
+end

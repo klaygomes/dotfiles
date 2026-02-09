@@ -8,4 +8,5 @@ fi
 
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export MAKEFLAGS="-j $(nproc)" # Use maximum number of cores for make
 export CONFIG_PATH=$HOME/.config/

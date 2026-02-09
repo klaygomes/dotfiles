@@ -95,5 +95,5 @@ cask "ghostty"
 mas "Be Focused Pro", id: 961632517
 mas "Xcode", id: 497799835
 mas "Dropzone 4 - Enhance Workflow", id: 1485052491
-mas "UTM Virtual Machines", id: 1538878817
+# mas "UTM Virtual Machines", id: 1538878817
 # mas "Amphetamine", id: 937984704 # keeps mac awake
