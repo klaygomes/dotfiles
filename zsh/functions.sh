@@ -1,5 +1,8 @@
 #!/bin/bash -euo pipefail
 
+# https://stackoverflow.com/questions/23620827/envsubst-command-not-found-on-mac-os-x-10-8
+which envsubst &>/dev/null || envsubst() { eval "echo \"$(sed 's/"/\\"/g')\""; }
+
 # Move one git repo into another
 function gmd(){
     echo "Enter the source repo url: "
