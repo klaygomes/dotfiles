@@ -8,16 +8,16 @@ brew "git"
 #brew "git-crypt"
 
 # GNU Transport Layer Security (TLS) Library
-brew "gnutls"
+#brew "gnutls"
 
 # a terminal based markdown reader designed from the ground up to bring out the beauty—and power—of the CLI.
 brew "glow"
 
 # GNU Pretty Good Privacy (PGP) package
-brew "gnupg"
+#brew "gnupg"
 
 # Image manipulation library
-brew "jpeg"
+#brew "jpeg"
 
 # Lightweight and flexible command-line JSON processor
 brew "jq"
@@ -62,13 +62,13 @@ brew "the_silver_searcher"
 # a line-oriented search tool that recursively searches the current directory for a regex pattern
 brew "ripgrep"
 
-brew "rectangle"
+cask "rectangle"
 
 # Application uninstaller
 cask "appcleaner"
 
 # Tool to prevent the system from going into sleep mode
-cask "keepingyouawake"
+#cask "keepingyouawake"
 
 # File archiver
 cask "keka"
@@ -83,7 +83,7 @@ cask "visual-studio-code"
 cask "vlc"
 
 # Pre-built GNU bare-metal toolchain for 32-bit Arm processors
-cask "gcc-arm-embedded"
+#cask "gcc-arm-embedded"
 
 # Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.
 cask "ghostty"
