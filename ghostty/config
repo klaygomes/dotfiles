@@ -5,6 +5,7 @@ scrollback-limit = 12288000
 cursor-invert-fg-bg = true
 font-size = 16
 font-thicken = true
+adjust-cursor-thickness = 24 
 
 
 window-padding-x = 16
