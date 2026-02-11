@@ -119,3 +119,17 @@ function scrape(){
       --no-parent \
           $url
 }
+
+function get_ip_info() {
+    local ip_wifi=$(ipconfig getifaddr en0)
+    if [ -n "$ip_wifi" ]; then
+        echo "$ip_wifi at wlan"
+        return
+    fi
+
+    local ip_eth=$(ipconfig getifaddr en1)
+    if [ -n "$ip_eth" ]; then
+        echo "$ip_eth at eth0"
+        return
+    fi
+}

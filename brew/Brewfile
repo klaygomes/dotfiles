@@ -8,7 +8,10 @@ brew "git"
 #brew "git-crypt"
 
 # GNU Transport Layer Security (TLS) Library
-#brew "gnutls"
+brew "gnutls"
+
+# GNU File, Shell, and Text utilities
+brew "coreutils"
 
 # a terminal based markdown reader designed from the ground up to bring out the beauty—and power—of the CLI.
 brew "glow"
