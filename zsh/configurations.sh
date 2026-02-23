@@ -16,5 +16,4 @@ precmd() {
     IP_DATA=$(get_ip_info)
 }
 zstyle ':vcs_info:git:*' formats ' ~ git (%b) '
-
 PROMPT='%F{magenta}%n@${IP_DATA}${vcs_info_msg_0_}'$'\n''%~%f %(!.#.$) '
