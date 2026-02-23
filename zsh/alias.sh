@@ -77,3 +77,5 @@ then
 fi
 
 alias termlog="pmset -g thermlog"
+alias fsafe="xattr -d com.apple.quarantine"
+alias emacs='emacsclient -c -a "" &'
