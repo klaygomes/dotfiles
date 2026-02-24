@@ -1,27 +1,3 @@
-#!/bin/bash
-
-# Create destination
-mkdir -p audios
-
-# 1. Extract ZIP files found anywhere in subdirectories
-# -quiet: reduces output
-# -n: never overwrite existing files
-# -d: destination directory
-find . -name "*.zip" -exec unzip -quiet -n {} -d ./audios/ \;
-
-# 2. Extract RAR files found anywhere in subdirectories
-# e: extract to destination
-# -o-: skip if file exists
-# -y: assume "yes" to prompts (non-interactive)
-find . -name "*.rar" -exec unrar e -o- -y {} ./audios/ \;
-
-# 3. Move existing loose media files from subdirectories
-# Matches common audio formats
-find . -type f \( -name "*.mp3" -o -name "*.wav" -o -name "*.m4a" -o -name "*.flac" \) \
--not -path "./audios/*" \
--exec mv -n {} ./audios/ \;
-
-echo "Deep search and extraction complete."
 #!/bin/bash -euo pipefail
 
 printf "Starting Mac configuration..."
