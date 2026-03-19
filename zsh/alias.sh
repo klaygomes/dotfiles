@@ -76,6 +76,9 @@ then
     fi
 fi
 
+alias t='tmux new-session -s "$(basename "$PWD")"'
+
 alias termlog="pmset -g thermlog"
 alias fsafe="xattr -d com.apple.quarantine"
 alias emacs='emacsclient -c -a "" &'
+alias sg="GIT_SSH_COMMAND='ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes' git"

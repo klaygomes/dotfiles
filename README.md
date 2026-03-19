@@ -29,10 +29,10 @@ If you want to configure everything just run:
 make all
 ```
 
-You may also configure `nvim`, `git`, `brew`, `zsh` or `node` individually by typing
+You may also configure `nvim`, `git`, `brew`, `zsh`, `node`, `tmux` or `ghostty` individually by typing
 
 ```bash
-make [ nvim | git | brew | zsh | node ]
+make [ nvim | git | brew | zsh | node | tmux | ghostty ]
 ```
 > You can type more than one item at same time `make nvim git` for example
 
@@ -56,11 +56,13 @@ make help
 | commands:          | description:                                           |    
 +--------------------+--------------------------------------------------------+
 | vim                | Install neovim configuration                           |
+| ghostty           | Install ghostty configuration                         |
 | zsh                | Configure zsh default alias, functions and etc.        |
 | mac                | Configure mac settings                                 |
 | brew               | Install brew packages                                  |
 | git                | Install git configuration                              |
 | node               | Install nvm, node lts and global packages              |
+| tmux               | Install tmux configuration                             |
 | help               | Show this help                                         |
 +--------------------+--------------------------------------------------------+
 ```
