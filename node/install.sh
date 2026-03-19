@@ -37,4 +37,11 @@ done < ./node/globals
 
 # wait for the installation to finish
 wait
+
+echo "> Setting up system-wide node PATH via /etc/paths.d/..."
+NODE_BIN_DIR="$(dirname "$(nvm which node)")"
+sudo ln -sfn "$NODE_BIN_DIR" /usr/local/nvm-node
+echo "/usr/local/nvm-node" | sudo tee /etc/paths.d/nvm-node > /dev/null
+echo "- ok (node available system-wide at /usr/local/nvm-node -> $NODE_BIN_DIR)"
+
 echo "- ok"
