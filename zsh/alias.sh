@@ -76,6 +76,7 @@ then
     fi
 fi
 
+
 alias t='tmux new-session -s "$(basename "$PWD")"'
 
 alias termlog="pmset -g thermlog"
