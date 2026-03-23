@@ -64,10 +64,10 @@ function get_input() {
   done
 }
 
-# Inject a file into the .zshrc file before "source $ZSH/oh-my-zsh.sh"
+# Inject a file into the .zshrc file after "source $ZSH/oh-my-zsh.sh"
 # Arguments:
 #   $1: The file to inject
-# eg. 
+# eg.
 #   inject "file.sh"
 function inject(){
   file="$1"
@@ -75,8 +75,8 @@ function inject(){
   if ! grep "${file}" ${dest} -q &> /dev/null; then
     # Find the line with "source $ZSH/oh-my-zsh.sh"
     if grep -q "source \$ZSH/oh-my-zsh.sh" "${dest}"; then
-      # Insert before the oh-my-zsh source line using perl
-      perl -i -pe 'print "\n[[ \$- = *i* ]] && source '\'''"$file"''\''\n" if /source \$ZSH\/oh-my-zsh\.sh/' "${dest}"
+      # Insert after the oh-my-zsh source line using perl
+      perl -i -pe '$_ .= "\n[[ \$- = *i* ]] && source '\'''"$file"''\''\n" if /source \$ZSH\/oh-my-zsh\.sh/' "${dest}"
     else
       # Fallback: append to end if oh-my-zsh line not found
       echo "" >> "${dest}" # add a new line
