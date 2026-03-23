@@ -46,6 +46,16 @@ $(GHOSTTY): $$(subst ${CONFIG_PATH},, $$@)
 	fi
 ## The following lines
 zsh: $(ZSH) ;@ ## Configure zsh default alias, functions and etc.
+
+# plugins.sh must be sourced before oh-my-zsh loads the plugins array
+${CONFIG_PATH}zsh/plugins.sh: zsh/plugins.sh
+	@$(call CREATE_TARGET_DIR)
+	@printf "Moving '$(<F)' to '${@}'"
+	@ln -sf "$(CURDIR)/$<" "${@}"
+	@. zsh/functions.sh && inject --before '${@}'							\
+		&& echo " - injected"												\
+		|| echo " - already injected"
+
 .SECONDEXPANSION:
 $(ZSH): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
