@@ -91,6 +91,9 @@ cask "vlc"
 # Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.
 cask "ghostty"
 
+# Terminal multiplexer
+brew "tmux"
+
 # An open-source IRC client written in Rust, with the iced GUI library
 #cask "halloy"
 

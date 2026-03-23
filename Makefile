@@ -56,7 +56,8 @@ $(ZSH): $$(subst ${CONFIG_PATH},, $$@)
 		|| echo " - already injected"
 
 ## The following lines
-tmux: $(TMUX) ;@ ##     Install tmux configuration
+tmux: $(TMUX) ## Install tmux configuration
+	@./tmux/install.sh
 .SECONDEXPANSION:
 $(TMUX): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
