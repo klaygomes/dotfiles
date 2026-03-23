@@ -94,6 +94,15 @@ cask "ghostty"
 # Terminal multiplexer
 brew "tmux"
 
+# A terminal UI for git commands
+brew "lazygit"
+
+# Fish shell-like autosuggestions for zsh
+brew "zsh-autosuggestions"
+
+# Fish shell-like syntax highlighting for zsh
+brew "zsh-syntax-highlighting"
+
 # An open-source IRC client written in Rust, with the iced GUI library
 #cask "halloy"
 
