@@ -1,1 +1,1 @@
-plugins=(macos git gh docker docker-compose colored-man-pages)
+plugins=(macos git gh docker docker-compose colored-man-pages fzf)
