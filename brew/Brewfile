@@ -94,6 +94,8 @@ cask "ghostty"
 # Terminal multiplexer
 brew "tmux"
 
+brew "ranger"
+
 # A terminal UI for git commands
 brew "lazygit"
 
