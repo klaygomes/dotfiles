@@ -3,6 +3,47 @@
 # https://stackoverflow.com/questions/23620827/envsubst-command-not-found-on-mac-os-x-10-8
 which envsubst &>/dev/null || envsubst() { eval "echo \"$(sed 's/"/\\"/g')\""; }
 
+# Copy meeting notes prompt to clipboard
+function mp() {
+  cat <<'EOF' | pbcopy && echo "Meeting prompt copied to clipboard"
+Transform raw meeting annotations into a structured Obsidian note.
+
+Instructions:
+1. Use the provided template structure and properties.
+2. Identify the date, project name, and attendees from the text.
+3. Distill raw notes into a concise 'Minutes' section.
+4. Extract 'Key Decisions' and 'Action Items' (use the [ ] checkbox format).
+5. Ensure all person names are formatted as Obsidian links: [[Name]].
+6. Adhere to the provided YAML frontmatter format.
+7. Give detailed information about questions and answers and what was discussed.
+
+Use the following template as output structure:
+
+---
+date: <today's date in YYYY-MM-DD format>
+project: ""
+attendees:
+  - [[Name]]
+tags:
+  - meeting
+---
+
+# Meeting: [[Subject]]
+
+## Objective
+[One sentence goal]
+
+## Minutes
+[Concise bullet points]
+
+## Key Decisions
+[Strategic choices made]
+
+## Action Items
+- [ ] Task description @Assignee [due:: YYYY-MM-DD]
+EOF
+}
+
 # Move one git repo into another
 function gmd(){
     echo "Enter the source repo url: "
