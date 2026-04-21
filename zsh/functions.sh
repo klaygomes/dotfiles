@@ -6,41 +6,14 @@ which envsubst &>/dev/null || envsubst() { eval "echo \"$(sed 's/"/\\"/g')\""; }
 # Copy meeting notes prompt to clipboard
 function mp() {
   cat <<'EOF' | pbcopy && echo "Meeting prompt copied to clipboard"
-Transform raw meeting annotations into a structured Obsidian note.
+Transform the raw meeting annotations into a structured Obsidian note.
 
 Instructions:
-1. Use the provided template structure and properties.
-2. Identify the date, project name, and attendees from the text.
-3. Distill raw notes into a concise 'Minutes' section.
-4. Extract 'Key Decisions' and 'Action Items' (use the [ ] checkbox format).
-5. Ensure all person names are formatted as Obsidian links: [[Name]].
-6. Adhere to the provided YAML frontmatter format.
-7. Give detailed information about questions and answers and what was discussed.
-
-Use the following template as output structure:
-
----
-date: <today's date in YYYY-MM-DD format>
-project: ""
-attendees:
-  - [[Name]]
-tags:
-  - meeting
----
-
-# Meeting: [[Subject]]
-
-## Objective
-[One sentence goal]
-
-## Minutes
-[Concise bullet points]
-
-## Key Decisions
-[Strategic choices made]
-
-## Action Items
-- [ ] Task description @Assignee [due:: YYYY-MM-DD]
+1. Identify the date, project name, and attendees from the text.
+2. Distill raw notes into a concise 'Minutes' section.
+3. Extract 'Key Decisions' and 'Action Items' (use the [ ] checkbox format).
+4. Ensure all person names are formatted as Obsidian links: [[Name]].
+5. Give detailed information about questions and answers and what was discussed.
 EOF
 }
 
@@ -189,5 +162,31 @@ function install_rvb(){
   gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
   curl -sSL https://get.rvm.io | bash -s stable
   curl -sSL https://get.rvm.io | bash -s stable --rails
+}
+
+# Create or switch to a tmux session.
+# Accepts a plain session name or a GitHub URL.
+# GitHub URL example: https://github.com/org/repo/pull/123
+#   -> session name: repo, cwd: ~/org/repo
+function _tmux_new_session() {
+  local input="$1"
+  local session_name session_dir
+
+  if [[ "$input" =~ ^https://github\.com/([^/]+)/([^/]+) ]]; then
+    local org="${match[1]}"
+    local repo="${match[2]%%/*}"   # strip trailing path (/pull/62, /tree/main, etc.)
+    session_name="$repo"
+    session_dir="$HOME/$org/$repo"
+  else
+    session_name="$input"
+    session_dir="$PWD"
+  fi
+
+  if tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux switch-client -t "$session_name"
+  else
+    tmux new-session -d -s "$session_name" -c "$session_dir"
+    tmux switch-client -t "$session_name"
+  fi
 }
 
