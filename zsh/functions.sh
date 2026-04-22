@@ -167,7 +167,8 @@ function install_rvb(){
 # Create or switch to a tmux session.
 # Accepts a plain session name or a GitHub URL.
 # GitHub URL example: https://github.com/org/repo/pull/123
-#   -> session name: repo, cwd: ~/org/repo
+#   -> session name: repo, cwd: ~/org/repo (or ~/personal/repo for klaygomes org)
+# Clones the repo via gh if the folder doesn't exist yet.
 function _tmux_new_session() {
   local input="$1"
   local session_name session_dir
@@ -176,7 +177,15 @@ function _tmux_new_session() {
     local org="${match[1]}"
     local repo="${match[2]%%/*}"   # strip trailing path (/pull/62, /tree/main, etc.)
     session_name="$repo"
-    session_dir="$HOME/$org/$repo"
+    if [[ "$org" == "klaygomes" ]]; then
+      session_dir="$HOME/personal/$repo"
+    else
+      session_dir="$HOME/$org/$repo"
+    fi
+    if [[ ! -d "$session_dir" ]]; then
+      mkdir -p "${session_dir:h}"
+      gh repo clone "$org/$repo" "$session_dir"
+    fi
   else
     session_name="$input"
     session_dir="$PWD"
