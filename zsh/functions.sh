@@ -17,6 +17,49 @@ Instructions:
 EOF
 }
 
+# Save clipboard content as a meeting note in ~/personal/meetings/
+# The date is extracted from the clipboard text; falls back to today.
+function sm() {
+  python3 "$HOME/dotfiles/scripts/sm.py"
+}
+
+# Export notes from Apple Notes to ~/.notes_staging as plain-text files.
+# Usage: export_notes [FolderName]
+#   With no argument, exports all folders.
+#   With a folder name, exports only that folder.
+# Each file is prefixed with its folder name (e.g. "Meetings__title.txt")
+# so that migrate_notes.py can classify them by destination.
+function export_notes() {
+  local STAGING_DIR="$HOME/.notes_staging"
+  mkdir -p "$STAGING_DIR"
+  local TARGET_FOLDER="${1:-}"
+
+  osascript <<EOF
+tell application "Notes"
+  set folderList to {}
+  if "$TARGET_FOLDER" is not "" then
+    set folderList to {folder "$TARGET_FOLDER"}
+  else
+    set folderList to folders
+  end if
+  repeat with theFolder in folderList
+    set folderName to name of theFolder
+    repeat with theNote in notes of theFolder
+      set noteTitle to name of theNote
+      set noteBody to body of theNote
+      set safeTitle to do shell script "printf '%s' " & quoted form of (folderName & "__" & noteTitle) & " | tr '/: ' '---'"
+      set outPath to "$STAGING_DIR/" & safeTitle & ".html"
+      do shell script "printf '%s' " & quoted form of noteBody & " > " & quoted form of outPath
+      do shell script "textutil -convert txt " & quoted form of outPath & " -output " & quoted form of ("$STAGING_DIR/" & safeTitle & ".txt")
+      do shell script "rm " & quoted form of outPath
+    end repeat
+  end repeat
+end tell
+EOF
+
+  echo "Exported notes to $STAGING_DIR"
+}
+
 # Move one git repo into another
 function gmd(){
     echo "Enter the source repo url: "
