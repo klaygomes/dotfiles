@@ -78,6 +78,18 @@ make help
 | `mp` | Copy a structured meeting notes prompt to clipboard |
 | `sm` | Save clipboard content as a dated Markdown note in `~/personal/meetings/`. Date is extracted from content; falls back to today |
 | `export_notes [folder]` | Export Apple Notes to `~/.notes_staging/` as plain text. Omit folder to export all |
+| `cred` | Update `~/.aws/credentials` from clipboard. Remaps the source profile name to a canonical one via `~/.aws/profile_map` |
+
+### AWS credentials workflow
+
+```bash
+# Copy credentials block from AWS console, then:
+cred
+# → updated [qred-dev] in ~/.aws/credentials
+
+# Profile name mapping lives in ~/.aws/profile_map (not tracked in repo):
+# source_profile_name=canonical_name
+```
 
 ### Meeting notes workflow
 
