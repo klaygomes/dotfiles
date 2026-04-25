@@ -1,4 +1,5 @@
-#!/bin/bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 # Install codedb
 echo "Installing codedb..."
@@ -7,5 +8,5 @@ echo " - ok"
 
 # Configure  fzf
 echo "Configuring fzf... "
-    ${HOMEBREW_CELLAR}/fzf/$(fzf --version | cut -d ' ' -f 1)/install
+    "${HOMEBREW_CELLAR}/fzf/$(fzf --version | cut -d ' ' -f 1)/install"
 echo " - ok"

@@ -1,4 +1,5 @@
-#!/bin/bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 if [ ! -f "$(which brew)" ]
   then

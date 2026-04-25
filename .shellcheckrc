@@ -1,4 +1,9 @@
-# SC1090: Can't follow non-constant source — expected in dotfiles
+# SC1090: Can't follow non-constant source.
+# Justification: dotfiles source paths are dynamic (e.g. sourced via $HOME or
+# relative paths at install time). Static analysis cannot resolve them.
 disable=SC1090
-# SC1091: Not following sourced file — file may not exist during CI
+
+# SC1091: Not following sourced file — file not found.
+# Justification: sourced files (e.g. zsh/functions.sh, nvm.sh) exist only at
+# runtime on the target machine, not in the CI checkout.
 disable=SC1091

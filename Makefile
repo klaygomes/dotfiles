@@ -4,6 +4,8 @@ VIM 		:=	$(addprefix ${CONFIG_PATH}, $(shell find nvim -type f -print))
 ZSH			:=	$(addprefix ${CONFIG_PATH}, $(shell find zsh -type f -print))
 GHOSTTY		:=	$(addprefix ${CONFIG_PATH}, $(shell find ghostty -type f -print))
 TMUX		:=	$(addprefix ${CONFIG_PATH}, $(shell find tmux -type f -print))
+RANGER		:=	$(addprefix ${CONFIG_PATH}, $(shell find ranger -type f -print))
+BAT			:=	$(addprefix ${CONFIG_PATH}, $(shell find bat -type f -print))
 MAC			:=	$(CONFIG_PATH)mac/setup.sh
 
 GIT			:=	${HOME}/.gitconfig
@@ -14,7 +16,7 @@ NODE		:=	$(CONFIG_PATH)/node/globals
 # helper function to create target directory
 CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created.";fi;
 
-.PHONY: ghostty vim zsh mac brew git node tmux help
+.PHONY: ghostty vim zsh mac brew git node tmux ranger bat help
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PROLOGUE
@@ -59,6 +61,26 @@ $(ZSH): $$(subst ${CONFIG_PATH},, $$@)
 		|| echo " - already injected"
 
 ## The following lines
+bat: $(BAT) ;@ ## Install bat configuration
+.SECONDEXPANSION:
+$(BAT): $$(subst ${CONFIG_PATH},, $$@)
+	@$(call CREATE_TARGET_DIR)
+	@if [ ! -d $< ]; then												 \
+		echo "Including '${^}' configuration to '${@}'"					;\
+		ln -sf "$(CURDIR)/$<" "$@"									    ;\
+	fi
+
+## The following lines
+ranger: $(RANGER) ;@ ## Install ranger configuration
+.SECONDEXPANSION:
+$(RANGER): $$(subst ${CONFIG_PATH},, $$@)
+	@$(call CREATE_TARGET_DIR)
+	@if [ ! -d $< ]; then												 \
+		echo "Including '${^}' configuration to '${@}'"					;\
+		ln -sf "$(CURDIR)/$<" "$@"									    ;\
+	fi
+
+## The following lines
 tmux: $(TMUX) ## Install tmux configuration
 	@./tmux/install.sh
 .SECONDEXPANSION:
@@ -97,7 +119,7 @@ $(NODE): node/globals
 
 ## Run all configurations
 all: ;@ ## Run all configurations
-	@for target in mac zsh brew node git vim tmux; do \
+	@for target in mac zsh brew node git vim tmux ranger bat; do \
 		echo "Running $$target..."; \
 		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
 	done

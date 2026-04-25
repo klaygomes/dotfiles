@@ -1,4 +1,5 @@
-#!/bin/bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 FONT_DIR="${HOME}/Library/Fonts"
 
@@ -8,7 +9,7 @@ if [ ! -d "$FONT_DIR" ]; then
 fi
 
 while IFS= read -rd "" f; do
-    printf "Installing font $(basename $f)"
-    cp "$f" ${FONT_DIR}/
+    printf "Installing font %s" "$(basename "$f")"
+    cp "$f" "${FONT_DIR}/"
     echo " - ok"
 done < <( find -L fonts -type f -path '*.ttf' -print0 )

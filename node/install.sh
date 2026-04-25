@@ -1,4 +1,5 @@
-#!/bin/bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 
 echo "Installing nvm..."
@@ -32,7 +33,7 @@ nvm use --lts
 
 while IFS= read -r line; do
     echo "> Installing $line"
-    npm install -g $line &> /dev/null &
+    npm install -g "$line" &> /dev/null &
 done < ./node/globals
 
 # wait for the installation to finish

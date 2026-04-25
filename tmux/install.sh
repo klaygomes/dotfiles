@@ -1,4 +1,5 @@
-#!/bin/bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 PLUGINS_DIR="$HOME/.tmux/plugins"
 
