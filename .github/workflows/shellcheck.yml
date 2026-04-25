@@ -1,0 +1,27 @@
+name: ShellCheck
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  shellcheck:
+    name: Validate shell scripts
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck
+        run: |
+          find . -name "*.sh" \
+            -not -path "./.git/*" \
+            -not -path "./zsh/*" \
+            -not -name "gh-cp.sh" \
+            | sort \
+            | xargs shellcheck
