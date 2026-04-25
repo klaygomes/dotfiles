@@ -31,10 +31,10 @@ If you want to configure everything just run:
 make all
 ```
 
-You may also configure `nvim`, `git`, `brew`, `zsh`, `node`, `tmux` or `ghostty` individually by typing
+You may also configure components individually:
 
 ```bash
-make [ nvim | git | brew | zsh | node | tmux | ghostty ]
+make [ nvim | git | brew | zsh | node | tmux | ghostty | ranger | bat ]
 ```
 > You can type more than one item at same time `make nvim git` for example
 
@@ -52,22 +52,62 @@ make help
 
 ```text
 +-----------------------------------------------------------------------------+
-|              This Makefile should work in most shell environments.          | 
+|              This Makefile should work in most shell environments.          |
 |             But it was only tested on Mac running with Apple sillicon.      |
 +--------------------+--------------------------------------------------------+
-| commands:          | description:                                           |    
+| commands:          | description:                                           |
 +--------------------+--------------------------------------------------------+
 | vim                | Install neovim configuration                           |
-| ghostty           | Install ghostty configuration                         |
+| ghostty            | Install ghostty configuration                         |
 | zsh                | Configure zsh default alias, functions and etc.        |
 | mac                | Configure mac settings                                 |
 | brew               | Install brew packages                                  |
 | git                | Install git configuration                              |
 | node               | Install nvm, node lts and global packages              |
 | tmux               | Install tmux configuration                             |
+| ranger             | Install ranger configuration                           |
+| bat                | Install bat configuration                              |
 | help               | Show this help                                         |
 +--------------------+--------------------------------------------------------+
 ```
+
+## Shell commands
+
+| Command | Description |
+|---------|-------------|
+| `mp` | Copy a structured meeting notes prompt to clipboard |
+| `sm` | Save clipboard content as a dated Markdown note in `~/personal/meetings/`. Date is extracted from content; falls back to today |
+| `export_notes [folder]` | Export Apple Notes to `~/.notes_staging/` as plain text. Omit folder to export all |
+
+### Meeting notes workflow
+
+```bash
+# 1. Export notes from Apple Notes
+export_notes "Meetings"
+
+# 2. Migrate staged notes to ~/personal/meetings/
+python3 ~/dotfiles/scripts/migrate_notes.py
+
+# 3. Or save clipboard directly as a meeting note
+sm
+```
+
+## tmux bindings
+
+Prefix key: `§`
+
+| Binding | Description |
+|---------|-------------|
+| `§ a` | Fuzzy search files and directories from `/`; open or switch to a session for the selection |
+| `§ N` | New session by name or GitHub URL. If clipboard contains a GitHub URL, uses it automatically |
+| `§ s` | Switch between existing sessions (fzf) |
+| `§ g` | Open lazygit in a popup |
+| `§ e` | Open ranger file browser in a popup |
+| `§ \|` | Split pane horizontally |
+| `§ -` | Split pane vertically |
+| `§ h/j/k/l` | Move between panes |
+| `§ z` | Zoom/unzoom current pane |
+| `§ r` | Reload tmux config |
 
 ## How it works
 
