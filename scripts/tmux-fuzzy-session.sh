@@ -2,8 +2,6 @@
 # Fuzzy-search files and directories from / using fzf.
 # On selection, opens or switches to a tmux session for that path.
 
-TMUX_PARENT_CLIENT="${1:-}"
-
 source ~/dotfiles/zsh/functions.sh
 
 EXCLUDES=(
@@ -46,15 +44,12 @@ if [[ -n "$selected" ]]; then
   fi
   session_name=$(basename "$session_dir" | sed 's/^\.//' | tr '. ' '--')
 
-  echo "selected:     $selected"      >> /tmp/tmux-fuzzy-debug.log
-  echo "session_dir:  $session_dir"   >> /tmp/tmux-fuzzy-debug.log
-  echo "session_name: $session_name"  >> /tmp/tmux-fuzzy-debug.log
-  echo "parent_client: $TMUX_PARENT_CLIENT" >> /tmp/tmux-fuzzy-debug.log
+  fuzzy_win=$(tmux display-message -p '#{window_id}')
 
   if ! tmux has-session -t "=$session_name" 2>/dev/null; then
-    tmux new-session -d -s "$session_name" -c "$session_dir" 2>> /tmp/tmux-fuzzy-debug.log
+    tmux new-session -d -s "$session_name" -c "$session_dir"
   fi
 
-  tmux switch-client -c "$TMUX_PARENT_CLIENT" -t "$session_name" 2>> /tmp/tmux-fuzzy-debug.log
-  echo "switch exit: $?" >> /tmp/tmux-fuzzy-debug.log
+  tmux switch-client -t "$session_name"
+  tmux kill-window -t "$fuzzy_win"
 fi
