@@ -19,10 +19,9 @@ case "$MIME_TYPE" in
             -- "$FILE_PATH" 2>/dev/null && exit 0
         ;;
 
-    # Images (ASCII art via imgcat if available, otherwise skip)
+    # Images — chafa converts to Unicode/block chars, works in Ghostty + tmux
     image/*)
-        imgcat "$FILE_PATH" 2>/dev/null && exit 0
-        file "$FILE_PATH" && exit 0
+        chafa --size "${PV_WIDTH}x${PV_HEIGHT}" "$FILE_PATH" 2>/dev/null && exit 0
         ;;
 
     # PDFs
