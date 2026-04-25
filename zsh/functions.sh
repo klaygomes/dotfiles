@@ -24,7 +24,7 @@ function sm() {
 }
 
 function cred() {
-  python3 "$HOME/dotfiles/scripts/aws-update-creds.py"
+  bash "$HOME/dotfiles/scripts/aws-update-creds.sh"
 }
 
 # Export notes from Apple Notes to ~/.notes_staging as plain-text files.
