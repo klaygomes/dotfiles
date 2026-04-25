@@ -107,6 +107,7 @@ Prefix key: `§`
 | `§ -` | Split pane vertically |
 | `§ h/j/k/l` | Move between panes |
 | `§ z` | Zoom/unzoom current pane |
+| `§ X` | Kill current session and switch to previous |
 | `§ r` | Reload tmux config |
 
 ## How it works
