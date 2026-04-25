@@ -23,6 +23,10 @@ function sm() {
   python3 "$HOME/dotfiles/scripts/sm.py"
 }
 
+function cred() {
+  python3 "$HOME/dotfiles/scripts/aws-update-creds.py"
+}
+
 # Export notes from Apple Notes to ~/.notes_staging as plain-text files.
 # Usage: export_notes [FolderName]
 #   With no argument, exports all folders.
