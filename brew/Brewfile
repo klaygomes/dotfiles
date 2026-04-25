@@ -96,6 +96,12 @@ brew "tmux"
 
 brew "ranger"
 
+# Image preview in terminal (works in any terminal including Ghostty + tmux)
+brew "chafa"
+
+# PDF text extraction (provides pdftotext)
+brew "poppler"
+
 # A terminal UI for git commands
 brew "lazygit"
 
