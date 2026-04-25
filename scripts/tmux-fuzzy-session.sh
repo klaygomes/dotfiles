@@ -29,9 +29,9 @@ for dir in "${EXCLUDES[@]}"; do
 done
 
 selected=$(
-  fd . / --type d --hidden "${exclude_flags[@]}" --max-depth 7 2>/dev/null \
+  fd . / --hidden "${exclude_flags[@]}" --max-depth 7 2>/dev/null \
     | fzf --no-multi --height=100% \
-        --preview 'ls -la {}' \
+        --preview 'if [ -d {} ]; then ls -la {}; else bat --color=always --style=numbers --line-range :50 {}; fi' \
         --preview-window=right:50%:border-left \
         --bind 'esc:abort'
 )
