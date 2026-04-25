@@ -207,6 +207,32 @@ function install_rvb(){
   curl -sSL https://get.rvm.io | bash -s stable --rails
 }
 
+# Switch to a tmux session by name, creating it in session_dir if it doesn't exist.
+function _tmux_attach() {
+  local session_name="$1"
+  local session_dir="$2"
+  if tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux switch-client -t "$session_name"
+  else
+    tmux new-session -d -s "$session_name" -c "$session_dir"
+    tmux switch-client -t "$session_name"
+  fi
+}
+
+# Open or switch to a tmux session for a local file or directory path.
+# For files: session is created in the file's parent directory.
+function _tmux_open_local() {
+  local path="$1"
+  local session_dir session_name
+  if [[ -f "$path" ]]; then
+    session_dir=$(dirname "$path")
+  else
+    session_dir="$path"
+  fi
+  session_name=$(basename "$session_dir" | sed 's/^\.//' | tr '. ' '--')
+  _tmux_attach "$session_name" "$session_dir"
+}
+
 # Create or switch to a tmux session.
 # Accepts a plain session name or a GitHub URL.
 # GitHub URL example: https://github.com/org/repo/pull/123
@@ -234,11 +260,6 @@ function _tmux_new_session() {
     session_dir="$PWD"
   fi
 
-  if tmux has-session -t "=$session_name" 2>/dev/null; then
-    tmux switch-client -t "$session_name"
-  else
-    tmux new-session -d -s "$session_name" -c "$session_dir"
-    tmux switch-client -t "$session_name"
-  fi
+  _tmux_attach "$session_name" "$session_dir"
 }
 

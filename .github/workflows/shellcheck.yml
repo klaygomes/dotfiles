@@ -23,5 +23,6 @@ jobs:
             -not -path "./.git/*" \
             -not -path "./zsh/*" \
             -not -name "gh-cp.sh" \
+            -not -name "tmux-fuzzy-session.sh" \
             | sort \
             | xargs shellcheck

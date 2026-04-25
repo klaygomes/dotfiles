@@ -1,4 +1,5 @@
-#!/bin/bash -euo pipefail
+#!/usr/bin/env bash
+set -euo pipefail
 
 # configure homebrew
 printf "Configuring homebrew... "
@@ -13,13 +14,13 @@ fi
 
 printf "Setting homebrew environment variables..."
 
-if grep -qF "/bin/brew shellenv" ${HOME}/.zshrc > /dev/null 2>&1; then
-  echo "\nIt is already there..."
+if grep -qF "/bin/brew shellenv" "${HOME}/.zshrc" > /dev/null 2>&1; then
+  printf "\nIt is already there...\n"
 else
-  echo "" >> $HOME/.zshrc # add a new line
-  echo "eval \$(${HOMEBREW_LOCATION}/bin/brew shellenv)" >> $HOME/.zshrc
+  echo "" >> "${HOME}/.zshrc" # add a new line
+  echo "eval \$(${HOMEBREW_LOCATION}/bin/brew shellenv)" >> "${HOME}/.zshrc"
   echo " - ok"
 fi
 
 # inject brew shellenv into current session
-eval $(${HOMEBREW_LOCATION}/bin/brew shellenv)
+eval "$("${HOMEBREW_LOCATION}/bin/brew" shellenv)"

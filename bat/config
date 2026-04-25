@@ -1,0 +1,11 @@
+# Use terminal's own color scheme — consistent with any theme
+--theme=ansi
+
+# Show line numbers only; no header (ranger shows filename) or grid lines
+--style=numbers
+
+# Always use italics for comments/keywords that support it
+--italic-text=always
+
+# Never page inside ranger previews
+--paging=never
