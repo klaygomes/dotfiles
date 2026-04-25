@@ -44,9 +44,15 @@ if [[ -n "$selected" ]]; then
   fi
   session_name=$(basename "$session_dir" | sed 's/^\.//' | tr '. ' '--')
 
+  echo "selected:     $selected"      >> /tmp/tmux-fuzzy-debug.log
+  echo "session_dir:  $session_dir"   >> /tmp/tmux-fuzzy-debug.log
+  echo "session_name: $session_name"  >> /tmp/tmux-fuzzy-debug.log
+  echo "parent_client: $TMUX_PARENT_CLIENT" >> /tmp/tmux-fuzzy-debug.log
+
   if ! tmux has-session -t "=$session_name" 2>/dev/null; then
-    tmux new-session -d -s "$session_name" -c "$session_dir"
+    tmux new-session -d -s "$session_name" -c "$session_dir" 2>> /tmp/tmux-fuzzy-debug.log
   fi
 
-  tmux switch-client -c "$TMUX_PARENT_CLIENT" -t "$session_name"
+  tmux switch-client -c "$TMUX_PARENT_CLIENT" -t "$session_name" 2>> /tmp/tmux-fuzzy-debug.log
+  echo "switch exit: $?" >> /tmp/tmux-fuzzy-debug.log
 fi
