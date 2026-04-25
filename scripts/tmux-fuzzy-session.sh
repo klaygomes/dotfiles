@@ -2,6 +2,8 @@
 # Fuzzy-search files and directories from / using fzf.
 # On selection, opens or switches to a tmux session for that path.
 
+TMUX_PARENT_CLIENT="${1:-}"
+
 source ~/dotfiles/zsh/functions.sh
 
 EXCLUDES=(
