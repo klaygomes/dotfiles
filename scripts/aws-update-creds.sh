@@ -18,32 +18,30 @@ read_canonical() {
 }
 
 parse_block() {
-  local text="$1"
   profile_name=""
-  declare -gA cred_keys=()
+  cred_lines=()
   while IFS= read -r line; do
     line="${line//[$'\r']}"
     [[ -z "$line" ]] && continue
     if [[ "$line" =~ ^\[(.+)\]$ ]]; then
       profile_name="${BASH_REMATCH[1]}"
-    elif [[ "$line" =~ ^([^=]+)=(.*)$ ]]; then
-      cred_keys["${BASH_REMATCH[1]// /}"]="${BASH_REMATCH[2]}"
+    elif [[ "$line" =~ ^[^=]+=.* ]]; then
+      cred_lines+=("$line")
     fi
-  done <<< "$text"
+  done <<< "$1"
 }
 
 update_credentials() {
   local canonical="$1"
   local new_block="[$canonical]"$'\n'
-  for k in "${!cred_keys[@]}"; do
-    new_block+="$k=${cred_keys[$k]}"$'\n'
+  for entry in "${cred_lines[@]}"; do
+    new_block+="$entry"$'\n'
   done
 
   mkdir -p "$(dirname "$CREDS_FILE")"
   touch "$CREDS_FILE"
 
   if grep -q "^\[$canonical\]" "$CREDS_FILE"; then
-    # Replace existing section: remove old block, insert new one
     awk -v canon="$canonical" -v block="$new_block" '
       /^\[/ { if (in_section) { in_section=0 } }
       /^\[/ && $0 == "[" canon "]" { print block; in_section=1; next }
@@ -57,18 +55,18 @@ update_credentials() {
 block="$(pbpaste)"
 parse_block "$block"
 
-if [[ -z "$profile_name" ]] || [[ "${#cred_keys[@]}" -eq 0 ]]; then
+if [[ -z "$profile_name" ]] || [[ "${#cred_lines[@]}" -eq 0 ]]; then
   echo "Paste your AWS credentials block (end with an empty line):"
-  lines=()
+  input_lines=()
   while IFS= read -r line; do
     [[ -z "$line" ]] && break
-    lines+=("$line")
+    input_lines+=("$line")
   done
-  block="$(printf '%s\n' "${lines[@]}")"
+  block="$(printf '%s\n' "${input_lines[@]}")"
   parse_block "$block"
 fi
 
-if [[ -z "$profile_name" ]] || [[ "${#cred_keys[@]}" -eq 0 ]]; then
+if [[ -z "$profile_name" ]] || [[ "${#cred_lines[@]}" -eq 0 ]]; then
   echo "error: could not parse credentials" >&2
   exit 1
 fi
