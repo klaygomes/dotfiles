@@ -76,12 +76,18 @@ def update_credentials(canonical, keys):
 clipboard = subprocess.run(["pbpaste"], capture_output=True, text=True).stdout
 source_name, keys = parse_block(clipboard)
 
-if not source_name:
-    print("error: no profile header found in clipboard", file=sys.stderr)
-    sys.exit(1)
+if not source_name or not keys:
+    print("Paste your AWS credentials block (end with an empty line):")
+    lines = []
+    while True:
+        line = input()
+        if line == "" and lines:
+            break
+        lines.append(line)
+    source_name, keys = parse_block("\n".join(lines))
 
-if not keys:
-    print("error: no credentials found in clipboard", file=sys.stderr)
+if not source_name or not keys:
+    print("error: could not parse credentials", file=sys.stderr)
     sys.exit(1)
 
 mapping = read_map()
