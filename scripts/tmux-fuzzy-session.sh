@@ -36,4 +36,17 @@ selected=$(
         --bind 'esc:abort'
 )
 
-[[ -n "$selected" ]] && _tmux_open_local "$selected"
+if [[ -n "$selected" ]]; then
+  if [[ -f "$selected" ]]; then
+    session_dir=$(dirname "$selected")
+  else
+    session_dir="$selected"
+  fi
+  session_name=$(basename "$session_dir" | sed 's/^\.//' | tr '. ' '--')
+
+  if ! tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux new-session -d -s "$session_name" -c "$session_dir"
+  fi
+
+  tmux switch-client -c "$TMUX_PARENT_CLIENT" -t "$session_name"
+fi
