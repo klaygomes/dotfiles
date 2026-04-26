@@ -1,4 +1,5 @@
 CONFIG_PATH	?=	${HOME}/.config/
+BIN_PATH	?=	${HOME}/bin/
 
 VIM 		:=	$(addprefix ${CONFIG_PATH}, $(shell find nvim -type f -print))
 ZSH			:=	$(addprefix ${CONFIG_PATH}, $(shell find zsh -type f -print))
@@ -6,6 +7,7 @@ GHOSTTY		:=	$(addprefix ${CONFIG_PATH}, $(shell find ghostty -type f -print))
 TMUX		:=	$(addprefix ${CONFIG_PATH}, $(shell find tmux -type f -print))
 RANGER		:=	$(addprefix ${CONFIG_PATH}, $(shell find ranger -type f -print))
 BAT			:=	$(addprefix ${CONFIG_PATH}, $(shell find bat -type f -print))
+BIN			:=	$(addprefix ${BIN_PATH}, $(shell find bin -type f -print | sed 's|^bin/||'))
 MAC			:=	$(CONFIG_PATH)mac/setup.sh
 
 GIT			:=	${HOME}/.gitconfig
@@ -16,7 +18,7 @@ NODE		:=	$(CONFIG_PATH)/node/globals
 # helper function to create target directory
 CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created.";fi;
 
-.PHONY: ghostty vim zsh mac brew git node tmux ranger bat help
+.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin help
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PROLOGUE
@@ -117,9 +119,28 @@ $(NODE): node/globals
 	@mkdir -p "$(@D)"
 	@ln -sf "$(CURDIR)/${^}" "${@}"
 
+## The following lines
+bin: $(BIN) ;@ ## Install bin scripts to ~/bin
+.SECONDEXPANSION:
+$(BIN): $$(addprefix bin/, $$(notdir $$@))
+	@$(call CREATE_TARGET_DIR)
+	@echo "Including '${^}' to '${@}'"
+	@ln -sf "$(CURDIR)/${^}" "${@}"
+	@chmod +x "${@}"
+
+## The following lines
+skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
+	@mkdir -p ${HOME}/.claude/skills
+	@ln -sf "$(CURDIR)/skills/meeting-search" "${HOME}/.claude/skills/meeting-search"
+	@chmod +x "$(CURDIR)/skills/meeting-search/tools/query.py"
+	@if [ ! -f "$(CURDIR)/skills/meeting-search/.env" ]; then \
+		cp "$(CURDIR)/skills/meeting-search/.env.example" "$(CURDIR)/skills/meeting-search/.env"; \
+	fi
+	@echo "Skills installed"
+
 ## Run all configurations
 all: ;@ ## Run all configurations
-	@for target in mac zsh brew node git vim tmux ranger bat; do \
+	@for target in mac zsh brew node git vim tmux ranger bat bin skills; do \
 		echo "Running $$target..."; \
 		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
 	done
