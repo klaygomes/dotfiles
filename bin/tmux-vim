@@ -1,0 +1,9 @@
+#!/bin/bash
+# Open a file in nvim inside a tmux popup modal.
+# Used as $EDITOR so tools like Claude Code open files in a floating tmux window.
+if [ -n "$TMUX" ]; then
+    tmux popup -E -w 100% -h 100% "nvim $(printf '%q' "$1")"
+    tmux refresh-client
+else
+    exec nvim "$1"
+fi
