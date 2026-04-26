@@ -111,6 +111,9 @@ brew "zsh-autosuggestions"
 # Fish shell-like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
 
+# Container platform
+cask "docker"
+
 # An open-source IRC client written in Rust, with the iced GUI library
 #cask "halloy"
 
