@@ -10,6 +10,6 @@ if [[ "$clipboard" =~ ^https://github\.com/ ]]; then
   _tmux_new_session "$clipboard"
 else
   printf "Session name or GitHub URL: "
-  read -r input
+  read -r input || exit 0
   [[ -n "$input" ]] && _tmux_new_session "$input"
 fi
