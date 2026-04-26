@@ -1,5 +1,9 @@
 .DS_Store
 .idea
 scripts/.venv
+scripts/__pycache__/
 skills/meeting-search/.venv
+skills/**/.venv
+skills/**/__pycache__/
+**/*.pyc
 
