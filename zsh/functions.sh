@@ -29,6 +29,10 @@ function dotfiles_setup_scripts() {
   python3 -m venv "$scripts/.venv"
   "$scripts/.venv/bin/pip" install --quiet -r "$scripts/requirements.txt"
   echo "Scripts venv ready at $scripts/.venv"
+  if [[ ! -f "$scripts/.env" ]]; then
+    cp "$scripts/.env.example" "$scripts/.env"
+    echo "Created $scripts/.env — edit it if ChromaDB isn't on localhost:8000"
+  fi
 }
 
 # Bulk-ingest all meeting notes from ~/personal/meetings/ into ChromaDB.
