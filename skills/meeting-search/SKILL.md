@@ -1,20 +1,7 @@
 ---
 name: meeting-search
-version: 1.0.0
-description: >
-  Search personal meeting notes for answers about what was said, decided, or
-  assigned in meetings. Trigger when the user asks what was discussed in a
-  meeting, what a person said about a topic, what decisions were made, what
-  action items were created, or who is responsible for something.
-
-  Trigger on questions like:
-  - "What did [person] say about..."
-  - "What was decided about..."
-  - "What are my action items from..."
-  - "When did we discuss..."
-  - "Who owns / is responsible for..."
-  - "What happened in the meeting about..."
-argument-hint: <question about meeting content, decisions, or who said what>
+description: "Search personal meeting notes for answers about what was said, decided, or assigned in meetings. Trigger when the user asks what was discussed in a meeting, what a person said about a topic, what decisions were made, what action items were created, or who is responsible for something. Trigger on: 'What did [person] say about...', 'What was decided about...', 'What are my action items from...', 'When did we discuss...', 'Who owns / is responsible for...', 'What happened in the meeting about...'"
+argument-hint: "<question about meeting content, decisions, or who said what>"
 allowed-tools: Bash, Agent
 ---
 
