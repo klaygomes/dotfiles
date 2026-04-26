@@ -4,7 +4,7 @@ services:
     ports:
       - "${CHROMA_PORT:-8000}:8000"
     volumes:
-      - ${CHROMA_DATA_DIR:-~/personal/chroma_data}:/data
+      - ${CHROMA_DATA_DIR:-${HOME}/personal/chroma_data}:/data
     environment:
       - IS_PERSISTENT=TRUE
     healthcheck:
