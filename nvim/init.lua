@@ -52,24 +52,48 @@ vim.g.loaded_ruby_provider = 0
 vim.opt.wildignore:append({ "*.pyc", "*.o", "*.obj", "*.svn", "*.swp", "*.class", "*.hg", "*.DS_Store", "*.min.*", "node_files" })
 
 
-function gh(package)
-  return string.format("https://github.com/%s", package)
-end
-
 vim.g.lightline = {
-  colorscheme = 'tender',
+  colorscheme = "tender",
   active = {
-    left = { { 'mode', 'paste' }, { 'gitbranch', 'readonly', 'filename', 'modified' } }
+    left = { { "mode", "paste" }, { "gitbranch", "readonly", "filename", "modified" } }
   },
-  component_function = {
-    gitbranch = 'gitbranch#name'
-  },
+  component_function = { gitbranch = "gitbranch#name" },
 }
 
-if(vim.pack ~= nil) then
-  vim.pack.add({ 
-    { src = gh("jacoborus/tender.vim") },
-    { src = gh("itchyny/lightline.vim") },
-  })
-  vim.cmd([[colorscheme tender]])
-end
+vim.pack.add({
+  { src = "https://github.com/jacoborus/tender.vim" },
+  { src = "https://github.com/itchyny/lightline.vim" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+  { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+})
+
+-- Defer plugin setup to after vim.pack finishes installing (clean machine safe)
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function()
+    vim.cmd([[colorscheme tender]])
+
+    -- Treesitter: auto-install and enable highlighting
+    local ok_ts, ts = pcall(require, "nvim-treesitter.configs")
+    if ok_ts then
+      ts.setup({
+        ensure_installed = { "markdown", "markdown_inline" },
+        auto_install = true,
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end
+
+    -- Markdown rendering
+    local ok_md, md = pcall(require, "render-markdown")
+    if ok_md then
+      md.setup({
+        heading = { enabled = true },
+        code = { enabled = true, style = "full" },
+        bullet = { enabled = true },
+        checkbox = { enabled = true },
+        table = { enabled = true },
+      })
+    end
+  end,
+})
