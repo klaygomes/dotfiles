@@ -1,0 +1,7 @@
+{
+  "name": "meeting-search",
+  "version": "1.0.0",
+  "description": "Search personal meeting notes using HyDE retrieval over ChromaDB",
+  "author": "Cleiton Loiola",
+  "license": "MIT"
+}
