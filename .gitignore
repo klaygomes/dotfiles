@@ -1,4 +1,5 @@
 .DS_Store
 .idea
 scripts/.venv
+skills/meeting-search/.venv
 
