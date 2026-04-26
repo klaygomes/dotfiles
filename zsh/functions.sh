@@ -20,7 +20,13 @@ EOF
 # Save clipboard content as a meeting note in ~/personal/meetings/
 # The date is extracted from the clipboard text; falls back to today.
 function sm() {
-  python3 "$HOME/dotfiles/scripts/sm.py"
+  local scripts="$HOME/dotfiles/scripts"
+  if [[ ! -x "$scripts/.venv/bin/python" ]]; then
+    echo "Setting up scripts venv (first run)..."
+    python3 -m venv "$scripts/.venv"
+    "$scripts/.venv/bin/pip" install --quiet -r "$scripts/requirements.txt"
+  fi
+  "$scripts/.venv/bin/python" "$scripts/sm.py"
 }
 
 # Bootstrap the scripts venv (run once after cloning dotfiles, or after adding new deps).
