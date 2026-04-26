@@ -26,13 +26,21 @@ function sm() {
 # Bootstrap the scripts venv (run once after cloning dotfiles, or after adding new deps).
 function dotfiles_setup_scripts() {
   local scripts="$HOME/dotfiles/scripts"
+  local launchd_src="$HOME/dotfiles/launchd/com.cleiton.chromadb.plist"
+  local launchd_dst="$HOME/Library/LaunchAgents/com.cleiton.chromadb.plist"
+
   python3 -m venv "$scripts/.venv"
   "$scripts/.venv/bin/pip" install --quiet -r "$scripts/requirements.txt"
   echo "Scripts venv ready at $scripts/.venv"
+
   if [[ ! -f "$scripts/.env" ]]; then
     cp "$scripts/.env.example" "$scripts/.env"
     echo "Created $scripts/.env — edit it if ChromaDB isn't on localhost:8000"
   fi
+
+  cp "$launchd_src" "$launchd_dst"
+  launchctl load "$launchd_dst"
+  echo "ChromaDB launchd agent installed — will start automatically at login"
 }
 
 # Bulk-ingest all meeting notes from ~/personal/meetings/ into ChromaDB.
