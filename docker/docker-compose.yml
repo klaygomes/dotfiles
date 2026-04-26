@@ -1,12 +1,15 @@
 services:
   chromadb:
     image: chromadb/chroma:latest
-    container_name: chromadb
     ports:
-      - "8000:8000"
+      - "${CHROMA_PORT:-8000}:8000"
     volumes:
-      - chromadb_data:/chroma/chroma
-    restart: always
-
-volumes:
-  chromadb_data:
+      - ${CHROMA_DATA_DIR:-~/personal/chroma_data}:/data
+    environment:
+      - IS_PERSISTENT=TRUE
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
