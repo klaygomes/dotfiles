@@ -23,6 +23,27 @@ function sm() {
   python3 "$HOME/dotfiles/scripts/sm.py"
 }
 
+# Bootstrap the scripts venv (run once after cloning dotfiles, or after adding new deps).
+function dotfiles_setup_scripts() {
+  local scripts="$HOME/dotfiles/scripts"
+  python3 -m venv "$scripts/.venv"
+  "$scripts/.venv/bin/pip" install --quiet -r "$scripts/requirements.txt"
+  echo "Scripts venv ready at $scripts/.venv"
+}
+
+# Bulk-ingest all meeting notes from ~/personal/meetings/ into ChromaDB.
+function ingest_meetings() {
+  local python="$HOME/dotfiles/scripts/.venv/bin/python"
+  local ingest="$HOME/dotfiles/scripts/ingest_meeting.py"
+  local dir="${1:-$HOME/personal/meetings}"
+  local count=0
+  for f in "$dir"/*.md; do
+    [[ -f "$f" ]] || continue
+    "$python" "$ingest" "$f" && (( count++ ))
+  done
+  echo "Ingested $count meeting(s) from $dir"
+}
+
 function cred() {
   bash "$HOME/dotfiles/scripts/aws-update-creds.sh"
 }
@@ -49,19 +70,30 @@ tell application "Notes"
   repeat with theFolder in folderList
     set folderName to name of theFolder
     repeat with theNote in notes of theFolder
-      set noteTitle to name of theNote
-      set noteBody to body of theNote
-      set safeTitle to do shell script "printf '%s' " & quoted form of (folderName & "__" & noteTitle) & " | tr '/: ' '---'"
-      set outPath to "$STAGING_DIR/" & safeTitle & ".html"
-      do shell script "printf '%s' " & quoted form of noteBody & " > " & quoted form of outPath
-      do shell script "textutil -convert txt " & quoted form of outPath & " -output " & quoted form of ("$STAGING_DIR/" & safeTitle & ".txt")
-      do shell script "rm " & quoted form of outPath
+      try
+        set noteTitle to name of theNote
+        set noteBody to body of theNote
+        set safeTitle to do shell script "printf '%s' " & quoted form of (folderName & "__" & noteTitle) & " | tr '/: ' '---'"
+        set outPath to "$STAGING_DIR/" & safeTitle & ".html"
+        set fileRef to open for access POSIX file outPath with write permission
+        set eof of fileRef to 0
+        write noteBody to fileRef
+        close access fileRef
+        do shell script "textutil -convert txt " & quoted form of outPath & " -output " & quoted form of ("$STAGING_DIR/" & safeTitle & ".txt")
+        do shell script "rm " & quoted form of outPath
+      on error errMsg
+        do shell script "echo " & quoted form of ("SKIPPED: " & folderName & " / " & noteTitle & " — " & errMsg) & " >> /tmp/notes_errors.log"
+      end try
     end repeat
   end repeat
 end tell
 EOF
 
   echo "Exported notes to $STAGING_DIR"
+  if [[ -f /tmp/notes_errors.log ]]; then
+    echo "Skipped notes (see /tmp/notes_errors.log):"
+    cat /tmp/notes_errors.log
+  fi
 }
 
 # Move one git repo into another
