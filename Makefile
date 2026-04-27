@@ -1,5 +1,6 @@
 CONFIG_PATH	?=	${HOME}/.config/
 BIN_PATH	?=	${HOME}/bin/
+CLAUDE_PATH	?=	${HOME}/.claude/
 
 VIM 		:=	$(addprefix ${CONFIG_PATH}, $(shell find nvim -type f -print))
 ZSH			:=	$(addprefix ${CONFIG_PATH}, $(shell find zsh -type f -print))
@@ -18,7 +19,7 @@ NODE		:=	$(CONFIG_PATH)/node/globals
 # helper function to create target directory
 CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created.";fi;
 
-.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin help
+.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin claude skills help
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PROLOGUE
@@ -129,6 +130,12 @@ $(BIN): $$(addprefix bin/, $$(notdir $$@))
 	@chmod +x "${@}"
 
 ## The following lines
+claude: ;@ ## Install Claude Code settings (symlinks into ~/.claude)
+	@mkdir -p ${CLAUDE_PATH}
+	@ln -sf "$(CURDIR)/claude/settings.local.json" "${CLAUDE_PATH}settings.local.json"
+	@echo "Claude settings installed"
+
+## The following lines
 skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@mkdir -p ${HOME}/.claude/skills
 	@ln -sf "$(CURDIR)/skills/klay-meeting-search" "${HOME}/.claude/skills/klay-meeting-search"
@@ -140,7 +147,7 @@ skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 
 ## Run all configurations
 all: ;@ ## Run all configurations
-	@for target in mac zsh brew node git vim tmux ranger bat bin skills; do \
+	@for target in mac zsh brew node git vim tmux ranger bat bin claude skills; do \
 		echo "Running $$target..."; \
 		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
 	done
