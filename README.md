@@ -34,7 +34,7 @@ make all
 You may also configure components individually:
 
 ```bash
-make [ nvim | git | brew | zsh | node | tmux | ghostty | ranger | bat | claude | skills ]
+make [ nvim | git | brew | zsh | node | tmux | ghostty | ranger | bat | launchd | claude | skills ]
 ```
 > You can type more than one item at same time `make nvim git` for example
 
@@ -67,6 +67,7 @@ make help
 | tmux               | Install tmux configuration                             |
 | ranger             | Install ranger configuration                           |
 | bat                | Install bat configuration                              |
+| launchd            | Install and load launchd agents                        |
 | claude             | Install Claude Code settings                           |
 | skills             | Install Claude Code skills                             |
 | help               | Show this help                                         |
