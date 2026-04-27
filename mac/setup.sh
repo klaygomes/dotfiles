@@ -161,7 +161,6 @@ defaults write com.apple.dock "mru-spaces" -bool "false"
 # Prevents Terminal showing last session's contents
 touch ~/.hushlogin
 
-# Clear System Settings modifier key remapping (prevents Ctrl from being remapped to Escape)
 defaults -currentHost write -g com.apple.keyboard.modifiermapping.0-0-0 -array
 
 # apply the changes
