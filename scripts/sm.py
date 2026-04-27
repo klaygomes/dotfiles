@@ -7,6 +7,7 @@ migrate_notes.py. Falls back to today's date if none is found.
 Called by the sm() shell function in dotfiles/zsh/functions.sh.
 """
 
+import hashlib
 import subprocess
 import sys
 from datetime import date, datetime
@@ -23,6 +24,8 @@ _INPUT_FORMATS = [
     "%d/%m/%Y",
     "%Y-%m-%d",
     "%Y/%m/%d",
+    "%d %B %Y",       # "27 April 2026"
+    "%A, %d %B %Y",   # "Monday, 27 April 2026"
 ]
 
 
@@ -64,6 +67,12 @@ def main():
     else:
         iso_date = _prompt_date()
         date_source = "today" if iso_date == date.today().isoformat() else "provided by user"
+
+    content_md5 = hashlib.md5(content.encode()).hexdigest()
+    for existing in MEETINGS_DIR.glob("*.md"):
+        if hashlib.md5(existing.read_text(encoding="utf-8").encode()).hexdigest() == content_md5:
+            print(f"Duplicate: content already saved as {existing.name}, skipping.")
+            sys.exit(0)
 
     dest = unique_path(MEETINGS_DIR, iso_date)
     dest.write_text(content)

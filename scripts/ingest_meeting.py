@@ -108,7 +108,8 @@ def ingest(file_path: Path, date: str | None = None) -> None:
         "md5": md5,
     }
     if iso_date:
-        metadata["date"] = iso_date
+        metadata["date"] = int(iso_date.replace("-", ""))
+        metadata["date_str"] = iso_date
 
     collection.upsert(
         ids=[doc_id],

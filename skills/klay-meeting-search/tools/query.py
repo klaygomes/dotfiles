@@ -79,9 +79,9 @@ def _get_client():
 def _build_where(date_from: str | None, date_to: str | None) -> dict:
     conditions: list[dict] = [{"data_source": {"$eq": DEFAULT_DATA_SOURCE}}]
     if date_from:
-        conditions.append({"date": {"$gte": date_from}})
+        conditions.append({"date": {"$gte": int(date_from.replace("-", ""))}})
     if date_to:
-        conditions.append({"date": {"$lte": date_to}})
+        conditions.append({"date": {"$lte": int(date_to.replace("-", ""))}})
     return {"$and": conditions} if len(conditions) > 1 else conditions[0]
 
 
@@ -117,7 +117,7 @@ def query(
     blocks: list[str] = []
     for doc, meta in zip(documents, metadatas):
         address = meta.get("address", "")
-        date = meta.get("date", "")
+        date = meta.get("date_str") or str(meta.get("date", ""))
         header = f"{date} · [{address}]({address})" if date else f"[Source]({address})"
         blocks.append(f"{header}\n{doc}")
 
