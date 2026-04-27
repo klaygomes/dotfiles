@@ -5,8 +5,8 @@
 
 set -euo pipefail
 
-SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DOTFILES_DIR="$(cd "$SKILL_DIR/../.." && pwd)"
+SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd -P)"
+DOTFILES_DIR="$(cd "$SKILL_DIR/../.." && pwd -P)"
 
 if [[ ! -x "$SKILL_DIR/.venv/bin/python" ]]; then
   echo "Creating venv..."

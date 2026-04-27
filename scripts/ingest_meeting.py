@@ -17,7 +17,7 @@ from pathlib import Path
 
 warnings.filterwarnings("ignore", module="urllib3")
 
-_SCRIPTS_DIR = Path(__file__).parent
+_SCRIPTS_DIR = Path(__file__).resolve().parent
 _ENV_PATH = _SCRIPTS_DIR.parent / ".env"
 
 COLLECTION_NAME = "qaa"
