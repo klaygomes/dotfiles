@@ -161,9 +161,8 @@ defaults write com.apple.dock "mru-spaces" -bool "false"
 # Prevents Terminal showing last session's contents
 touch ~/.hushlogin
 
-# Maps caps lock to escape
-# https://developer.apple.com/library/archive/technotes/tn2450/_index.html
-hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x700000029}]}' > /dev/null
+# Clear System Settings modifier key remapping (prevents Ctrl from being remapped to Escape)
+defaults -currentHost write -g com.apple.keyboard.modifiermapping.0-0-0 -array
 
 # apply the changes
 applications_to_kill=(
