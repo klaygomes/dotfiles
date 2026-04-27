@@ -131,10 +131,10 @@ $(BIN): $$(addprefix bin/, $$(notdir $$@))
 ## The following lines
 skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@mkdir -p ${HOME}/.claude/skills
-	@ln -sf "$(CURDIR)/skills/meeting-search" "${HOME}/.claude/skills/meeting-search"
-	@chmod +x "$(CURDIR)/skills/meeting-search/tools/query.py"
-	@if [ ! -f "$(CURDIR)/skills/meeting-search/.env" ]; then \
-		cp "$(CURDIR)/skills/meeting-search/.env.example" "$(CURDIR)/skills/meeting-search/.env"; \
+	@ln -sf "$(CURDIR)/skills/klay-meeting-search" "${HOME}/.claude/skills/klay-meeting-search"
+	@chmod +x "$(CURDIR)/skills/klay-meeting-search/tools/query.py"
+	@if [ ! -f "$(CURDIR)/.env" ]; then \
+		cp "$(CURDIR)/.env.example" "$(CURDIR)/.env"; \
 	fi
 	@echo "Skills installed"
 
