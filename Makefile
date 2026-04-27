@@ -105,7 +105,7 @@ brew: $(BREW);@ ## Install brew packages
 $(BREW): brew/Brewfile
 	@ln -sf "$(CURDIR)/$(^)" $(@)
 	@./brew/install.sh
-	@source ./brew/shellenv.sh && brew bundle --file=$(@) --force && ./brew/setup.sh
+	@source ./brew/shellenv.sh && brew bundle cleanup --force --file=$(@); brew bundle --file=$(@) --force && ./brew/setup.sh
 
 ## The following lines
 git: $(GIT); ## Install git configuration

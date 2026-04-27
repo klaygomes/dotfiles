@@ -10,5 +10,5 @@ if [ ! -f "$(which brew)" ]
     brew update;
     brew upgrade;
     brew cleanup;
-    brew doctor
+    brew doctor || true
 fi
