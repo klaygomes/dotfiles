@@ -25,6 +25,7 @@ setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_SILENT
 
 # ── Completion ────────────────────────────────────────────────────────────────
+autoload -Uz compinit && compinit
 setopt COMPLETE_IN_WORD
 setopt ALWAYS_TO_END
 setopt MENU_COMPLETE
