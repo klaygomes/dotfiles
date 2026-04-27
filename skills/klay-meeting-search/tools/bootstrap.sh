@@ -6,6 +6,7 @@
 set -euo pipefail
 
 SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+DOTFILES_DIR="$(cd "$SKILL_DIR/../.." && pwd)"
 
 if [[ ! -x "$SKILL_DIR/.venv/bin/python" ]]; then
   echo "Creating venv..."
@@ -13,11 +14,11 @@ if [[ ! -x "$SKILL_DIR/.venv/bin/python" ]]; then
   "$SKILL_DIR/.venv/bin/pip" install -q -r "$SKILL_DIR/requirements.txt"
 fi
 
-if [[ ! -f "$SKILL_DIR/.env" ]]; then
-  if [[ ! -f "$SKILL_DIR/.env.example" ]]; then
-    echo "ERROR: .env.example missing" >&2; exit 1
+if [[ ! -f "$DOTFILES_DIR/.env" ]]; then
+  if [[ ! -f "$DOTFILES_DIR/.env.example" ]]; then
+    echo "ERROR: .env.example missing at $DOTFILES_DIR" >&2; exit 1
   fi
-  cp "$SKILL_DIR/.env.example" "$SKILL_DIR/.env"
+  cp "$DOTFILES_DIR/.env.example" "$DOTFILES_DIR/.env"
 fi
 
 echo "OK"

@@ -80,48 +80,6 @@ make help
 | `export_notes [folder]` | Export Apple Notes to `~/.notes_staging/` as plain text. Omit folder to export all |
 | `cred` | Update `~/.aws/credentials` from clipboard. Remaps the source profile name to a canonical one via `~/.aws/profile_map` |
 
-### AWS credentials workflow
-
-```bash
-# Copy credentials block from AWS console, then:
-cred
-# → updated [qred-dev] in ~/.aws/credentials
-
-# Profile name mapping lives in ~/.aws/profile_map (not tracked in repo):
-# source_profile_name=canonical_name
-```
-
-### Meeting notes workflow
-
-```bash
-# 1. Export notes from Apple Notes
-export_notes "Meetings"
-
-# 2. Migrate staged notes to ~/personal/meetings/
-python3 ~/dotfiles/scripts/migrate_notes.py
-
-# 3. Or save clipboard directly as a meeting note
-sm
-```
-
-## tmux bindings
-
-Prefix key: `§`
-
-| Binding | Description |
-|---------|-------------|
-| `§ a` | Fuzzy search files and directories from `/`; open or switch to a session for the selection |
-| `§ N` | New session by name or GitHub URL. If clipboard contains a GitHub URL, uses it automatically |
-| `§ s` | Switch between existing sessions (fzf) |
-| `§ g` | Open lazygit in a popup |
-| `§ e` | Open ranger file browser in a popup |
-| `§ \|` | Split pane horizontally |
-| `§ -` | Split pane vertically |
-| `§ h/j/k/l` | Move between panes |
-| `§ z` | Zoom/unzoom current pane |
-| `§ X` | Kill current session and switch to previous |
-| `§ r` | Reload tmux config |
-
 ## How it works
 
 If you want to understand how I'm managing my dotfiles, I wrote a [complete article

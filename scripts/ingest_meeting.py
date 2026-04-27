@@ -18,7 +18,7 @@ from pathlib import Path
 warnings.filterwarnings("ignore", module="urllib3")
 
 _SCRIPTS_DIR = Path(__file__).parent
-_ENV_PATH = _SCRIPTS_DIR / ".env"
+_ENV_PATH = _SCRIPTS_DIR.parent / ".env"
 
 COLLECTION_NAME = "qaa"
 DEFAULT_MODEL = "BAAI/bge-small-en-v1.5"
