@@ -33,11 +33,20 @@ setopt PROMPT_SUBST
 # Load Git info
 autoload -Uz vcs_info
 precmd() {
-    vcs_info
-    IP_DATA=$(get_ip_info)
+    if [[ -z "$TMUX" ]]; then
+        IP_DATA="@$(get_ip_info)"
+        vcs_info
+    else
+        IP_DATA=""
+        vcs_info_msg_0_=""
+    fi
 }
 zstyle ':vcs_info:git:*' formats ' ~ git (%b) '
-PROMPT='%F{magenta}%n@${IP_DATA}${vcs_info_msg_0_}'$'\n''%~%f %(!.#.$) '
+if [[ -n "$TMUX" ]]; then
+    PROMPT='%F{magenta}%(5~|%-1~/…/%3~|%~)%f %(!.#.$) '
+else
+    PROMPT='%F{magenta}%n${IP_DATA}${vcs_info_msg_0_}'$'\n''%~%f %(!.#.$) '
+fi
 
 if type brew &>/dev/null; then
   BREW_PREFIX="$(brew --prefix)"
