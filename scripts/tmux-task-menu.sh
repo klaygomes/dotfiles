@@ -2,34 +2,41 @@
 
 clear
 
-W=120  # total table width (2 sections of 60)
+# One Double Dark palette
+R='\033[0m'           # reset
+BORDER='\033[38;5;8m' # gray  — box lines
+HDR='\033[1;38;2;109;202;255m'  # bold blue  — column headers (#6dcaff)
+CMD='\033[38;2;233;149;109m'    # orange     — commands (#e8956d)
+EX='\033[38;2;140;197;112m'     # green      — examples (#8cc570)
+
+W=120
 PAD=$(( (COLUMNS - W) / 2 ))
 pad=$(printf '%*s' $PAD '')
 
-# Each section: | %-28s| %-27s|  = 60 chars wide
-row2() {
-  printf "${pad}│ %-27s│ %-28s║ %-27s│ %-28s│\n" "$1" "$2" "$3" "$4"
+# helpers — column widths: 27 | 28 ║ 27 | 28
+_line28() { printf '─%.0s' {1..28}; }
+_line29() { printf '─%.0s' {1..29}; }
+
+top2() {
+  printf "${pad}${BORDER}┌$(_line28)┬$(_line29)╦$(_line28)┬$(_line29)┐${R}\n"
 }
 div2() {
-  printf "${pad}├%s┼%s╬%s┼%s┤\n" \
-    "$(printf '─%.0s' {1..28})" "$(printf '─%.0s' {1..29})" \
-    "$(printf '─%.0s' {1..28})" "$(printf '─%.0s' {1..29})"
-}
-top2() {
-  printf "${pad}┌%s┬%s╦%s┬%s┐\n" \
-    "$(printf '─%.0s' {1..28})" "$(printf '─%.0s' {1..29})" \
-    "$(printf '─%.0s' {1..28})" "$(printf '─%.0s' {1..29})"
+  printf "${pad}${BORDER}├$(_line28)┼$(_line29)╬$(_line28)┼$(_line29)┤${R}\n"
 }
 bot2() {
-  printf "${pad}└%s┴%s╩%s┴%s┘\n" \
-    "$(printf '─%.0s' {1..28})" "$(printf '─%.0s' {1..29})" \
-    "$(printf '─%.0s' {1..28})" "$(printf '─%.0s' {1..29})"
+  printf "${pad}${BORDER}└$(_line28)┴$(_line29)╩$(_line28)┴$(_line29)┘${R}\n"
+}
+hdr2() {
+  printf "${pad}${BORDER}│${R} ${HDR}%-27s${R}${BORDER}│${R} ${HDR}%-28s${R}${BORDER}║${R} ${HDR}%-27s${R}${BORDER}│${R} ${HDR}%-28s${R}${BORDER}│${R}\n" "$1" "$2" "$3" "$4"
+}
+row2() {
+  printf "${pad}${BORDER}│${R} ${CMD}%-27s${R}${BORDER}│${R} ${EX}%-28s${R}${BORDER}║${R} ${CMD}%-27s${R}${BORDER}│${R} ${EX}%-28s${R}${BORDER}│${R}\n" "$1" "$2" "$3" "$4"
 }
 
 cheatsheet() {
   echo ""
   top2
-  row2 "COMMAND" "EXAMPLE" "COMMAND" "EXAMPLE"
+  hdr2 "COMMAND" "EXAMPLE" "COMMAND" "EXAMPLE"
   div2
   row2 "add <desc>"                  "add Buy milk"               "<id> start / stop"      "1 start"
   row2 "add <desc> project:<name>"   "add Fix bug project:work"   "<id> done"              "2 done"
