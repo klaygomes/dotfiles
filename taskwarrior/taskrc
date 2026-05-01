@@ -1,0 +1,42 @@
+# Taskwarrior configuration
+
+data.location=~/.local/share/task
+
+# Appearance
+color=on
+defaultwidth=120
+
+# Journal / history
+journal.info=yes
+
+# Editor
+editor=bat --paging=always
+
+# Behaviour
+default.command=next
+search.case.sensitive=no
+bulk=5
+nag=
+recurrence.confirmation=no
+
+# Due / scheduled defaults
+due=7
+
+# Urgency coefficients
+urgency.due.coefficient=12.0
+urgency.blocking.coefficient=8.0
+urgency.age.coefficient=2.0
+urgency.annotations.coefficient=1.0
+urgency.user.tag.next.coefficient=15.0
+
+# Reports
+report.next.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.next.labels=ID,Active,Age,Deps,P,Project,Tags,Recur,S,Due,Until,Description,Urg
+report.next.sort=urgency-
+report.next.filter=status:pending limit:30
+
+report.list.columns=id,priority,project,tags,due.relative,description,urgency
+report.list.labels=ID,P,Project,Tags,Due,Description,Urg
+report.list.sort=urgency-
+report.list.filter=status:pending
+news.version=3.4.2

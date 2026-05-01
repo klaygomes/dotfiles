@@ -15,12 +15,13 @@ MAC			:=	$(CONFIG_PATH)mac/setup.sh
 GIT			:=	${HOME}/.gitconfig
 BREW		:=	$(HOME)/Brewfile
 NODE		:=	$(CONFIG_PATH)/node/globals
+TASKWARRIOR	:=	$(CONFIG_PATH)task/taskrc
 
 
 # helper function to create target directory
 CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created.";fi;
 
-.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills help
+.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills taskwarrior help
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PROLOGUE
@@ -147,6 +148,13 @@ claude: ;@ ## Install Claude Code settings (symlinks into ~/.claude)
 	@echo "Claude settings installed"
 
 ## The following lines
+taskwarrior: $(TASKWARRIOR) ;@ ## Install taskwarrior configuration
+$(TASKWARRIOR): taskwarrior/taskrc
+	@$(call CREATE_TARGET_DIR)
+	@echo "Including 'taskwarrior/taskrc' to '$(TASKWARRIOR)'"
+	@ln -sf "$(CURDIR)/taskwarrior/taskrc" "$(TASKWARRIOR)"
+
+## The following lines
 skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@mkdir -p ${HOME}/.claude/skills
 	@ln -sf "$(CURDIR)/skills/klay-meeting-search" "${HOME}/.claude/skills/klay-meeting-search"
@@ -158,7 +166,7 @@ skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 
 ## Run all configurations
 all: ;@ ## Run all configurations
-	@for target in mac zsh brew node git vim tmux ranger bat bin launchd claude skills; do \
+	@for target in mac zsh brew node git vim tmux ranger bat bin launchd claude skills taskwarrior; do \
 		echo "Running $$target..."; \
 		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
 	done
