@@ -1,0 +1,27 @@
+Makefile
+  f440b90024f6bc9b 148-157
+claude/settings.patch.json
+  f440b90024f6bc9b 1-6
+claude/statusline-command.sh
+  f440b90024f6bc9b 1-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "29887f086264678145f74cd301d1f77ecd2ca634",
+  "prompts": {
+    "f440b90024f6bc9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "96f546ee-856d-4e87-866e-526ee6f42d5c",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Cleiton Loiola",
+      "messages": [],
+      "total_additions": 65,
+      "total_deletions": 1,
+      "accepted_lines": 65,
+      "overriden_lines": 0
+    }
+  }
+}
