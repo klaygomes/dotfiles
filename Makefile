@@ -145,7 +145,16 @@ launchd: ;@ ## Install and load launchd agents
 claude: ;@ ## Install Claude Code settings (symlinks into ~/.claude)
 	@mkdir -p ${CLAUDE_PATH}
 	@ln -sf "$(CURDIR)/claude/settings.local.json" "${CLAUDE_PATH}settings.local.json"
-	@echo "Claude settings installed"
+	@ln -sf "$(CURDIR)/claude/statusline-command.sh" "${CLAUDE_PATH}statusline-command.sh"
+	@chmod +x "$(CURDIR)/claude/statusline-command.sh"
+	@if [ -f "${CLAUDE_PATH}settings.json" ]; then \
+		jq -s '.[0] * .[1]' "${CLAUDE_PATH}settings.json" "$(CURDIR)/claude/settings.patch.json" > /tmp/claude-settings-merged.json \
+		&& mv /tmp/claude-settings-merged.json "${CLAUDE_PATH}settings.json" \
+		&& echo "Claude settings patched"; \
+	else \
+		cp "$(CURDIR)/claude/settings.patch.json" "${CLAUDE_PATH}settings.json" \
+		&& echo "Claude settings created"; \
+	fi
 
 ## The following lines
 taskwarrior: $(TASKWARRIOR) ;@ ## Install taskwarrior configuration
