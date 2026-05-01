@@ -111,6 +111,10 @@ brew "zsh-autosuggestions"
 # Fish shell-like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
 
+# Task management
+brew "task"
+brew "tasksh"
+
 # Container platform
 cask "docker"
 
