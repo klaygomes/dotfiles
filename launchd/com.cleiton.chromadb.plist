@@ -8,7 +8,7 @@
   <key>ProgramArguments</key>
   <array>
     <string>/bin/bash</string>
-    <string>/Users/cleiton.loiola/dotfiles/scripts/start-chromadb.sh</string>
+    <string>/Users/cleiton.loiola/dotfiles/scripts/chroma-start.sh</string>
   </array>
 
   <key>RunAtLoad</key>
