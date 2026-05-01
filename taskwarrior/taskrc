@@ -6,6 +6,24 @@ data.location=~/.local/share/task
 color=on
 defaultwidth=120
 
+# Theme — One Double Dark (matches ghostty + tmux)
+color.header=bold color12
+color.label=bold color12
+color.alternate=on color234
+color.active=bold color10
+color.due=color3
+color.due.today=bold color11
+color.overdue=bold color9
+color.blocked=color8
+color.blocking=bold color7
+color.priority.H=bold color9
+color.priority.M=color11
+color.priority.L=color8
+color.project.none=color8
+color.completed=color8
+color.deleted=color8
+color.tag.next=bold color13
+
 # Journal / history
 journal.info=yes
 
@@ -18,6 +36,7 @@ search.case.sensitive=no
 bulk=5
 nag=
 recurrence.confirmation=no
+confirmation=no
 
 # Due / scheduled defaults
 due=7
