@@ -20,11 +20,13 @@ parts+=("${c}󰍛 ${ctx_int}%${R}")
 
 # Rate limits
 _rate_segment() {
-  local pct_used=$1 resets_at=$2 label=$3
+  local pct_used=$1 resets_at=$2 label=$3 show_day=${4:-0}
   local used=$(printf '%.0f' "$pct_used")
   local reset_str=""
   if [ "$resets_at" -gt 0 ]; then
-    reset_str=" ${GRAY}→$(date -r "$resets_at" +"%a %H:%M")${R}"
+    local fmt="%H:%M"
+    [ "$show_day" = "1" ] && fmt="%a %H:%M"
+    reset_str=" ${GRAY}→$(date -r "$resets_at" +"$fmt")${R}"
   fi
   if   [ "$used" -ge 80 ]; then c=$RED
   elif [ "$used" -ge 50 ]; then c=$YELLOW
@@ -42,7 +44,7 @@ fi
 week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
 week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // 0')
 if [ -n "$week_pct" ]; then
-  parts+=("$(_rate_segment "$week_pct" "$week_reset" "7d")")
+  parts+=("$(_rate_segment "$week_pct" "$week_reset" "7d" 1)")
 fi
 
 
