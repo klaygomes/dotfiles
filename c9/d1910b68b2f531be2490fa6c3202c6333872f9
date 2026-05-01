@@ -1,0 +1,23 @@
+launchd/com.cleiton.chromadb.plist
+  f440b90024f6bc9b 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "c9d1910b68b2f531be2490fa6c3202c6333872f9",
+  "prompts": {
+    "f440b90024f6bc9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "96f546ee-856d-4e87-866e-526ee6f42d5c",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Cleiton Loiola",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
