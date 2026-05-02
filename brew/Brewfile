@@ -116,7 +116,7 @@ brew "task"
 brew "tasksh"
 
 # Container platform
-cask "docker"
+cask "docker-desktop"
 
 # An open-source IRC client written in Rust, with the iced GUI library
 #cask "halloy"
