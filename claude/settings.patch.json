@@ -1,6 +1,6 @@
 {
   "statusLine": {
     "type": "command",
-    "command": "bash /Users/cleiton/dotfiles/scripts/claude-statusline.sh"
+    "command": "bash $HOME/dotfiles/scripts/claude-statusline.sh"
   }
 }
