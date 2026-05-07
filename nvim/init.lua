@@ -53,7 +53,7 @@ vim.opt.wildignore:append({ "*.pyc", "*.o", "*.obj", "*.svn", "*.swp", "*.class"
 
 
 vim.g.lightline = {
-  colorscheme = "tender",
+  colorscheme = "tokyonight",
   active = {
     left = { { "mode", "paste" }, { "gitbranch", "readonly", "filename", "modified" } }
   },
@@ -61,7 +61,7 @@ vim.g.lightline = {
 }
 
 vim.pack.add({
-  { src = "https://github.com/jacoborus/tender.vim" },
+  { src = "https://github.com/folke/tokyonight.nvim" },
   { src = "https://github.com/itchyny/lightline.vim" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
@@ -84,7 +84,7 @@ vim.pack.add({
 vim.api.nvim_create_autocmd("VimEnter", {
   once = true,
   callback = function()
-    vim.cmd([[colorscheme tender]])
+    vim.cmd([[colorscheme tokyonight-night]])
 
     -- Treesitter: auto-install and enable highlighting
     local ok_ts, ts = pcall(require, "nvim-treesitter.configs")

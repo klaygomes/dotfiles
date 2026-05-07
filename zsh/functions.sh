@@ -261,6 +261,12 @@ function install_rvb(){
   curl -sSL https://get.rvm.io | bash -s stable --rails
 }
 
+# Kill all processes listening on a given port.
+# Usage: kp <port>
+function kp() {
+  lsof -ti:"$1" | xargs kill -9 2>/dev/null
+}
+
 # Switch to a tmux session by name, creating it in session_dir if it doesn't exist.
 function _tmux_attach() {
   local session_name="$1"
