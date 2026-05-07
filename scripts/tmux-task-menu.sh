@@ -36,28 +36,40 @@ row2() {
 cheatsheet() {
   echo ""
   top2
-  hdr2 "COMMAND" "EXAMPLE" "COMMAND" "EXAMPLE"
+  hdr2 "COMMAND" "EXAMPLE" "ACTIONS" "EXAMPLE"
   div2
-  row2 "add <desc>"                  "add Buy milk"               "<id> start / stop"      "1 start"
-  row2 "add <desc> project:<name>"   "add Fix bug project:work"   "<id> done"              "2 done"
-  row2 "add <desc> due:<date>"       "add Task due:friday"        "<id> delete"            "3 delete"
-  row2 "add <desc> priority:H"       "add Urgent task priority:H" "<id> modify due:<date>" "2 modify due:tomorrow"
-  row2 "add <desc> +<tag>"           "add Fix +work +bug"         "<id> modify priority:H" "1 modify priority:H"
-  row2 "list"                        "all pending tasks"          "<id> modify +<tag>"     "1 modify +urgent"
-  row2 "next"                        "by urgency"                 "<id> annotate <note>"   "1 annotate check logs"
-  row2 "due:today"                   "tasks due today"            "<id> info"              "2 info"
-  row2 "due:tomorrow"                "tasks due tomorrow"         "<id> edit"              "open in \$EDITOR"
-  row2 "project:<name>"              "project:work"               "summary"                "project overview"
-  row2 "projects"                    "list all projects"          "+<tag>"                 "+work (filter by tag)"
+  row2 "add <desc>"               "add Buy milk"            "<id> done / delete"     "2 done  /  3 delete"
+  row2 "add ... project:<p>"      "add Fix project:work"    "<id> start / stop"      "1 start"
+  row2 "add ... +<tag>"           "add Fix +work +bug"      "<id> modify <attr>"     "2 modify due:+2d"
+  row2 "add ... priority:H/M/L"  "add Task priority:H"     "<id> annotate <note>"   "1 annotate check log"
+  row2 "add ... due:<date>"       "add Task due:friday"     "<id> info / edit"       "2 info / open \$EDITOR"
+  row2 "add ... until:<date>"     "add Task until:eow"      "list / next / waiting"  "all / urgency / hidden"
+  row2 "add ... wait:<date>"      "hides task until date"   "project:<p> / +<tag>"   "project:work / +bug"
+  row2 "add ... scheduled:<date>" "add Task scheduled:+1w"  "due:today / tomorrow"   "filter by due date"
+  row2 "add ... recur:<freq>"     "add Bills recur:monthly" "summary / projects"     "overview / list all"
+  div2
+  hdr2 "DATE KEYWORDS" "" "RELATIVE DATES" ""
+  div2
+  row2 "today  tomorrow  eod"     "end of day"              "+1d  +2w  +3m  +1y"    "days/weeks/months/years"
+  row2 "eow  eom  eoy"            "end of week/month/year"  "mon  tue  wed  thu  fri" "next weekday occurrence"
   bot2
   echo ""
 }
 
 cheatsheet
 
+zmodload zsh/zle
+
+typeset _exit_modal=0
+_modal_exit() { _exit_modal=1; BUFFER=''; zle accept-line }
+zle -N _modal_exit
+bindkey '\e' _modal_exit
+
 while true; do
-  printf "task> "
-  read cmd || break
+  typeset cmd=''
+  _exit_modal=0
+  vared -p 'task> ' cmd || break
+  [[ $_exit_modal -eq 1 ]] && break
   [[ -z "$cmd" ]] && continue
   [[ "$cmd" == "quit" || "$cmd" == "exit" || "$cmd" == "q" ]] && break
   [[ "$cmd" == "h" || "$cmd" == "help" ]] && cheatsheet && continue
