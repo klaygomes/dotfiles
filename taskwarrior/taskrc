@@ -28,7 +28,7 @@ color.tag.next=bold color13
 journal.info=yes
 
 # Editor
-editor=bat --paging=always
+editor=nvim
 
 # Behaviour
 default.command=next
