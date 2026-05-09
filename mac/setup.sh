@@ -37,32 +37,68 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 #### DOCK
 ########################################
 
-# Set Dock size
-defaults write com.apple.dock tilesize -int 35
-
-# Auto-hide Dock
-defaults write com.apple.dock autohide -int 0
-
-# Disable animations
-defaults write com.apple.dock launchanim -int 0
-
-# Disable minimizing windows into their application’s icon
-defaults write com.apple.dock minimize-to-application -int 0
-
-# Show indicator lights for open applications in the Dock
-defaults write com.apple.dock show-process-indicators -int 1
-
-# Change minimize/maximize window effect
-defaults write com.apple.dock mineffect -string "suck"
-
 # Move Dock to the right
 defaults write com.apple.dock orientation -string "right"
 
-# Double-click on window's title bar to maximize it
-defaults write -g AppleActionOnDoubleClick -string "Maximize"
+# Remove default apps from the dock
+defaults write com.apple.dock persistent-apps -array
+
+# Add highlight effect to dock stacks
+defaults write com.apple.dock mouse-over-hilite-stack -bool true
+
+# Set item size
+defaults write com.apple.dock tilesize -int 35
+
+# Use genie animation
+defaults write com.apple.dock mineffect -string "genie"
+
+# Minimize apps into their dock icon
+defaults write com.apple.dock minimize-to-application -bool true
+
+# Enable spring loading for opening files by dragging to dock
+defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+
+# Show indicator lights for open applications in the Dock
+defaults write com.apple.dock show-process-indicators -bool true
+
+# Enable app launching animations
+defaults write com.apple.dock launchanim -bool true
+
+# Set opening animation speed
+defaults write com.apple.dock expose-animation-duration -float 1
+
+# Auto-hide Dock
+defaults write com.apple.dock autohide -bool false
+
+# Show which dock apps are hidden
+defaults write com.apple.dock showhidden -bool true
 
 # Hide recent applications
-defaults write com.apple.dock show-recents -int 0
+defaults write com.apple.dock show-recents -bool false
+
+# Double-click on window’s title bar to maximize it
+defaults write -g AppleActionOnDoubleClick -string "Maximize"
+
+# Use dockutil to manage dock apps if available
+if hash dockutil 2>/dev/null; then
+  apps_to_remove=(
+    ‘App Store’ ‘Calendar’ ‘Contacts’ ‘FaceTime’
+    ‘Keynote’ ‘Mail’ ‘Maps’ ‘Messages’ ‘Music’
+    ‘News’ ‘Notes’ ‘Numbers’ ‘Pages’ ‘Photos’
+    ‘Podcasts’ ‘Reminders’ ‘TV’
+  )
+  apps_to_add=(
+    ‘Ghostty’ ‘Google Chrome’ ‘Safari’ ‘Visual Studio Code’
+  )
+  for app in "${apps_to_remove[@]}"; do
+    dockutil --remove "$app" --no-restart 2>/dev/null || true
+  done
+  for app in "${apps_to_add[@]}"; do
+    if [[ -d "/Applications/${app}.app" ]]; then
+      dockutil --add "/Applications/${app}.app" --no-restart 2>/dev/null || true
+    fi
+  done
+fi
 
 #################################
 #### TRACKPAD
