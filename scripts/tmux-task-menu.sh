@@ -36,22 +36,18 @@ row2() {
 cheatsheet() {
   echo ""
   top2
-  hdr2 "COMMAND" "EXAMPLE" "ACTIONS" "EXAMPLE"
+  hdr2 "ADD MODIFIERS" "EXAMPLE" "ACTIONS" "EXAMPLE"
   div2
-  row2 "add <desc>"               "add Buy milk"            "<id> done / delete"     "2 done  /  3 delete"
-  row2 "add ... project:<p>"      "add Fix project:work"    "<id> start / stop"      "1 start"
-  row2 "add ... +<tag>"           "add Fix +work +bug"      "<id> modify <attr>"     "2 modify due:+2d"
-  row2 "add ... priority:H/M/L"  "add Task priority:H"     "<id> annotate <note>"   "1 annotate check log"
-  row2 "add ... due:<date>"       "add Task due:friday"     "<id> info / edit"       "2 info / open \$EDITOR"
-  row2 "add ... until:<date>"     "add Task until:eow"      "list / next / waiting"  "all / urgency / hidden"
-  row2 "add ... wait:<date>"      "hides task until date"   "project:<p> / +<tag>"   "project:work / +bug"
-  row2 "add ... scheduled:<date>" "add Task scheduled:+1w"  "due:today / tomorrow"   "filter by due date"
-  row2 "add ... recur:<freq>"     "add Bills recur:monthly" "summary / projects"     "overview / list all"
+  row2 "add <desc>"                "add Buy milk"            "<id> done / delete"    "2 done  /  3 delete"
+  row2 "+<tag>  project:<p>"       "+bug project:work"       "<id> start / stop"     "1 start  /  1 stop"
+  row2 "priority:H/M/L  due:<d>"  "priority:H due:fri"      "<id> modify <attr>"    "2 modify due:+2d"
+  row2 "wait:<d>  until:<d>"       "wait:mon until:eow"      "<id> annotate <note>"  "1 annotate see log"
+  row2 "sched:<d>  recur:<freq>"   "sched:+1w recur:monthly" "list / next / waiting" "all / urgent / hidden"
   div2
   hdr2 "DATE KEYWORDS" "" "RELATIVE DATES" ""
   div2
-  row2 "today  tomorrow  eod"     "end of day"              "+1d  +2w  +3m  +1y"    "days/weeks/months/years"
-  row2 "eow  eom  eoy"            "end of week/month/year"  "mon  tue  wed  thu  fri" "next weekday occurrence"
+  row2 "today  tomorrow  eod"      "end of day"              "+1d  +2w  +3m  +1y"   "days/weeks/months/years"
+  row2 "eow  eom  eoy"             "end of week/month/year"  "mon  tue  wed  thu  fri" "next weekday occurrence"
   bot2
   echo ""
 }
