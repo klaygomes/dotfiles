@@ -20,7 +20,7 @@ parts+=("${c}󰍛 ${ctx_int}%${R}")
 
 # Rate limits
 _rate_segment() {
-  local pct_used=$1 resets_at=$2 label=$3 show_day=${4:-0}
+  local pct_used=$1 resets_at=$2 icon=$3 show_day=${4:-0}
   local used=$(printf '%.0f' "$pct_used")
   local reset_str=""
   if [ "$resets_at" -gt 0 ]; then
@@ -32,20 +32,16 @@ _rate_segment() {
   elif [ "$used" -ge 50 ]; then c=$YELLOW
   else                          c=$GREEN
   fi
-  echo "${c}${label}:${used}%${R}${reset_str}"
+  echo "${c}${icon} ${used}%${R}${reset_str}"
 }
 
-five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
+five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // 0')
 five_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // 0')
-if [ -n "$five_pct" ]; then
-  parts+=("$(_rate_segment "$five_pct" "$five_reset" "5h")")
-fi
+parts+=("$(_rate_segment "$five_pct" "$five_reset" "󱑿")")
 
-week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
+week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // 0')
 week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // 0')
-if [ -n "$week_pct" ]; then
-  parts+=("$(_rate_segment "$week_pct" "$week_reset" "7d" 1)")
-fi
+parts+=("$(_rate_segment "$week_pct" "$week_reset" "󰃭" 1)")
 
 
 printf '%s' "$(IFS=' | '; echo "${parts[*]}")"
