@@ -118,6 +118,8 @@ brew "tasksh"
 # Container platform
 cask "docker-desktop"
 
+cask "font-jetbrains-mono-nerd-font"
+
 # An open-source IRC client written in Rust, with the iced GUI library
 #cask "halloy"
 
