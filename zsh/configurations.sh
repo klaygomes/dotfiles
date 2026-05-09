@@ -40,6 +40,7 @@ precmd() {
         IP_DATA=""
         vcs_info_msg_0_=""
     fi
+    echo "$COLUMNS" >| /tmp/terminal_cols
 }
 zstyle ':vcs_info:git:*' formats ' ~ git (%b) '
 if [[ -n "$TMUX" ]]; then

@@ -45,4 +45,10 @@ week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // 0')
 parts+=("$(_rate_segment "$week_pct" "$week_reset" "󰃭" 1)")
 
 
-printf '%s' "$(IFS=' | '; echo "${parts[*]}")"
+output="$(IFS=' | '; echo "${parts[*]}")"
+cols=$(cat /tmp/terminal_cols 2>/dev/null)
+cols=${cols:-${COLUMNS:-120}}
+visible=$(printf '%s' "$output" | sed 's/\033\[[0-9;]*m//g')
+pad=$(( cols - ${#visible} ))
+[ "$pad" -gt 0 ] && printf '%*s' "$pad" ""
+printf '%s' "$output"
