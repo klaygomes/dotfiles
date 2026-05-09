@@ -64,8 +64,14 @@ brew "the_silver_searcher"
 
 # a line-oriented search tool that recursively searches the current directory for a regex pattern
 brew "ripgrep"
+
+# Shell script static analysis tool
 brew "shellcheck"
 
+# Utility to manage macOS Dock items from the command line
+brew "dockutil"
+
+# Window snapping and resizing via keyboard shortcuts
 cask "rectangle"
 
 # Application uninstaller
@@ -95,6 +101,7 @@ cask "ghostty"
 # Terminal multiplexer
 brew "tmux"
 
+# Terminal file manager with vi-like keybindings
 brew "ranger"
 
 # Image preview in terminal (works in any terminal including Ghostty + tmux)
@@ -112,21 +119,28 @@ brew "zsh-autosuggestions"
 # Fish shell-like syntax highlighting for zsh
 brew "zsh-syntax-highlighting"
 
-# Task management
+# CLI task manager (TaskWarrior)
 brew "task"
+
+# Interactive shell for TaskWarrior
 brew "tasksh"
 
 # Container platform
 cask "docker-desktop"
 
+# Monospace font with programming ligatures and Nerd Font icons
 cask "font-jetbrains-mono-nerd-font"
 
 # An open-source IRC client written in Rust, with the iced GUI library
 #cask "halloy"
 
-# Apple App Store 
+# Pomodoro timer for focused work sessions
 mas "Be Focused Pro", id: 961632517
+
+# Apple IDE for macOS/iOS development
 mas "Xcode", id: 497799835
+
+# Drag-and-drop productivity utility for files, URLs, and scripts
 mas "Dropzone 4 - Enhance Workflow", id: 1485052491
 # mas "UTM Virtual Machines", id: 1538878817
 # mas "Amphetamine", id: 937984704 # keeps mac awake
