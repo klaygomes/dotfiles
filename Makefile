@@ -145,7 +145,7 @@ launchd: ;@ ## Install and load launchd agents
 claude: ;@ ## Install Claude Code settings (symlinks into ~/.claude)
 	@mkdir -p ${CLAUDE_PATH}
 	@ln -sf "$(CURDIR)/claude/settings.local.json" "${CLAUDE_PATH}settings.local.json"
-	@chmod +x "$(CURDIR)/scripts/statusline-command.sh"
+	@chmod +x "$(CURDIR)/scripts/claude-statusline.sh"
 	@if [ -f "${CLAUDE_PATH}settings.json" ]; then \
 		jq -s '.[0] * .[1]' "${CLAUDE_PATH}settings.json" "$(CURDIR)/claude/settings.patch.json" > /tmp/claude-settings-merged.json \
 		&& mv /tmp/claude-settings-merged.json "${CLAUDE_PATH}settings.json" \
