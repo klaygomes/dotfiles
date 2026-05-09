@@ -1,0 +1,9 @@
+tmux/tmux.conf
+  ai_agent 109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "4cd0835f0c17fdb87a241e656d6c05b6b35d08a2",
+  "prompts": {}
+}
