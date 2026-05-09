@@ -21,7 +21,8 @@ parts+=("${c}󰍛 ${ctx_int}%${R}")
 # Rate limits
 _rate_segment() {
   local pct_used=$1 resets_at=$2 icon=$3 show_day=${4:-0}
-  local used=$(printf '%.0f' "$pct_used")
+  local used
+  used=$(printf '%.0f' "$pct_used")
   local reset_str=""
   if [ "$resets_at" -gt 0 ]; then
     local fmt="%H:%M"
