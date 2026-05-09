@@ -65,6 +65,19 @@ vim.pack.add({
   { src = "https://github.com/itchyny/lightline.vim" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+
+  -- LSP
+  { src = "https://github.com/neovim/nvim-lspconfig" },
+  { src = "https://github.com/williamboman/mason.nvim" },
+  { src = "https://github.com/williamboman/mason-lspconfig.nvim" },
+
+  -- Completion
+  { src = "https://github.com/hrsh7th/nvim-cmp" },
+  { src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+  { src = "https://github.com/hrsh7th/cmp-buffer" },
+  { src = "https://github.com/hrsh7th/cmp-path" },
+  { src = "https://github.com/L3MON4D3/LuaSnip" },
+  { src = "https://github.com/saadparwaiz1/cmp_luasnip" },
 })
 
 -- Defer plugin setup to after vim.pack finishes installing (clean machine safe)
@@ -77,7 +90,13 @@ vim.api.nvim_create_autocmd("VimEnter", {
     local ok_ts, ts = pcall(require, "nvim-treesitter.configs")
     if ok_ts then
       ts.setup({
-        ensure_installed = { "markdown", "markdown_inline" },
+        ensure_installed = {
+          "markdown", "markdown_inline",
+          "lua", "bash",
+          "javascript", "typescript", "tsx",
+          "python", "c", "css", "html",
+          "json", "yaml",
+        },
         auto_install = true,
         highlight = { enable = true },
         indent = { enable = true },
@@ -94,6 +113,18 @@ vim.api.nvim_create_autocmd("VimEnter", {
         checkbox = { enabled = true },
         table = { enabled = true },
       })
+    end
+
+    -- Completion must load before LSP so cmp_nvim_lsp capabilities are ready
+    local ok_cmp = pcall(require, "completion")
+    if not ok_cmp then
+      vim.notify("completion.lua failed to load", vim.log.levels.WARN)
+    end
+
+    -- LSP + Mason (reads capabilities from cmp_nvim_lsp)
+    local ok_lsp = pcall(require, "lsp")
+    if not ok_lsp then
+      vim.notify("lsp.lua failed to load", vim.log.levels.WARN)
     end
   end,
 })
