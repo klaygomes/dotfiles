@@ -14,4 +14,4 @@ window-padding-balance = true
 window-padding-color = background
 
 shell-integration = detect
-shell-integration-features = cursor,sudo,title,notifications
+shell-integration-features = cursor,sudo,title
