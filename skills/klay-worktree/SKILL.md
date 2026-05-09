@@ -213,6 +213,10 @@ Worktree ready.
 Symlinks:  <list what was symlinked, or "none">
 Baseline:  passed ✓  (or: failed — user confirmed)
 
+Open Claude Code with the correct branch/PR context:
+
+  claude <worktree-path>
+
 When you are done with this feature:
 
   git worktree remove <worktree-path>    # remove the worktree
