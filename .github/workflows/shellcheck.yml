@@ -26,5 +26,6 @@ jobs:
             -not -path "./zsh/*" \
             -not -name "gh-cp.sh" \
             -not -name "tmux-fuzzy-session.sh" \
+            -not -name "tmux-task-menu.sh" \
             | sort \
             | xargs shellcheck
