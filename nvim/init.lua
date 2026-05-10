@@ -38,6 +38,7 @@ vim.opt.updatetime = 100                  -- To be able to see gitgutter signs m
 vim.opt.completeopt = "menuone,noselect"  -- completion menu like an IDE
 vim.opt.spelllang = "en_us,pt_br"         -- Set the spell language
 vim.opt.swapfile = false                  -- no swap files, I like to live dangerously
+vim.opt.signcolumn = "yes"               -- always show sign column to avoid layout shift on mode change
 
 -- Set the leader key to space
 vim.g.mapleader = " "
@@ -63,6 +64,7 @@ vim.g.lightline = {
 vim.pack.add({
   { src = "https://github.com/folke/tokyonight.nvim" },
   { src = "https://github.com/itchyny/lightline.vim" },
+  { src = "https://github.com/itchyny/vim-gitbranch" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 
@@ -71,6 +73,10 @@ vim.pack.add({
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/williamboman/mason.nvim" },
   { src = "https://github.com/williamboman/mason-lspconfig.nvim" },
+
+  -- Telescope
+  { src = "https://github.com/nvim-lua/plenary.nvim" },
+  { src = "https://github.com/nvim-telescope/telescope.nvim" },
 
   -- Completion
   { src = "https://github.com/hrsh7th/nvim-cmp" },
@@ -114,6 +120,26 @@ vim.api.nvim_create_autocmd("VimEnter", {
         checkbox = { enabled = true },
         table = { enabled = true },
       })
+    end
+
+    -- Telescope
+    local ok_tel, tel = pcall(require, "telescope")
+    if ok_tel then
+      tel.setup({
+        defaults = {
+          mappings = {
+            i = { ["<C-u>"] = false, ["<C-d>"] = false },
+          },
+        },
+      })
+      local builtin = require("telescope.builtin")
+      vim.keymap.set("n", "<leader>ff", builtin.find_files,  { desc = "Find files" })
+      vim.keymap.set("n", "<leader>fg", builtin.live_grep,   { desc = "Live grep" })
+      vim.keymap.set("n", "<leader>fb", builtin.buffers,     { desc = "Buffers" })
+      vim.keymap.set("n", "<leader>fh", builtin.help_tags,   { desc = "Help tags" })
+      vim.keymap.set("n", "<leader>fr", builtin.oldfiles,    { desc = "Recent files" })
+      vim.keymap.set("n", "<leader>fs", builtin.grep_string, { desc = "Grep word under cursor" })
+      vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Diagnostics" })
     end
 
     -- Completion must load before LSP so cmp_nvim_lsp capabilities are ready
