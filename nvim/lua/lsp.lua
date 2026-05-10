@@ -36,6 +36,7 @@ require("mason-lspconfig").setup({
     "html",
     "jsonls",
     "yamlls",
+    "marksman",
   },
   handlers = {
     lsp_zero.default_setup,
