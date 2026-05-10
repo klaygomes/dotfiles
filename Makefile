@@ -169,6 +169,10 @@ skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@chmod +x "$(CURDIR)/skills/klay-meeting-search/tools/query.py"
 	@ln -sf "$(CURDIR)/skills/klay-worktree" "${HOME}/.claude/skills/klay-worktree"
 	@ln -sf "$(CURDIR)/skills/klay-verify-before-done" "${HOME}/.claude/skills/klay-verify-before-done"
+	@ln -sf "$(CURDIR)/skills/klay-manage-git-worktrees" "${HOME}/.claude/skills/klay-manage-git-worktrees"
+	@ln -sf "$(CURDIR)/skills/klay-prove-dont-speculate" "${HOME}/.claude/skills/klay-prove-dont-speculate"
+	@ln -sf "$(CURDIR)/skills/klay-review-pr" "${HOME}/.claude/skills/klay-review-pr"
+	@ln -sf "$(CURDIR)/skills/shared" "${HOME}/.claude/skills/shared"
 	@if [ ! -f "$(CURDIR)/.env" ]; then \
 		cp "$(CURDIR)/.env.example" "$(CURDIR)/.env"; \
 	fi
