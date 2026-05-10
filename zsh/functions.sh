@@ -323,3 +323,12 @@ function _tmux_new_session() {
   _tmux_attach "$session_name" "$session_dir"
 }
 
+function server() {
+  local port=${1:-8000}
+  while lsof -i :"$port" &>/dev/null; do
+    ((port++))
+  done
+  echo "Starting server on http://localhost:$port"
+  serve -p "$port" "${@:2}"
+}
+
