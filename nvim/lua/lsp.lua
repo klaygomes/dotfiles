@@ -1,56 +1,62 @@
-local lsp_zero = require("lsp-zero")
+vim.lsp.config('*', {
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+})
 
-lsp_zero.extend_lspconfig({
-  capabilities = require("cmp_nvim_lsp").default_capabilities(),
-  sign_text = true,
-  lsp_attach = function(client, bufnr)
-    lsp_zero.default_keymaps({ buffer = bufnr })
-    -- keymaps not covered by lsp-zero defaults
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('my.lsp', {}),
+  callback = function(ev)
     local map = function(lhs, rhs, desc)
-      vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
+      vim.keymap.set('n', lhs, rhs, { buffer = ev.buf, desc = desc })
     end
-    map("<leader>rn", vim.lsp.buf.rename, "Rename symbol")
-    map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-    map("<leader>f", function() vim.lsp.buf.format({ async = true }) end, "Format buffer")
-    map("<leader>e", vim.diagnostic.open_float, "Show diagnostic float")
+    map('gd',  vim.lsp.buf.definition,                                        'Go to definition')
+    map('gD',  vim.lsp.buf.declaration,                                       'Go to declaration')
+    map('gr',  vim.lsp.buf.references,                                        'References')
+    map('gi',  vim.lsp.buf.implementation,                                    'Go to implementation')
+    map('K',   vim.lsp.buf.hover,                                             'Hover docs')
+    map('<leader>rn', vim.lsp.buf.rename,                                     'Rename symbol')
+    map('<leader>ca', vim.lsp.buf.code_action,                                'Code action')
+    map('<leader>f',  function() vim.lsp.buf.format({ async = true }) end,    'Format buffer')
+    map('<leader>e',  vim.diagnostic.open_float,                              'Show diagnostic')
   end,
 })
 
 vim.diagnostic.config({
-  virtual_text = { prefix = "●" },
+  virtual_text = { prefix = '●' },
   signs = true,
   update_in_insert = false,
-  float = { border = "rounded", source = true },
+  float = { border = 'rounded', source = true },
 })
 
-require("mason").setup({ ui = { border = "rounded" } })
-
-require("mason-lspconfig").setup({
-  ensure_installed = {
-    "lua_ls",
-    "bashls",
-    "ts_ls",
-    "pyright",
-    "clangd",
-    "cssls",
-    "html",
-    "jsonls",
-    "yamlls",
-    "marksman",
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      runtime = { version = 'LuaJIT' },
+      workspace = {
+        checkThirdParty = false,
+        library = { vim.env.VIMRUNTIME },
+      },
+    },
   },
-  handlers = {
-    lsp_zero.default_setup,
+})
 
-    lua_ls = function()
-      require("lspconfig").lua_ls.setup(lsp_zero.nvim_lua_ls())
-    end,
-
-    pyright = function()
-      require("lspconfig").pyright.setup({
-        settings = {
-          python = { analysis = { typeCheckingMode = "basic" } },
-        },
-      })
-    end,
+vim.lsp.config('pyright', {
+  settings = {
+    python = { analysis = { typeCheckingMode = 'basic' } },
   },
+})
+
+require('mason').setup({ ui = { border = 'rounded' } })
+require('mason-lspconfig').setup({
+  ensure_installed = { 'lua_ls', 'clangd', 'marksman' },
+})
+
+-- npm-managed servers (via node/globals) — Mason does not manage these
+vim.lsp.enable({
+  'bashls',
+  'ts_ls',
+  'cssls',
+  'html',
+  'jsonls',
+  'yamlls',
+  'pyright',
 })
