@@ -68,6 +68,15 @@ brew "ripgrep"
 # Shell script static analysis tool
 brew "shellcheck"
 
+# Lua code formatter
+brew "stylua"
+
+# Shell formatter
+brew "shfmt"
+
+# Python code formatter
+brew "black"
+
 # Utility to manage macOS Dock items from the command line
 brew "dockutil"
 
