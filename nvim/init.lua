@@ -69,10 +69,9 @@ vim.pack.add({
   { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 
   -- LSP
-  { src = "https://github.com/VonHeikemen/lsp-zero.nvim" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
-  { src = "https://github.com/williamboman/mason.nvim" },
-  { src = "https://github.com/williamboman/mason-lspconfig.nvim" },
+  { src = "https://github.com/mason-org/mason.nvim" },
+  { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
 
   -- Telescope
   { src = "https://github.com/nvim-lua/plenary.nvim" },

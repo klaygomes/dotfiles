@@ -9,3 +9,4 @@ pyright
 eslint_d
 prettier
 spectacle-cli
+yaml-language-server
