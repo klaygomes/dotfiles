@@ -1,5 +1,4 @@
 local cmp = require("cmp")
-local cmp_action = require("lsp-zero").cmp_action()
 local luasnip = require("luasnip")
 
 cmp.setup({
@@ -16,8 +15,24 @@ cmp.setup({
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-e>"]     = cmp.mapping.abort(),
     ["<CR>"]      = cmp.mapping.confirm({ select = false }),
-    ["<Tab>"]     = cmp_action.tab_complete(),
-    ["<S-Tab>"]   = cmp_action.select_prev_or_fallback(),
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
   }),
   sources = cmp.config.sources(
     { { name = "nvim_lsp" }, { name = "luasnip" } },
