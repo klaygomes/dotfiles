@@ -32,6 +32,11 @@ setopt PROMPT_SUBST
 
 # Load Git info
 autoload -Uz vcs_info
+preexec() {
+    [[ -z "$TMUX" ]] && return
+    local cmd="${${1%% *}:0:10}"
+    tmux rename-window "$(basename "$PWD") [${cmd}]"
+}
 precmd() {
     if [[ -z "$TMUX" ]]; then
         IP_DATA="@$(get_ip_info)"
@@ -39,6 +44,7 @@ precmd() {
     else
         IP_DATA=""
         vcs_info_msg_0_=""
+        tmux set-window-option automatic-rename on 2>/dev/null
     fi
     echo "$COLUMNS" >| /tmp/terminal_cols
 }
