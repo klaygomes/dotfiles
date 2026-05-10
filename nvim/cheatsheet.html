@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Neovim Cheatsheet</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "JetBrains Mono", "Fira Mono", "Courier New", monospace;
+      font-size: 11px;
+      color: #111;
+      background: #fff;
+      padding: 24px 32px;
+    }
+
+    h1 {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-bottom: 2px solid #111;
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+    }
+
+    h1 span {
+      font-size: 11px;
+      font-weight: normal;
+      text-transform: none;
+      letter-spacing: 0;
+      color: #555;
+      margin-left: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 32px;
+    }
+
+    section {
+      break-inside: avoid;
+    }
+
+    h2 {
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #555;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 3px;
+      margin-bottom: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td {
+      padding: 3px 0;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    td:first-child {
+      width: 40%;
+      white-space: nowrap;
+    }
+
+    kbd {
+      display: inline-block;
+      background: #f4f4f4;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      padding: 0 5px;
+      font-family: inherit;
+      font-size: 10.5px;
+    }
+
+    .spc { color: #888; font-size: 9px; vertical-align: middle; }
+
+    td:last-child { color: #333; padding-left: 10px; }
+
+    @media print {
+      body { padding: 12mm 14mm; }
+      kbd { background: #eee; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Neovim Keybindings <span>SPC = Space (leader)</span></h1>
+
+<div class="grid">
+
+  <section>
+    <h2>Find (Telescope)</h2>
+    <table>
+      <tr><td><kbd>SPC</kbd> <kbd>f f</kbd></td><td>Find files</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>f g</kbd></td><td>Live grep</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>f b</kbd></td><td>Buffers</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>f h</kbd></td><td>Help tags</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>f r</kbd></td><td>Recent files</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>f s</kbd></td><td>Grep word under cursor</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>f d</kbd></td><td>Diagnostics list</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>LSP (buffer-local)</h2>
+    <table>
+      <tr><td><kbd>g d</kbd></td><td>Go to definition</td></tr>
+      <tr><td><kbd>g D</kbd></td><td>Go to declaration</td></tr>
+      <tr><td><kbd>g r</kbd></td><td>References</td></tr>
+      <tr><td><kbd>g i</kbd></td><td>Go to implementation</td></tr>
+      <tr><td><kbd>K</kbd></td><td>Hover docs</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>r n</kbd></td><td>Rename symbol</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>c a</kbd></td><td>Code action</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>e</kbd></td><td>Show diagnostic float</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Git (gitsigns, buffer-local)</h2>
+    <table>
+      <tr><td><kbd>] c</kbd></td><td>Next hunk</td></tr>
+      <tr><td><kbd>[ c</kbd></td><td>Prev hunk</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>h s</kbd></td><td>Stage hunk</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>h r</kbd></td><td>Reset hunk</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>h b</kbd></td><td>Blame line</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>h p</kbd></td><td>Preview hunk</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Editing</h2>
+    <table>
+      <tr><td><kbd>SPC</kbd> <kbd>f</kbd></td><td>Format buffer (conform)</td></tr>
+      <tr><td><kbd>g c c</kbd></td><td>Toggle line comment</td></tr>
+      <tr><td><kbd>g c</kbd> <em>motion</em></td><td>Comment motion</td></tr>
+      <tr><td><kbd>g c</kbd> <em>(visual)</em></td><td>Comment selection</td></tr>
+      <tr><td><kbd>(</kbd> <kbd>[</kbd> <kbd>{</kbd> <kbd>"</kbd></td><td>Auto-closed on insert</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Completion (insert mode)</h2>
+    <table>
+      <tr><td><kbd>Ctrl</kbd> <kbd>Space</kbd></td><td>Trigger completion</td></tr>
+      <tr><td><kbd>Ctrl</kbd> <kbd>b</kbd> / <kbd>f</kbd></td><td>Scroll docs up / down</td></tr>
+      <tr><td><kbd>Tab</kbd> / <kbd>S-Tab</kbd></td><td>Next / prev item or snippet jump</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Confirm selection</td></tr>
+      <tr><td><kbd>Ctrl</kbd> <kbd>e</kbd></td><td>Abort completion</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Formatters by filetype</h2>
+    <table>
+      <tr><td><kbd>lua</kbd></td><td>stylua</td></tr>
+      <tr><td><kbd>python</kbd></td><td>black</td></tr>
+      <tr><td><kbd>sh</kbd> / <kbd>bash</kbd></td><td>shfmt</td></tr>
+      <tr><td><kbd>js</kbd> / <kbd>ts</kbd> / <kbd>jsx</kbd> / <kbd>tsx</kbd></td><td>prettier</td></tr>
+      <tr><td><kbd>css</kbd> / <kbd>html</kbd> / <kbd>json</kbd> / <kbd>yaml</kbd> / <kbd>md</kbd></td><td>prettier</td></tr>
+    </table>
+  </section>
+
+</div>
+
+</body>
+</html>
