@@ -139,10 +139,16 @@
     <h2>Editing</h2>
     <table>
       <tr><td><kbd>SPC</kbd> <kbd>f</kbd></td><td>Format buffer (conform)</td></tr>
+      <tr><td><em>on save</em></td><td>Auto-format via conform (500 ms timeout)</td></tr>
       <tr><td><kbd>g c c</kbd></td><td>Toggle line comment</td></tr>
-      <tr><td><kbd>g c</kbd> <em>motion</em></td><td>Comment motion</td></tr>
+      <tr><td><kbd>g b c</kbd></td><td>Toggle block comment</td></tr>
+      <tr><td><kbd>g c</kbd> <em>motion</em></td><td>Line-comment motion</td></tr>
+      <tr><td><kbd>g b</kbd> <em>motion</em></td><td>Block-comment motion</td></tr>
       <tr><td><kbd>g c</kbd> <em>(visual)</em></td><td>Comment selection</td></tr>
-      <tr><td><kbd>(</kbd> <kbd>[</kbd> <kbd>{</kbd> <kbd>"</kbd></td><td>Auto-closed on insert</td></tr>
+      <tr><td><kbd>g c O</kbd></td><td>Add comment line above</td></tr>
+      <tr><td><kbd>g c o</kbd></td><td>Add comment line below</td></tr>
+      <tr><td><kbd>g c A</kbd></td><td>Append comment at end of line</td></tr>
+      <tr><td><kbd>(</kbd> <kbd>[</kbd> <kbd>{</kbd> <kbd>"</kbd> <kbd>'</kbd> <kbd>`</kbd></td><td>Auto-closed on insert</td></tr>
     </table>
   </section>
 
@@ -165,6 +171,26 @@
       <tr><td><kbd>sh</kbd> / <kbd>bash</kbd></td><td>shfmt</td></tr>
       <tr><td><kbd>js</kbd> / <kbd>ts</kbd> / <kbd>jsx</kbd> / <kbd>tsx</kbd></td><td>prettier</td></tr>
       <tr><td><kbd>css</kbd> / <kbd>html</kbd> / <kbd>json</kbd> / <kbd>yaml</kbd> / <kbd>md</kbd></td><td>prettier</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Spell (en_us + pt_br)</h2>
+    <table>
+      <tr><td><kbd>] s</kbd></td><td>Next misspelling</td></tr>
+      <tr><td><kbd>[ s</kbd></td><td>Prev misspelling</td></tr>
+      <tr><td><kbd>z =</kbd></td><td>Spelling suggestions</td></tr>
+      <tr><td><kbd>z g</kbd></td><td>Add word to dictionary</td></tr>
+      <tr><td><kbd>z w</kbd></td><td>Mark word as wrong</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Which-key (popup guide)</h2>
+    <table>
+      <tr><td><kbd>SPC</kbd> <em>(pause)</em></td><td>Show all leader keymaps</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>f</kbd> <em>…</em></td><td>Group: find / format</td></tr>
+      <tr><td><kbd>SPC</kbd> <kbd>h</kbd> <em>…</em></td><td>Group: git hunks</td></tr>
     </table>
   </section>
 
