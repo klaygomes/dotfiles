@@ -76,19 +76,19 @@ defaults write com.apple.dock showhidden -bool true
 # Hide recent applications
 defaults write com.apple.dock show-recents -bool false
 
-# Double-click on window’s title bar to maximize it
+# Double-click on window's title bar to maximize it
 defaults write -g AppleActionOnDoubleClick -string "Maximize"
 
 # Use dockutil to manage dock apps if available
 if hash dockutil 2>/dev/null; then
   apps_to_remove=(
-    ‘App Store’ ‘Calendar’ ‘Contacts’ ‘FaceTime’
-    ‘Keynote’ ‘Mail’ ‘Maps’ ‘Messages’ ‘Music’
-    ‘News’ ‘Notes’ ‘Numbers’ ‘Pages’ ‘Photos’
-    ‘Podcasts’ ‘Reminders’ ‘TV’
+    'App Store' 'Calendar' 'Contacts' 'FaceTime'
+    'Keynote' 'Mail' 'Maps' 'Messages' 'Music'
+    'News' 'Notes' 'Numbers' 'Pages' 'Photos'
+    'Podcasts' 'Reminders' 'TV'
   )
   apps_to_add=(
-    ‘Ghostty’ ‘Google Chrome’ ‘Safari’ ‘Visual Studio Code’
+    'Ghostty' 'Google Chrome' 'Safari' 'Visual Studio Code'
   )
   for app in "${apps_to_remove[@]}"; do
     dockutil --remove "$app" --no-restart 2>/dev/null || true
