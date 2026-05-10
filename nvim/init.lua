@@ -84,6 +84,13 @@ vim.pack.add({
   { src = "https://github.com/hrsh7th/cmp-path" },
   { src = "https://github.com/L3MON4D3/LuaSnip" },
   { src = "https://github.com/saadparwaiz1/cmp_luasnip" },
+
+  -- Editing
+  { src = "https://github.com/lewis6991/gitsigns.nvim" },
+  { src = "https://github.com/numToStr/Comment.nvim" },
+  { src = "https://github.com/windwp/nvim-autopairs" },
+  { src = "https://github.com/stevearc/conform.nvim" },
+  { src = "https://github.com/folke/which-key.nvim" },
 })
 
 -- Defer plugin setup to after vim.pack finishes installing (clean machine safe)
@@ -151,6 +158,76 @@ vim.api.nvim_create_autocmd("VimEnter", {
     local ok_lsp = pcall(require, "lsp")
     if not ok_lsp then
       vim.notify("lsp.lua failed to load", vim.log.levels.WARN)
+    end
+
+    -- Git signs: hunks in sign column, staging, blame
+    local ok_gs, gs = pcall(require, "gitsigns")
+    if ok_gs then
+      gs.setup({
+        on_attach = function(bufnr)
+          local map = function(lhs, rhs, desc)
+            vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
+          end
+          map("]c", gs.next_hunk,   "Next hunk")
+          map("[c", gs.prev_hunk,   "Prev hunk")
+          map("<leader>hs", gs.stage_hunk,   "Stage hunk")
+          map("<leader>hr", gs.reset_hunk,   "Reset hunk")
+          map("<leader>hb", gs.blame_line,   "Blame line")
+          map("<leader>hp", gs.preview_hunk, "Preview hunk")
+        end,
+      })
+    end
+
+    -- Commenting: gcc / gc<motion>
+    local ok_comment, comment = pcall(require, "Comment")
+    if ok_comment then
+      comment.setup()
+    end
+
+    -- Auto-close brackets/quotes, with cmp integration
+    local ok_ap, ap = pcall(require, "nvim-autopairs")
+    if ok_ap then
+      ap.setup({ check_ts = true })
+      local ok_ap_cmp, ap_cmp = pcall(require, "nvim-autopairs.completion.cmp")
+      if ok_ap_cmp then
+        require("cmp").event:on("confirm_done", ap_cmp.on_confirm_done())
+      end
+    end
+
+    -- Formatting: per-filetype formatters with LSP fallback
+    local ok_conform, conform = pcall(require, "conform")
+    if ok_conform then
+      conform.setup({
+        formatters_by_ft = {
+          lua        = { "stylua" },
+          python     = { "black" },
+          sh         = { "shfmt" },
+          bash       = { "shfmt" },
+          javascript = { "prettier" },
+          typescript = { "prettier" },
+          javascriptreact = { "prettier" },
+          typescriptreact = { "prettier" },
+          css        = { "prettier" },
+          html       = { "prettier" },
+          json       = { "prettier" },
+          yaml       = { "prettier" },
+          markdown   = { "prettier" },
+        },
+        format_on_save = { timeout_ms = 500, lsp_fallback = true },
+      })
+      vim.keymap.set("n", "<leader>f", function()
+        conform.format({ async = true, lsp_fallback = true })
+      end, { desc = "Format buffer" })
+    end
+
+    -- Which-key: popup for leader keymaps
+    local ok_wk, wk = pcall(require, "which-key")
+    if ok_wk then
+      wk.setup()
+      wk.add({
+        { "<leader>f", group = "find/format" },
+        { "<leader>h", group = "git" },
+      })
     end
   end,
 })

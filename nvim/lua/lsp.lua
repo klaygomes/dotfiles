@@ -13,10 +13,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     map('gr',  vim.lsp.buf.references,                                        'References')
     map('gi',  vim.lsp.buf.implementation,                                    'Go to implementation')
     map('K',   vim.lsp.buf.hover,                                             'Hover docs')
-    map('<leader>rn', vim.lsp.buf.rename,                                     'Rename symbol')
-    map('<leader>ca', vim.lsp.buf.code_action,                                'Code action')
-    map('<leader>f',  function() vim.lsp.buf.format({ async = true }) end,    'Format buffer')
-    map('<leader>e',  vim.diagnostic.open_float,                              'Show diagnostic')
+    map('<leader>rn', vim.lsp.buf.rename,        'Rename symbol')
+    map('<leader>ca', vim.lsp.buf.code_action,   'Code action')
+    map('<leader>e',  vim.diagnostic.open_float, 'Show diagnostic')
   end,
 })
 
