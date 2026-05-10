@@ -9,8 +9,7 @@
 
 [![ShellCheck](https://github.com/klaygomes/dotfiles/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/klaygomes/dotfiles/actions/workflows/shellcheck.yml)
 
-These are Mac only configuration files. If, for some crazy reason, you want to use have it in
-mind.
+Automate all my configuration with just one command
 
 ## How to use
 
@@ -31,10 +30,14 @@ If you want to configure everything just run:
 make all
 ```
 
-You may also configure components individually:
+Configure individual components:
 
 ```bash
-make [ nvim | git | brew | zsh | node | tmux | ghostty | ranger | bat | launchd | claude | skills ]
+make nvim                    # neovim
+make git brew zsh node       # tools
+make tmux ghostty            # terminals
+make ranger bat launchd      # utilities
+make claude skills           # claude code
 ```
 > You can type more than one item at same time `make nvim git` for example
 
