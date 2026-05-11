@@ -2,5 +2,9 @@
   "statusLine": {
     "type": "command",
     "command": "bash $HOME/dotfiles/scripts/claude-statusline.sh"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
   }
 }
