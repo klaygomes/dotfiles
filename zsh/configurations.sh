@@ -55,6 +55,9 @@ else
     PROMPT='%F{magenta}%n${IP_DATA}${vcs_info_msg_0_}'$'\n''%~%f %(!.#.$) '
 fi
 
+# git-ai injects [trace2] into ~/.gitconfig; strip it on every shell start
+git config --global --remove-section trace2 2>/dev/null || true
+
 if type brew &>/dev/null; then
   BREW_PREFIX="$(brew --prefix)"
   [[ -f "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] \
