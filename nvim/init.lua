@@ -39,6 +39,7 @@ vim.opt.completeopt = "menuone,noselect"  -- completion menu like an IDE
 vim.opt.spelllang = "en_us,pt_br"         -- Set the spell language
 vim.opt.swapfile = false                  -- no swap files, I like to live dangerously
 vim.opt.signcolumn = "yes"               -- always show sign column to avoid layout shift on mode change
+vim.opt.clipboard = "unnamedplus"        -- sync yank/paste with system clipboard
 
 -- Set the leader key to space
 vim.g.mapleader = " "
