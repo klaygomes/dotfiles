@@ -4,7 +4,7 @@ from pathlib import Path
 
 DATE_PATTERNS = [
     (re.compile(r'[Dd]ate:\s*(\d{4}-\d{2}-\d{2})'), '%Y-%m-%d'),
-    (re.compile(r'[Dd]ate:\s*([A-Za-z]+ \d{1,2},\s*\d{4})'), '%B %d, %Y'),
+    (re.compile(r'[Dd]ate:\s*([A-Za-z]+\s+\d{1,2},\s*\d{4})'), '%B %d, %Y'),
     (re.compile(r'-+date:\s*(\d{4}-\d{2}-\d{2})', re.I), '%Y-%m-%d'),
     # "Monday, 27 April 2026" — weekday prefix is optional
     (re.compile(r'(?:[A-Za-z]+,\s*)?(\d{1,2}\s+[A-Za-z]+\s+\d{4})'), '%d %B %Y'),

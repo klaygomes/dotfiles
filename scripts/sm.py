@@ -24,6 +24,7 @@ _INPUT_FORMATS = [
     "%d/%m/%Y",
     "%Y-%m-%d",
     "%Y/%m/%d",
+    "%B %d, %Y",      # "May 13, 2026"
     "%d %B %Y",       # "27 April 2026"
     "%A, %d %B %Y",   # "Monday, 27 April 2026"
 ]
