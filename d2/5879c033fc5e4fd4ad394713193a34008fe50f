@@ -1,0 +1,11 @@
+tools/plan-reviewer/public/editor.ts
+  ai_agent 2,32,105-127,143,204-226,238,244,248-267,328
+tools/plan-reviewer/public/styles.css
+  ai_agent 383-426
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "d25879c033fc5e4fd4ad394713193a34008fe50f",
+  "prompts": {}
+}
