@@ -1,3 +1,5 @@
+local theme = require("theme")
+
 vim.opt.number = true       -- Show line numbers
 vim.opt.compatible = false  -- Be neovim, not vi
 vim.opt.filetype = "on"     -- Enable filetype detection
@@ -60,7 +62,7 @@ vim.opt.wildignore:append({ "*.pyc", "*.o", "*.obj", "*.svn", "*.swp", "*.class"
 
 
 vim.g.lightline = {
-  colorscheme = "tokyonight",
+  colorscheme = theme.lightline,
   active = {
     left = { { "mode", "paste" }, { "gitbranch", "readonly", "filename", "modified" } }
   },
@@ -104,8 +106,7 @@ vim.pack.add({
 vim.api.nvim_create_autocmd("VimEnter", {
   once = true,
   callback = function()
-    vim.cmd([[colorscheme tokyonight-night]])
-    vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#7c3aed" })
+    theme.apply()
 
     local ok_zen, zen = pcall(require, "zen-mode")
     if ok_zen then
