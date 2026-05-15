@@ -7,8 +7,13 @@ vim.opt.autoread = true     -- automatically read file when changed outside of v
 
 vim.opt.hidden = true       -- don't ask to save buffers before switching
 vim.opt.number = true       -- Show line numbers
+local wrap_col = 120        -- Change this to test different column widths
+
 vim.opt.showbreak = "+++"   -- Wrap-broken line prefix
-vim.opt.textwidth = 100     -- Line wrap (number of cols)
+vim.opt.textwidth = 0       -- Disable hard line breaks (soft wrap only)
+vim.opt.colorcolumn = tostring(wrap_col)  -- Visual column guide
+vim.opt.linebreak = true    -- Soft-wrap at word boundaries, not mid-word
+vim.opt.breakindent = true  -- Preserve indentation on wrapped lines
 vim.opt.showmatch = true    -- Highlight matching brace
 vim.opt.spell = true        -- Enable spell-checking
 vim.opt.visualbell = true   -- Use visual bell (no beeping)
@@ -87,6 +92,7 @@ vim.pack.add({
   { src = "https://github.com/saadparwaiz1/cmp_luasnip" },
 
   -- Editing
+  { src = "https://github.com/folke/zen-mode.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/numToStr/Comment.nvim" },
   { src = "https://github.com/windwp/nvim-autopairs" },
@@ -99,6 +105,17 @@ vim.api.nvim_create_autocmd("VimEnter", {
   once = true,
   callback = function()
     vim.cmd([[colorscheme tokyonight-night]])
+    vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#7c3aed" })
+
+    local ok_zen, zen = pcall(require, "zen-mode")
+    if ok_zen then
+      zen.setup({ window = { width = wrap_col, options = { wrap = true, linebreak = true } } })
+      vim.keymap.set("n", "<leader>z", zen.toggle, { desc = "Zen mode" })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "markdown", "text" },
+        callback = function() zen.open() end,
+      })
+    end
 
     -- Treesitter: auto-install and enable highlighting
     local ok_ts, ts = pcall(require, "nvim-treesitter.configs")
