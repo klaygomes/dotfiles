@@ -1,5 +1,5 @@
 import { EditorState, Range, StateEffect } from "@codemirror/state";
-import { EditorView, keymap, Decoration, DecorationSet, ViewPlugin, ViewUpdate } from "@codemirror/view";
+import { EditorView, keymap, Decoration, DecorationSet, ViewPlugin, ViewUpdate, hoverTooltip } from "@codemirror/view";
 import { markdown } from "@codemirror/lang-markdown";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 
@@ -29,6 +29,7 @@ let annotations: Annotation[] = [];
 let pendingFrom = -1;
 let pendingTo = -1;
 let pendingText = "";
+let editingAnnotationId: string | null = null;
 let view: EditorView;
 
 const highContrastTheme = EditorView.theme(
@@ -101,6 +102,29 @@ const annotationDecorationsPlugin = ViewPlugin.fromClass(
   { decorations: (v) => v.decorations }
 );
 
+const annotationHoverTooltip = hoverTooltip((_, pos) => {
+  const ann = annotations.find(a => a.from <= pos && pos <= a.to);
+  if (!ann) return null;
+  return {
+    pos: ann.from,
+    end: ann.to,
+    above: true,
+    create() {
+      const dom = document.createElement("div");
+      dom.className = "ann-tooltip";
+      dom.innerHTML = `
+        <p class="ann-tooltip-comment">${escHtml(ann.comment)}</p>
+        <div class="ann-tooltip-actions">
+          <button class="ann-tooltip-btn ann-tooltip-edit" data-id="${ann.id}">Edit</button>
+          <button class="ann-tooltip-btn ann-tooltip-remove" data-id="${ann.id}">Remove</button>
+        </div>`;
+      dom.querySelector(".ann-tooltip-edit")!.addEventListener("click", () => editAnnotation(ann.id));
+      dom.querySelector(".ann-tooltip-remove")!.addEventListener("click", () => deleteAnnotation(ann.id));
+      return { dom };
+    },
+  };
+}, { hoverTime: 300 });
+
 function initEditor() {
   const content = window.__PLAN_CONTENT__ ?? "";
 
@@ -116,6 +140,7 @@ function initEditor() {
       highContrastTheme,
       EditorView.lineWrapping,
       annotationDecorationsPlugin,
+      annotationHoverTooltip,
       EditorView.updateListener.of(onEditorUpdate),
     ],
   });
@@ -176,41 +201,68 @@ function saveAnnotation() {
   const comment = input.value.trim();
   if (!comment) return;
 
-  const state = view.state;
-  const lineStart = state.doc.lineAt(pendingFrom);
-  const lineEnd = state.doc.lineAt(pendingTo);
+  if (editingAnnotationId) {
+    // Update existing annotation
+    annotations = annotations.map(a =>
+      a.id === editingAnnotationId ? { ...a, comment } : a
+    );
+    editingAnnotationId = null;
+  } else {
+    // Create new annotation
+    const state = view.state;
+    const lineStart = state.doc.lineAt(pendingFrom);
+    const lineEnd = state.doc.lineAt(pendingTo);
+    annotations.push({
+      id: crypto.randomUUID(),
+      text: pendingText,
+      from: pendingFrom,
+      to: pendingTo,
+      range: {
+        from: { line: lineStart.number, col: pendingFrom - lineStart.from },
+        to: { line: lineEnd.number, col: pendingTo - lineEnd.from },
+      },
+      comment,
+    });
+  }
 
-  const annotation: Annotation = {
-    id: crypto.randomUUID(),
-    text: pendingText,
-    from: pendingFrom,
-    to: pendingTo,
-    range: {
-      from: { line: lineStart.number, col: pendingFrom - lineStart.from },
-      to: { line: lineEnd.number, col: pendingTo - lineEnd.from },
-    },
-    comment,
-  };
-
-  annotations.push(annotation);
   pendingFrom = -1;
   pendingTo = -1;
   pendingText = "";
 
   view.dispatch({ effects: refreshDecorations.of(null) });
-
   cancelAnnotation();
   renderAnnotations();
 }
 
 function cancelAnnotation() {
+  editingAnnotationId = null;
   document.getElementById("comment-dialog")!.classList.add("hidden");
 }
 
 function deleteAnnotation(id: string) {
   annotations = annotations.filter((a) => a.id !== id);
-  view.dispatch({ changes: { from: 0, to: 0, insert: "" } });
+  view.dispatch({ effects: refreshDecorations.of(null) });
   renderAnnotations();
+}
+
+function editAnnotation(id: string) {
+  const ann = annotations.find(a => a.id === id);
+  if (!ann) return;
+
+  editingAnnotationId = id;
+  pendingFrom = ann.from;
+  pendingTo = ann.to;
+  pendingText = ann.text;
+
+  const preview = document.getElementById("dialog-preview")!;
+  const truncated = ann.text.length > 80 ? ann.text.slice(0, 80) + "…" : ann.text;
+  preview.textContent = `"${truncated}"`;
+
+  const input = document.getElementById("comment-input") as HTMLTextAreaElement;
+  input.value = ann.comment;
+
+  document.getElementById("comment-dialog")!.classList.remove("hidden");
+  setTimeout(() => { input.focus(); input.select(); }, 50);
 }
 
 function renderAnnotations() {
@@ -273,6 +325,7 @@ async function submitReview(action: "approve" | "request_changes" | "comment") {
 
 // Expose to DOM event handlers
 (window as Record<string, unknown>).__deleteAnnotation = deleteAnnotation;
+(window as Record<string, unknown>).__editAnnotation = editAnnotation;
 (window as Record<string, unknown>).__addAnnotation = addAnnotation;
 (window as Record<string, unknown>).__saveAnnotation = saveAnnotation;
 (window as Record<string, unknown>).__cancelAnnotation = cancelAnnotation;
