@@ -32,33 +32,32 @@ let view: EditorView;
 const highContrastTheme = EditorView.theme(
   {
     "&": {
-      backgroundColor: "#0d0f17",
-      color: "#e8eaf0",
+      backgroundColor: "#1a1a1a",
+      color: "#e5e5e5",
       height: "100%",
       fontSize: "14px",
     },
     ".cm-content": {
       fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
-      lineHeight: "1.75",
-      padding: "20px 8px",
-      caretColor: "#00d4ff",
+      lineHeight: "1.8",
+      caretColor: "#e8956d",
     },
     ".cm-focused": { outline: "none" },
-    "&.cm-focused .cm-cursor": { borderLeftColor: "#00d4ff", borderLeftWidth: "2px" },
+    "&.cm-focused .cm-cursor": { borderLeftColor: "#e8956d", borderLeftWidth: "2px" },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": {
-      backgroundColor: "#00d4ff28",
+      backgroundColor: "#e8956d22",
     },
     ".cm-gutters": {
-      backgroundColor: "#0d0f17",
-      color: "#3a3f5c",
-      borderRight: "1px solid #1e2235",
+      backgroundColor: "#1a1a1a",
+      color: "#374151",
+      borderRight: "1px solid #282828",
     },
     ".cm-lineNumbers .cm-gutterElement": { padding: "0 10px 0 4px", minWidth: "36px" },
-    ".cm-activeLine": { backgroundColor: "#ffffff08" },
-    ".cm-activeLineGutter": { backgroundColor: "#ffffff08", color: "#6272a4" },
+    ".cm-activeLine": { backgroundColor: "#ffffff06" },
+    ".cm-activeLineGutter": { backgroundColor: "#ffffff06", color: "#6b7280" },
     ".cm-annotation-highlight": {
-      backgroundColor: "#ff950040",
-      borderBottom: "2px solid #ff9500",
+      backgroundColor: "#e8956d28",
+      borderBottom: "2px solid #e8956d",
       borderRadius: "2px",
     },
   },
@@ -259,9 +258,10 @@ async function submitReview(action: "approve" | "request_changes" | "comment") {
     });
     document.body.innerHTML = `
       <div class="done-screen">
-        <p>Review submitted: <strong>${action.replace("_", " ")}</strong></p>
-        <p class="done-sub">You can close this tab.</p>
+        <p>Review submitted: <strong>${action.replace(/_/g, " ")}</strong></p>
+        <p class="done-sub">Closing in 1 second…</p>
       </div>`;
+    setTimeout(() => window.close(), 1000);
   } catch {
     alert("Failed to submit review. Is the plan-reviewer server still running?");
   }
