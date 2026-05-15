@@ -1,9 +1,16 @@
 #!/bin/bash
 # Open a file in nvim inside a tmux popup modal.
 # Used as $EDITOR so tools like Claude Code open files in a floating tmux window.
+# Plan files are routed to the browser-based plan reviewer instead.
+FILE="$1"
+
+if [[ "$FILE" == *"/.claude/plans/"* ]]; then
+    exec "${HOME}/bin/plan-reviewer" "$FILE"
+fi
+
 if [ -n "$TMUX" ]; then
-    tmux popup -E -w 100% -h 100% "nvim $(printf '%q' "$1")"
+    tmux popup -E -w 100% -h 100% "nvim $(printf '%q' "$FILE")"
     tmux refresh-client
 else
-    exec nvim "$1"
+    exec nvim "$FILE"
 fi

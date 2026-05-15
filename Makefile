@@ -21,7 +21,7 @@ TASKWARRIOR	:=	$(CONFIG_PATH)task/taskrc
 # helper function to create target directory
 CREATE_TARGET_DIR=	if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created.";fi;
 
-.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills taskwarrior help
+.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer help
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PROLOGUE
@@ -163,6 +163,15 @@ $(TASKWARRIOR): taskwarrior/taskrc
 	@ln -sf "$(CURDIR)/taskwarrior/taskrc" "$(TASKWARRIOR)"
 
 ## The following lines
+plan-reviewer: ;@ ## Build plan-reviewer tool and install to ~/bin
+	@echo "Building plan-reviewer..."
+	@export NVM_DIR="$$HOME/.nvm" && \. "$$NVM_DIR/nvm.sh" && \
+		cd tools/plan-reviewer && nvm install && nvm use && npm install && npm run build
+	@ln -sf "$(CURDIR)/tools/plan-reviewer/dist/cli.js" "${BIN_PATH}plan-reviewer"
+	@chmod +x "${BIN_PATH}plan-reviewer"
+	@echo "plan-reviewer installed to ${BIN_PATH}plan-reviewer"
+
+## The following lines
 skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@mkdir -p ${HOME}/.claude/skills
 	@ln -sf "$(CURDIR)/skills/klay-meeting-search" "${HOME}/.claude/skills/klay-meeting-search"
@@ -173,6 +182,7 @@ skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@ln -sf "$(CURDIR)/skills/klay-prove-dont-speculate" "${HOME}/.claude/skills/klay-prove-dont-speculate"
 	@ln -sf "$(CURDIR)/skills/klay-review-pr" "${HOME}/.claude/skills/klay-review-pr"
 	@ln -sf "$(CURDIR)/skills/shared" "${HOME}/.claude/skills/shared"
+	@ln -sf "$(CURDIR)/skills/klay-plan-reviewer" "${HOME}/.claude/skills/klay-plan-reviewer"
 	@if [ ! -f "$(CURDIR)/.env" ]; then \
 		cp "$(CURDIR)/.env.example" "$(CURDIR)/.env"; \
 	fi
@@ -180,7 +190,7 @@ skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 
 ## Run all configurations
 all: ;@ ## Run all configurations
-	@for target in mac zsh brew node git vim tmux ranger bat bin launchd claude skills taskwarrior; do \
+	@for target in mac zsh brew node git vim tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer; do \
 		echo "Running $$target..."; \
 		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
 	done
