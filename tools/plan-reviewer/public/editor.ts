@@ -1,4 +1,4 @@
-import { EditorState, Range } from "@codemirror/state";
+import { EditorState, Range, StateEffect } from "@codemirror/state";
 import { EditorView, keymap, Decoration, DecorationSet, ViewPlugin, ViewUpdate } from "@codemirror/view";
 import { markdown } from "@codemirror/lang-markdown";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
@@ -23,6 +23,8 @@ interface Annotation {
   comment: string;
 }
 
+const refreshDecorations = StateEffect.define<null>();
+
 let annotations: Annotation[] = [];
 let pendingFrom = -1;
 let pendingTo = -1;
@@ -32,8 +34,8 @@ let view: EditorView;
 const highContrastTheme = EditorView.theme(
   {
     "&": {
-      backgroundColor: "#1a1a1a",
-      color: "#e5e5e5",
+      backgroundColor: "#121212",
+      color: "#e2e2e2",
       height: "100%",
       fontSize: "14px",
     },
@@ -45,16 +47,16 @@ const highContrastTheme = EditorView.theme(
     ".cm-focused": { outline: "none" },
     "&.cm-focused .cm-cursor": { borderLeftColor: "#e8956d", borderLeftWidth: "2px" },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": {
-      backgroundColor: "#e8956d22",
+      backgroundColor: "rgba(232,149,109,0.15)",
     },
     ".cm-gutters": {
-      backgroundColor: "#1a1a1a",
-      color: "#374151",
-      borderRight: "1px solid #282828",
+      backgroundColor: "#121212",
+      color: "#444444",
+      borderRight: "1px solid #222222",
     },
     ".cm-lineNumbers .cm-gutterElement": { padding: "0 10px 0 4px", minWidth: "36px" },
-    ".cm-activeLine": { backgroundColor: "#ffffff06" },
-    ".cm-activeLineGutter": { backgroundColor: "#ffffff06", color: "#6b7280" },
+    ".cm-activeLine": { backgroundColor: "rgba(255,255,255,0.03)" },
+    ".cm-activeLineGutter": { backgroundColor: "rgba(255,255,255,0.03)", color: "#666666" },
     ".cm-annotation-highlight": {
       backgroundColor: "rgba(232,149,109,0.18)",
       borderBottom: "2px solid #e8956d",
@@ -73,7 +75,10 @@ const annotationDecorationsPlugin = ViewPlugin.fromClass(
     }
 
     update(u: ViewUpdate) {
-      if (u.docChanged || u.viewportChanged) {
+      const needsRefresh = u.docChanged
+        || u.viewportChanged
+        || u.transactions.some(t => t.effects.some(e => e.is(refreshDecorations)));
+      if (needsRefresh) {
         this.decorations = this.buildDecorations(u.view);
       }
     }
@@ -192,8 +197,7 @@ function saveAnnotation() {
   pendingTo = -1;
   pendingText = "";
 
-  // Refresh decorations
-  view.dispatch({ changes: { from: 0, to: 0, insert: "" } });
+  view.dispatch({ effects: refreshDecorations.of(null) });
 
   cancelAnnotation();
   renderAnnotations();
