@@ -134,6 +134,9 @@ brew "task"
 # Interactive shell for TaskWarrior
 brew "tasksh"
 
+# Terminal system monitor (CPU, memory, disk, network dashboard)
+brew "btop"
+
 # Container platform
 cask "docker-desktop"
 
