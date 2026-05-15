@@ -35,33 +35,33 @@ let view: EditorView;
 const highContrastTheme = EditorView.theme(
   {
     "&": {
-      backgroundColor: "#121212",
-      color: "#e2e2e2",
+      backgroundColor: "var(--color-editor)",
+      color: "var(--color-text)",
       height: "100%",
-      fontSize: "14px",
+      fontSize: "var(--text-editor)",
     },
     ".cm-content": {
-      fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
-      lineHeight: "1.8",
-      caretColor: "#e8956d",
+      fontFamily: "var(--font-mono)",
+      lineHeight: "var(--leading-editor)",
+      caretColor: "var(--color-accent)",
     },
     ".cm-focused": { outline: "none" },
-    "&.cm-focused .cm-cursor": { borderLeftColor: "#e8956d", borderLeftWidth: "2px" },
+    "&.cm-focused .cm-cursor": { borderLeftColor: "var(--color-accent)", borderLeftWidth: "var(--border-width-thick)" },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": {
-      backgroundColor: "rgba(232,149,109,0.15)",
+      backgroundColor: "var(--color-selection)",
     },
     ".cm-gutters": {
-      backgroundColor: "#121212",
-      color: "#444444",
-      borderRight: "1px solid #222222",
+      backgroundColor: "var(--color-editor)",
+      color: "var(--color-gutter-fg)",
+      borderRight: "var(--border-width) solid var(--color-gutter-border)",
     },
-    ".cm-lineNumbers .cm-gutterElement": { padding: "0 10px 0 4px", minWidth: "36px" },
-    ".cm-activeLine": { backgroundColor: "rgba(255,255,255,0.03)" },
-    ".cm-activeLineGutter": { backgroundColor: "rgba(255,255,255,0.03)", color: "#666666" },
+    ".cm-lineNumbers .cm-gutterElement": { padding: "0 var(--space-5) 0 var(--space-2)", minWidth: "36px" },
+    ".cm-activeLine": { backgroundColor: "var(--color-active-line)" },
+    ".cm-activeLineGutter": { backgroundColor: "var(--color-active-line)", color: "var(--color-gutter-active)" },
     ".cm-annotation-highlight": {
-      backgroundColor: "rgba(232,149,109,0.18)",
-      borderBottom: "2px solid #e8956d",
-      borderRadius: "2px",
+      backgroundColor: "var(--color-accent-highlight)",
+      borderBottom: "2px solid var(--color-accent)",
+      borderRadius: "var(--radius-1)",
     },
   },
   { dark: true }
@@ -271,7 +271,7 @@ function renderAnnotations() {
   count.textContent = String(annotations.length);
 
   if (annotations.length === 0) {
-    list.innerHTML = `<p class="empty-state">No annotations yet.<br>Select text and click <strong style="color:var(--sb-accent)">＋ Add comment</strong>.</p>`;
+    list.innerHTML = `<div class="empty-state"><span>No annotations yet.</span><span>Select text → <strong>＋ Add comment</strong></span></div>`;
     return;
   }
 
