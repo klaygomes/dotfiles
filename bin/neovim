@@ -8,6 +8,17 @@ if [[ "$FILE" == *"/.claude/plans/"* ]]; then
     exec "${HOME}/bin/plan-reviewer" "$FILE"
 fi
 
+# Empty input from Claude Code's external editor → open plan if one was recently active
+if [[ ! -s "$FILE" ]]; then
+    LATEST_PLAN=$(ls -t "${HOME}/.claude/plans/"*.md 2>/dev/null | head -1)
+    if [[ -n "$LATEST_PLAN" ]]; then
+        PLAN_AGE=$(( $(date +%s) - $(stat -f %m "$LATEST_PLAN") ))
+        if [[ $PLAN_AGE -lt 600 ]]; then
+            exec "${HOME}/bin/plan-reviewer" "$LATEST_PLAN"
+        fi
+    fi
+fi
+
 if [ -n "$TMUX" ]; then
     tmux popup -E -w 100% -h 100% "nvim $(printf '%q' "$FILE")"
     tmux refresh-client
