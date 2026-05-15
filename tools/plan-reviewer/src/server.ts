@@ -1,11 +1,25 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as net from "net";
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import open from "open";
 
-const PORT = 3848;
+const PREFERRED_PORT = 3848;
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
+
+function findFreePort(start: number): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.listen(start, () => {
+      const port = (server.address() as net.AddressInfo).port;
+      server.close(() => resolve(port));
+    });
+    server.on("error", () =>
+      start < 3900 ? resolve(findFreePort(start + 1)) : reject(new Error("No free port found"))
+    );
+  });
+}
 
 interface ServerOptions {
   content: string;
@@ -13,7 +27,8 @@ interface ServerOptions {
   fileName: string;
 }
 
-export function startServer(options: ServerOptions): Promise<unknown> {
+export async function startServer(options: ServerOptions): Promise<unknown> {
+  const port = await findFreePort(PREFERRED_PORT);
   return new Promise((resolve) => {
     const app = new Hono();
 
@@ -48,7 +63,7 @@ window.__PLAN_NAME__ = ${JSON.stringify(options.fileName)};
       return c.json({ ok: true });
     });
 
-    serve({ fetch: app.fetch, port: PORT }, (info) => {
+    serve({ fetch: app.fetch, port }, (info) => {
       const url = `http://localhost:${info.port}`;
       console.error(`Plan reviewer → ${url}`);
       open(url);
