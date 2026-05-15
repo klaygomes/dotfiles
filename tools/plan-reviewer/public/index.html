@@ -41,7 +41,14 @@
       </div>
     </aside>
 
-    <main id="editor-container"></main>
+    <div class="main-area">
+      <div class="tabs-bar">
+        <button class="tab tab-active" id="tab-editor" onclick="window.__switchTab('editor')">Editor</button>
+        <button class="tab" id="tab-preview" onclick="window.__switchTab('preview')">Preview</button>
+      </div>
+      <main id="editor-container"></main>
+      <div id="preview-container" class="hidden"></div>
+    </div>
 
   </div>
 
@@ -64,8 +71,12 @@
     </div>
   </footer>
 
-  <div id="add-comment-btn" class="floating-btn hidden">
-    <button onclick="window.__addAnnotation()">＋ Add comment</button>
+  <div id="inline-popover" class="inline-popover hidden">
+    <textarea id="inline-comment-input" class="inline-popover-textarea" placeholder="Add comment… (⌘↵)"></textarea>
+    <div class="inline-popover-actions">
+      <button class="btn btn-save" onclick="window.__saveInlineComment()">Save <kbd>⌘↵</kbd></button>
+      <button class="btn btn-cancel" onclick="window.__hideInlinePopover()">Cancel</button>
+    </div>
   </div>
 
   <div id="comment-dialog" class="dialog-backdrop hidden">
@@ -82,6 +93,11 @@
     </div>
   </div>
 
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+    window._mermaid = mermaid;
+  </script>
   <script src="/editor.bundle.js"></script>
 </body>
 </html>
