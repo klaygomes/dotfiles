@@ -1,29 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Editor / shell */
-  --bg:           #1a1a1a;
-  --border:       #2e2e2e;
-  --border-dim:   #242424;
-  --accent:       #e8956d;
-  --accent-dim:   #c4724a;
-  --accent-bg:    #e8956d18;
-  --green:        #6ee7b7;
-  --red:          #f87171;
+  /* Editor — Charcoal Gray */
+  --bg:            #121212;
+  --border:        #252525;  /* Outer Space */
+  --text:          #dde1e7;
+  --text-dim:      #8c95a2;
+  --accent:        #e8956d;  /* terminal orange */
+  --green:         #4ade80;
+  --red:           #fc8181;
 
-  /* Sidebar candy palette */
-  --sb-bg:        #1a1530;
-  --sb-surface:   #211c3a;
-  --sb-hover:     #2a2448;
-  --sb-border:    #32295a;
-  --sb-text:      #e2d9f3;
-  --sb-dim:       #9b8ec4;
-  --sb-muted:     #5a5080;
-  --sb-label:     #b4a7d6;
-  --sb-accent:    #c4adff;
+  /* Sidebar — Oxford Blue: visually distinct, not jarring */
+  --sb-bg:         #1b2230;  /* between Smoky Black + Oxford Blue */
+  --sb-surface:    #212a37;  /* Oxford Blue */
+  --sb-border:     #2d3a4a;
+  --sb-text:       #dde1e7;  /* same brightness as editor text */
+  --sb-dim:        #8c95a2;  /* readable slate */
+  --sb-muted:      #4a5568;  /* placeholders only */
+  --sb-label:      #e8956d;  /* orange = ties to terminal accent */
+  --sb-accent:     #e8956d;
+  --sb-badge-bg:   #2d3a4a;
+  --sb-badge-text: #dde1e7;
 
-  --mono:        'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  --sans:        'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono:        'JetBrains Mono', 'Fira Code', monospace;
+  --sans:        'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --statusbar-h: 28px;
 }
 
@@ -35,6 +35,7 @@ html, body {
   color: var(--text);
   font-family: var(--sans);
   font-size: 13px;
+  line-height: 1.5;
 }
 
 /* ── Layout ── */
@@ -54,9 +55,7 @@ html, body {
   overflow: hidden;
 }
 
-.sidebar-section {
-  padding: 14px 12px;
-}
+.sidebar-section { padding: 14px 12px; }
 
 .sidebar-divider {
   height: 1px;
@@ -64,8 +63,26 @@ html, body {
   flex-shrink: 0;
 }
 
+/* Annotations — flex-grow so buttons stay at bottom */
+.annotations-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+#annotation-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 4px;
+}
+
+/* Section labels — clearly visible */
 .section-label {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -74,54 +91,32 @@ html, body {
   margin-bottom: 10px;
 }
 
-/* ── Action buttons ── */
-.actions-section {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
+.count-badge {
+  background: var(--sb-badge-bg);
+  color: var(--sb-badge-text);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
-.btn {
-  border: none;
-  border-radius: 5px;
-  padding: 7px 12px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  transition: opacity 0.12s, background 0.12s;
-}
-.btn:active { opacity: 0.8; }
-
-.btn-approve  { background: var(--green); color: #052e16; }
-.btn-changes  { background: var(--accent); color: #1c0a00; }
-.btn-comment  { background: var(--sb-surface); color: var(--sb-text); border: 1px solid var(--sb-border); }
-.btn-save     { background: var(--accent); color: #1c0a00; }
-.btn-cancel   { background: var(--sb-surface); color: var(--sb-dim); border: 1px solid var(--sb-border); }
-.btn:hover    { opacity: 0.85; }
-
-/* ── Annotations ── */
-.annotations-section {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
-}
-
+/* Empty state — readable */
 .empty-state {
-  color: var(--sb-muted);
-  font-size: 11px;
+  color: var(--sb-dim);
+  font-size: 12px;
   line-height: 1.7;
 }
 
+/* Annotation items */
 .annotation-item {
   position: relative;
   background: var(--sb-surface);
   border: 1px solid var(--sb-border);
   border-left: 2px solid var(--sb-accent);
-  border-radius: 4px;
-  padding: 8px 24px 8px 10px;
+  border-radius: 5px;
+  padding: 8px 28px 8px 10px;
   margin-bottom: 6px;
 }
 
@@ -129,7 +124,7 @@ html, body {
   font-family: var(--mono);
   font-size: 10px;
   color: var(--sb-accent);
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -141,51 +136,81 @@ html, body {
   line-height: 1.5;
 }
 
+/* Delete button — clearly visible */
 .ann-delete {
   position: absolute;
   top: 6px;
   right: 6px;
   background: none;
   border: none;
-  color: var(--sb-muted);
+  color: var(--sb-dim);
   cursor: pointer;
-  font-size: 10px;
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
+  font-size: 12px;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
   padding: 0;
+  line-height: 1;
+  transition: color 0.12s, background 0.12s;
 }
-.ann-delete:hover { color: var(--red); background: #f8717120; }
+.ann-delete:hover { color: var(--red); background: rgba(252, 129, 129, 0.15); }
 
-/* ── Summary ── */
-.summary-section {
-  flex-shrink: 0;
-  padding-bottom: 10px;
-}
+/* Summary */
+.summary-section { flex-shrink: 0; }
 
 #summary-input {
   width: 100%;
   background: var(--sb-surface);
   border: 1px solid var(--sb-border);
-  border-radius: 4px;
+  border-radius: 5px;
   color: var(--sb-text);
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.5;
-  padding: 7px 8px;
+  padding: 8px;
   resize: vertical;
-  min-height: 60px;
+  min-height: 64px;
   max-height: 120px;
   outline: none;
 }
-#summary-input:focus { border-color: var(--sb-accent); }
+#summary-input:focus  { border-color: var(--sb-accent); }
 #summary-input::placeholder { color: var(--sb-muted); }
 
-/* ── Pane border (tmux style) ── */
+/* Actions — at the bottom */
+.actions-section {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* ── Buttons ── */
+.btn {
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: opacity 0.12s;
+  letter-spacing: 0.01em;
+}
+.btn:active { opacity: 0.75; }
+.btn:hover  { opacity: 0.88; }
+
+.btn-approve { background: var(--green);  color: #052e16; }
+.btn-changes { background: var(--accent); color: #1c0a00; }
+.btn-comment { background: var(--sb-surface); color: var(--sb-text); border: 1px solid var(--sb-border); }
+.btn-save    { background: var(--accent); color: #1c0a00; width: auto; }
+.btn-cancel  { background: var(--sb-surface); color: var(--sb-dim); border: 1px solid var(--sb-border); width: auto; }
+
+/* ── Pane border ── */
 .pane-border {
   width: 1px;
   background: var(--sb-border);
@@ -199,11 +224,8 @@ html, body {
   background: var(--bg);
 }
 
-#editor-container .cm-editor {
-  height: 100%;
-}
+#editor-container .cm-editor { height: 100%; }
 
-/* CodeMirror content centered, max readable width */
 #editor-container .cm-scroller {
   display: flex;
   justify-content: center;
@@ -215,19 +237,14 @@ html, body {
   padding: 40px 24px;
 }
 
-/* ── CodeMirror theme ── */
-.cm-editor {
-  background: var(--bg) !important;
-}
-
 /* ── Bottom status bar (tmux-style) ── */
 .statusbar {
   height: var(--statusbar-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #1a1a1a;
-  border-top: 1px solid var(--border);
+  background: #0a0a0a;  /* Rich Black */
+  border-top: 1px solid #1d1d1d;
   padding: 0;
   flex-shrink: 0;
   font-family: var(--mono);
@@ -249,55 +266,45 @@ html, body {
   align-items: center;
   gap: 6px;
   padding: 0 12px;
-  font-size: 11px;
-  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
-.statusbar-icon {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
+.statusbar-icon { width: 13px; height: 13px; flex-shrink: 0; }
 
-/* tmux-style arrow separator */
 .statusbar-sep {
   width: 0;
   height: 0;
   border-top: 14px solid transparent;
   border-bottom: 14px solid transparent;
-  border-left: 10px solid var(--accent);
+  border-left: 9px solid var(--accent);
 }
 
 .statusbar-plan {
-  color: var(--text-dim);
-  padding: 0 16px;
+  color: #8b8b8b;
+  padding: 0 14px;
   display: flex;
   align-items: center;
 }
 
 .statusbar-right {
   padding: 0 14px;
-  color: var(--text-muted);
+  color: #4b4b4b;
   font-size: 10px;
 }
 
 /* ── Floating add comment button ── */
-.floating-btn {
-  position: fixed;
-  z-index: 200;
-}
+.floating-btn { position: fixed; z-index: 200; }
 .floating-btn button {
-  background: var(--accent);
-  color: #1c0a00;
+  background: var(--sb-accent);
+  color: #0d0a1f;
   border: none;
-  border-radius: 4px;
-  padding: 4px 11px;
+  border-radius: 5px;
+  padding: 5px 12px;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 14px #00000070;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
   white-space: nowrap;
 }
 .floating-btn button:hover { opacity: 0.9; }
@@ -308,7 +315,7 @@ html, body {
 .dialog-backdrop {
   position: fixed;
   inset: 0;
-  background: #00000070;
+  background: rgba(0,0,0,0.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -316,23 +323,23 @@ html, body {
 }
 
 .dialog-box {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-top: 2px solid var(--accent);
-  border-radius: 6px;
-  padding: 18px;
+  background: var(--sb-bg);
+  border: 1px solid var(--sb-border);
+  border-top: 2px solid var(--sb-accent);
+  border-radius: 8px;
+  padding: 20px;
   width: 420px;
   max-width: 90vw;
-  box-shadow: 0 20px 60px #00000090;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.8);
 }
 
 .dialog-label {
   font-family: var(--sans);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  color: var(--sb-label);
   margin-bottom: 6px;
   display: block;
 }
@@ -340,12 +347,12 @@ html, body {
 .dialog-preview {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--accent);
-  border-left: 2px solid var(--accent);
-  padding: 5px 9px;
-  background: var(--accent-bg);
-  border-radius: 3px;
-  margin-bottom: 12px;
+  color: var(--sb-accent);
+  border-left: 2px solid var(--sb-accent);
+  padding: 5px 10px;
+  background: rgba(167, 139, 250, 0.08);
+  border-radius: 4px;
+  margin-bottom: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -353,32 +360,27 @@ html, body {
 
 .dialog-textarea {
   width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  border-radius: 5px;
+  color: var(--sb-text);
   font-family: var(--sans);
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.55;
   padding: 9px;
   resize: vertical;
   min-height: 80px;
   outline: none;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
-.dialog-textarea:focus { border-color: var(--accent); }
-.dialog-textarea::placeholder { color: var(--text-muted); }
+.dialog-textarea:focus   { border-color: var(--sb-accent); }
+.dialog-textarea::placeholder { color: var(--sb-muted); }
 
-.dialog-actions {
-  display: flex;
-  gap: 7px;
-  justify-content: flex-end;
-}
-.dialog-actions .btn { width: auto; }
+.dialog-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .dialog-actions kbd {
   font-family: var(--mono);
   font-size: 9px;
-  opacity: 0.65;
+  opacity: 0.6;
   margin-left: 4px;
 }
 
@@ -390,14 +392,14 @@ html, body {
   justify-content: center;
   height: 100vh;
   gap: 8px;
-  color: var(--text-dim);
   font-family: var(--sans);
+  color: var(--sb-dim);
 }
-.done-screen strong { color: var(--accent); }
-.done-sub { font-size: 11px; color: var(--text-muted); }
+.done-screen strong { color: var(--green); }
+.done-sub { font-size: 11px; color: var(--sb-muted); }
 
 /* ── Scrollbars ── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+::-webkit-scrollbar-thumb { background: var(--sb-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--sb-muted); }

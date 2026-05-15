@@ -56,7 +56,7 @@ const highContrastTheme = EditorView.theme(
     ".cm-activeLine": { backgroundColor: "#ffffff06" },
     ".cm-activeLineGutter": { backgroundColor: "#ffffff06", color: "#6b7280" },
     ".cm-annotation-highlight": {
-      backgroundColor: "#e8956d28",
+      backgroundColor: "rgba(232,149,109,0.18)",
       borderBottom: "2px solid #e8956d",
       borderRadius: "2px",
     },
@@ -212,10 +212,10 @@ function deleteAnnotation(id: string) {
 function renderAnnotations() {
   const list = document.getElementById("annotation-list")!;
   const count = document.getElementById("annotation-count")!;
-  count.textContent = `(${annotations.length})`;
+  count.textContent = String(annotations.length);
 
   if (annotations.length === 0) {
-    list.innerHTML = `<p class="empty-state">No annotations yet.<br>Select text and click <strong>＋ Add comment</strong>.</p>`;
+    list.innerHTML = `<p class="empty-state">No annotations yet.<br>Select text and click <strong style="color:var(--sb-accent)">＋ Add comment</strong>.</p>`;
     return;
   }
 
