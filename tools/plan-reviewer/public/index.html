@@ -11,18 +11,13 @@
 
   <div class="layout">
 
-    <!-- Left panel: actions + annotations -->
+    <!-- Left panel: annotations → summary → buttons -->
     <aside class="sidebar">
-      <div class="sidebar-section actions-section">
-        <button class="btn btn-approve"  onclick="window.__submitReview('approve')">Approve</button>
-        <button class="btn btn-changes"  onclick="window.__submitReview('request_changes')">Request Changes</button>
-        <button class="btn btn-comment"  onclick="window.__submitReview('comment')">Comment</button>
-      </div>
-
-      <div class="sidebar-divider"></div>
-
       <div class="sidebar-section annotations-section">
-        <div class="section-label">Annotations <span id="annotation-count">(0)</span></div>
+        <div class="section-label">
+          Annotations
+          <span id="annotation-count" class="count-badge">0</span>
+        </div>
         <div id="annotation-list"></div>
       </div>
 
@@ -31,6 +26,14 @@
       <div class="sidebar-section summary-section">
         <label class="section-label" for="summary-input">Summary</label>
         <textarea id="summary-input" placeholder="Overall feedback (optional)…"></textarea>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section actions-section">
+        <button class="btn btn-approve"  onclick="window.__submitReview('approve')">Approve</button>
+        <button class="btn btn-changes"  onclick="window.__submitReview('request_changes')">Request Changes</button>
+        <button class="btn btn-comment"  onclick="window.__submitReview('comment')">Comment</button>
       </div>
     </aside>
 
