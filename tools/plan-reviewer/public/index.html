@@ -4,38 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plan Reviewer</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f0a87a'/%3E%3Cstop offset='1' stop-color='%23c4724a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 2 L28 9 L28 23 L16 30 L4 23 L4 9 Z' fill='url(%23g)'/%3E%3Crect x='10' y='11' width='8' height='1.5' rx='0.75' fill='%231c0a00' opacity='0.7'/%3E%3Crect x='10' y='15' width='12' height='1.5' rx='0.75' fill='%231c0a00' opacity='0.7'/%3E%3Crect x='10' y='19' width='6' height='1.5' rx='0.75' fill='%231c0a00' opacity='0.7'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
-  <header class="toolbar">
-    <div class="toolbar-left">
-      <span class="toolbar-logo">◆</span>
-      <span class="toolbar-title">Plan Reviewer</span>
-      <span class="toolbar-sep">·</span>
-      <span class="toolbar-plan-name" id="plan-name"></span>
-    </div>
-    <div class="toolbar-actions">
-      <button class="btn btn-approve" onclick="window.__submitReview('approve')">Approve</button>
-      <button class="btn btn-changes" onclick="window.__submitReview('request_changes')">Request Changes</button>
-      <button class="btn btn-comment" onclick="window.__submitReview('comment')">Comment</button>
-    </div>
-  </header>
-
   <div class="layout">
-    <main id="editor-container"></main>
 
+    <!-- Left panel: actions + annotations -->
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <h3>Annotations <span id="annotation-count">(0)</span></h3>
+      <div class="sidebar-section actions-section">
+        <button class="btn btn-approve"  onclick="window.__submitReview('approve')">Approve</button>
+        <button class="btn btn-changes"  onclick="window.__submitReview('request_changes')">Request Changes</button>
+        <button class="btn btn-comment"  onclick="window.__submitReview('comment')">Comment</button>
       </div>
-      <div id="annotation-list"></div>
-      <div class="summary-section">
-        <label for="summary-input">Summary</label>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section annotations-section">
+        <div class="section-label">Annotations <span id="annotation-count">(0)</span></div>
+        <div id="annotation-list"></div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section summary-section">
+        <label class="section-label" for="summary-input">Summary</label>
         <textarea id="summary-input" placeholder="Overall feedback (optional)…"></textarea>
       </div>
     </aside>
+
+    <!-- Pane border -->
+    <div class="pane-border"></div>
+
+    <!-- Right panel: editor -->
+    <main id="editor-container"></main>
+
   </div>
+
+  <!-- Bottom status bar (tmux-style) -->
+  <footer class="statusbar">
+    <div class="statusbar-left">
+      <span class="statusbar-badge">
+        <svg class="statusbar-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1 L14 4.5 L14 11.5 L8 15 L2 11.5 L2 4.5 Z" fill="#1c0a00" opacity="0.4"/>
+          <rect x="5" y="5.5" width="4" height="0.9" rx="0.45" fill="#1c0a00" opacity="0.8"/>
+          <rect x="5" y="7.5" width="6" height="0.9" rx="0.45" fill="#1c0a00" opacity="0.8"/>
+          <rect x="5" y="9.5" width="3" height="0.9" rx="0.45" fill="#1c0a00" opacity="0.8"/>
+        </svg>
+        Plan Reviewer
+      </span>
+      <span class="statusbar-sep"></span>
+      <span class="statusbar-plan" id="plan-name"></span>
+    </div>
+    <div class="statusbar-right">
+      <span class="statusbar-hint">Select text → ＋ Add comment</span>
+    </div>
+  </footer>
 
   <!-- Floating add comment button -->
   <div id="add-comment-btn" class="floating-btn hidden">
@@ -51,7 +76,7 @@
       <textarea id="comment-input" class="dialog-textarea" placeholder="Your comment…"
         onkeydown="if(event.key==='Enter'&&event.metaKey) window.__saveAnnotation()"></textarea>
       <div class="dialog-actions">
-        <button class="btn btn-save" onclick="window.__saveAnnotation()">Save  <kbd>⌘↵</kbd></button>
+        <button class="btn btn-save" onclick="window.__saveAnnotation()">Save <kbd>⌘↵</kbd></button>
         <button class="btn btn-cancel" onclick="window.__cancelAnnotation()">Cancel</button>
       </div>
     </div>

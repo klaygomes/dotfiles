@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
-import { exec } from "child_process";
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
+import open from "open";
 
 const PORT = 3848;
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
@@ -49,8 +49,9 @@ window.__PLAN_NAME__ = ${JSON.stringify(options.fileName)};
     });
 
     serve({ fetch: app.fetch, port: PORT }, (info) => {
-      console.error(`Plan reviewer → http://localhost:${info.port}`);
-      exec(`open http://localhost:${info.port}`);
+      const url = `http://localhost:${info.port}`;
+      console.error(`Plan reviewer → ${url}`);
+      open(url);
     });
   });
 }
