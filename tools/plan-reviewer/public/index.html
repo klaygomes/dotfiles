@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan Reviewer</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <header class="toolbar">
+    <div class="toolbar-left">
+      <span class="toolbar-logo">◆</span>
+      <span class="toolbar-title">Plan Reviewer</span>
+      <span class="toolbar-sep">·</span>
+      <span class="toolbar-plan-name" id="plan-name"></span>
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn btn-approve" onclick="window.__submitReview('approve')">Approve</button>
+      <button class="btn btn-changes" onclick="window.__submitReview('request_changes')">Request Changes</button>
+      <button class="btn btn-comment" onclick="window.__submitReview('comment')">Comment</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main id="editor-container"></main>
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>Annotations <span id="annotation-count">(0)</span></h3>
+      </div>
+      <div id="annotation-list"></div>
+      <div class="summary-section">
+        <label for="summary-input">Summary</label>
+        <textarea id="summary-input" placeholder="Overall feedback (optional)…"></textarea>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Floating add comment button -->
+  <div id="add-comment-btn" class="floating-btn hidden">
+    <button onclick="window.__addAnnotation()">＋ Add comment</button>
+  </div>
+
+  <!-- Comment dialog -->
+  <div id="comment-dialog" class="dialog-backdrop hidden">
+    <div class="dialog-box">
+      <p class="dialog-label">Selected text</p>
+      <blockquote class="dialog-preview" id="dialog-preview"></blockquote>
+      <label class="dialog-label" for="comment-input">Comment</label>
+      <textarea id="comment-input" class="dialog-textarea" placeholder="Your comment…"
+        onkeydown="if(event.key==='Enter'&&event.metaKey) window.__saveAnnotation()"></textarea>
+      <div class="dialog-actions">
+        <button class="btn btn-save" onclick="window.__saveAnnotation()">Save  <kbd>⌘↵</kbd></button>
+        <button class="btn btn-cancel" onclick="window.__cancelAnnotation()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/editor.bundle.js"></script>
+</body>
+</html>
