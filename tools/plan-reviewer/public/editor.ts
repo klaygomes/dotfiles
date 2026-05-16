@@ -9,6 +9,7 @@ declare global {
     __PLAN_CONTENT__: string;
     __PLAN_PATH__: string;
     __PLAN_NAME__: string;
+    __PLAN_DISPLAY_PATH__: string;
     _mermaid?: {
       run: (opts: { nodes: NodeListOf<Element> }) => Promise<void>;
       initialize: (opts: object) => void;
@@ -54,7 +55,7 @@ const pendingSelectionPlugin = ViewPlugin.fromClass(
   { decorations: v => v.decorations }
 );
 
-let activeTab: "editor" | "preview" = "editor";
+let activeTab: "editor" | "preview" = "preview";
 let annotations: Annotation[] = [];
 let pendingFrom = -1;
 let pendingTo = -1;
@@ -170,7 +171,7 @@ function initEditor() {
   const content = window.__PLAN_CONTENT__ ?? "";
 
   const nameEl = document.getElementById("plan-name");
-  if (nameEl) nameEl.textContent = window.__PLAN_NAME__ ?? "plan.md";
+  if (nameEl) nameEl.textContent = window.__PLAN_DISPLAY_PATH__ ?? window.__PLAN_NAME__ ?? "plan.md";
 
   const state = EditorState.create({
     doc: content,
@@ -558,6 +559,11 @@ function handlePreviewSelection() {
     hideInlinePopover();
     return;
   }
+  const container = document.getElementById("preview-container")!;
+  if (!sel.anchorNode || !container.contains(sel.anchorNode)) {
+    hideInlinePopover();
+    return;
+  }
   const selectedText = sel.toString().trim();
   if (!selectedText) {
     hideInlinePopover();
@@ -825,6 +831,8 @@ async function submitReview(action: "approve" | "request_changes" | "comment") {
 document.addEventListener("DOMContentLoaded", () => {
   initEditor();
   renderAnnotations();
+  renderPreview();
+  setInterval(() => fetch("/api/heartbeat").catch(() => {}), 5_000);
 
   const inlineInput = document.getElementById("inline-comment-input") as HTMLTextAreaElement;
   inlineInput.addEventListener("keydown", (e) => {
@@ -841,13 +849,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const previewContainerEl = document.getElementById("preview-container")!;
-  document.addEventListener("mouseup", () => {
+  const editorContainerEl = document.getElementById("editor-container")!;
+  document.addEventListener("mouseup", (e) => {
     isMouseDown = false;
     const popover = document.getElementById("inline-popover")!;
     if (!popover.classList.contains("hidden")) return; // popover already open — don't reset it
     if (activeTab === "preview") {
       setTimeout(handlePreviewSelection, 0);
-    } else if (activeTab === "editor") {
+    } else if (activeTab === "editor" && editorContainerEl.contains(e.target as Node)) {
       const sel = view.state.selection.main;
       if (!sel.empty) {
         if (editorPopoverTimer) { clearTimeout(editorPopoverTimer); editorPopoverTimer = null; }
