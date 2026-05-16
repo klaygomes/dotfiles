@@ -7,6 +7,7 @@ import open from "open";
 
 const PREFERRED_PORT = 3848;
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
+const WATCHDOG_MS = 7_000;
 
 function findFreePort(start: number): Promise<number> {
   return new Promise((resolve, reject) => {
@@ -27,12 +28,32 @@ interface ServerOptions {
   fileName: string;
 }
 
-export async function startServer(options: ServerOptions): Promise<unknown> {
+export async function startServer(options: ServerOptions): Promise<{ result: unknown; close: () => void }> {
   const port = await findFreePort(PREFERRED_PORT);
   return new Promise((resolve) => {
     const app = new Hono();
+    let resolved = false;
+
+    function doResolve(result: unknown) {
+      if (resolved) return;
+      resolved = true;
+      clearTimeout(watchdogTimer);
+      resolve({ result, close: () => { try { httpServer.close(); } catch {} } });
+    }
+
+    let watchdogTimer: NodeJS.Timeout = setTimeout(() => doResolve({ action: "timeout" }), WATCHDOG_MS);
+
+    function resetWatchdog() {
+      clearTimeout(watchdogTimer);
+      watchdogTimer = setTimeout(() => doResolve({ action: "timeout" }), WATCHDOG_MS);
+    }
 
     app.get("/", (c) => {
+      const home = process.env.HOME ?? "";
+      const displayPath = home && options.filePath.startsWith(home)
+        ? "~" + options.filePath.slice(home.length)
+        : options.filePath;
+
       const html = fs.readFileSync(path.join(PUBLIC_DIR, "index.html"), "utf8");
       const injected = html.replace(
         "</body>",
@@ -40,6 +61,7 @@ export async function startServer(options: ServerOptions): Promise<unknown> {
 window.__PLAN_CONTENT__ = ${JSON.stringify(options.content)};
 window.__PLAN_PATH__ = ${JSON.stringify(options.filePath)};
 window.__PLAN_NAME__ = ${JSON.stringify(options.fileName)};
+window.__PLAN_DISPLAY_PATH__ = ${JSON.stringify(displayPath)};
 </script></body>`
       );
       return c.html(injected);
@@ -47,9 +69,7 @@ window.__PLAN_NAME__ = ${JSON.stringify(options.fileName)};
 
     app.get("/editor.bundle.js", (c) => {
       const buf = fs.readFileSync(path.join(PUBLIC_DIR, "editor.bundle.js"));
-      return new Response(buf, {
-        headers: { "Content-Type": "application/javascript" },
-      });
+      return new Response(buf, { headers: { "Content-Type": "application/javascript" } });
     });
 
     app.get("/styles.css", (c) => {
@@ -57,15 +77,25 @@ window.__PLAN_NAME__ = ${JSON.stringify(options.fileName)};
       return new Response(css, { headers: { "Content-Type": "text/css" } });
     });
 
-    app.post("/api/submit", async (c) => {
-      const body = await c.req.json();
-      setTimeout(() => resolve(body), 150);
+    app.get("/api/heartbeat", (c) => {
+      resetWatchdog();
       return c.json({ ok: true });
     });
 
-    serve({ fetch: app.fetch, port }, (info) => {
+    app.post("/api/submit", async (c) => {
+      const body = await c.req.json();
+      setTimeout(() => doResolve(body), 150);
+      return c.json({ ok: true });
+    });
+
+    const httpServer = serve({ fetch: app.fetch, port }, (info) => {
       const url = `http://localhost:${info.port}`;
-      console.error(`Plan reviewer → ${url}`);
+      const msg = `Plan reviewer → ${url}`;
+      const cols = process.stdout.columns || 80;
+      const rows = process.stdout.rows || 24;
+      const hPad = " ".repeat(Math.max(0, Math.floor((cols - msg.length) / 2)));
+      const vPad = "\n".repeat(Math.max(0, Math.floor(rows / 2) - 1));
+      process.stdout.write(vPad + hPad + msg + "\n");
       open(url);
     });
   });
