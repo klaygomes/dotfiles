@@ -1,7 +1,7 @@
 bash-language-server
 neovim
 typescript
-typescript-language-server
+@vtsls/language-server
 vim-language-server
 vscode-langservers-extracted
 serve

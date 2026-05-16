@@ -49,10 +49,18 @@ require('mason-lspconfig').setup({
   ensure_installed = { 'lua_ls', 'clangd', 'marksman' },
 })
 
+vim.lsp.config('vtsls', {
+  settings = {
+    typescript = {
+      preferences = { importModuleSpecifier = 'non-relative' },
+    },
+  },
+})
+
 -- npm-managed servers (via node/globals) — Mason does not manage these
 vim.lsp.enable({
   'bashls',
-  'ts_ls',
+  'vtsls',
   'cssls',
   'html',
   'jsonls',
