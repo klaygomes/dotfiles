@@ -16,8 +16,10 @@ BREW        := $(HOME)/Brewfile
 NODE        := $(CONFIG_PATH)/node/globals
 TASKWARRIOR := $(CONFIG_PATH)task/taskrc
 
+AGENTS  := $(addprefix ${CONFIG_PATH}, $(shell find claude/agents -type f))
+
 SKILLS := klay-meeting-search klay-worktree klay-verify-before-done klay-manage-git-worktrees \
-          klay-prove-dont-speculate klay-review-pr shared klay-plan-reviewer
+          klay-prove-dont-speculate klay-review-pr shared klay-plan-reviewer klay-task
 
 CREATE_TARGET_DIR = if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created."; fi;
 
@@ -29,7 +31,7 @@ define LINK_CONFIG
 fi
 endef
 
-.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer all help
+.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer agents all help
 .SECONDEXPANSION:
 .DEFAULT_GOAL := help
 
@@ -139,17 +141,21 @@ plan-reviewer: ;@ ## Build plan-reviewer tool and install to ~/bin
 	@chmod +x "${BIN_PATH}plan-reviewer"
 	@echo "plan-reviewer installed to ${BIN_PATH}plan-reviewer"
 
+agents: $(AGENTS) ;@ ## Install LLM agent prompts to ~/.config/claude/agents
+$(AGENTS): $$(subst ${CONFIG_PATH},, $$@)
+	$(LINK_CONFIG)
+
 skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@mkdir -p ${HOME}/.claude/skills
 	@for skill in $(SKILLS); do \
-		ln -sf "$(CURDIR)/skills/$$skill" "${HOME}/.claude/skills/$$skill"; \
+		ln -sf "$(CURDIR)/claude/skills/$$skill" "${HOME}/.claude/skills/$$skill"; \
 	done
-	@chmod +x "$(CURDIR)/skills/klay-meeting-search/tools/query.py"
+	@chmod +x "$(CURDIR)/claude/skills/klay-meeting-search/tools/query.py"
 	@[ -f "$(CURDIR)/.env" ] || cp "$(CURDIR)/.env.example" "$(CURDIR)/.env"
 	@echo "Skills installed"
 
 all: ;@ ## Run all configurations
-	@for target in mac zsh brew node git vim tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer; do \
+	@for target in mac zsh brew node git vim tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer agents; do \
 		echo "Running $$target..."; \
 		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
 	done
