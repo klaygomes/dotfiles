@@ -44,6 +44,9 @@ week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // 0')
 week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // 0')
 parts+=("$(_rate_segment "$week_pct" "$week_reset" "󰃭" 1)")
 
+# Model display name
+model_name=$(echo "$input" | jq -r '.model.display_name // ""')
+[ -n "$model_name" ] && parts+=("${GRAY}󰚩 ${model_name}${R}")
 
 output="$(IFS=' | '; echo "${parts[*]}")"
 cols=$(cat /tmp/terminal_cols 2>/dev/null)
