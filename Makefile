@@ -19,7 +19,8 @@ TASKWARRIOR := $(CONFIG_PATH)task/taskrc
 AGENTS  := $(addprefix ${CONFIG_PATH}, $(shell find claude/agents -type f))
 
 SKILLS := klay-meeting-search klay-worktree klay-verify-before-done klay-manage-git-worktrees \
-          klay-prove-dont-speculate klay-review-pr shared klay-plan-reviewer klay-task
+          klay-prove-dont-speculate klay-review-pr shared klay-plan-reviewer klay-task \
+          klay-clean-code
 
 CREATE_TARGET_DIR = if [ ! -d "$(@D)" ]; then mkdir -p "$(@D)" && echo "'$(@D)' created."; fi;
 
