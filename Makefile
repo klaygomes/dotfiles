@@ -149,7 +149,7 @@ $(AGENTS): $$(subst ${CONFIG_PATH},, $$@)
 skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@mkdir -p ${HOME}/.claude/skills
 	@for skill in $(SKILLS); do \
-		ln -sf "$(CURDIR)/claude/skills/$$skill" "${HOME}/.claude/skills/$$skill"; \
+		ln -sfn "$(CURDIR)/claude/skills/$$skill" "${HOME}/.claude/skills/$$skill"; \
 	done
 	@chmod +x "$(CURDIR)/claude/skills/klay-meeting-search/tools/query.py"
 	@[ -f "$(CURDIR)/.env" ] || cp "$(CURDIR)/.env.example" "$(CURDIR)/.env"
