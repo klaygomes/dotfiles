@@ -5,7 +5,7 @@ description: Make animated sprites, sprite sheets, and transparent looping video
 
 # sprite-gen
 
-All steps are scripts in `scripts/` (relative to this skill; `~/.claude/skills/klay-sprite-gen/scripts`). Call them instead of hand-writing ffmpeg or sprite-gen commands: they encode choices that were already tuned (green key, loop-back last frame, 0.9px feather, alpha codecs) and they are idempotent.
+All steps are scripts in `scripts/` (relative to this skill; `~/.claude/skills/klay-sprite-gen/scripts`). Call them instead of hand-writing ffmpeg or sprite-gen commands: they encode choices that were already tuned (green key, loop-back last frame, alias-free matte, alpha codecs) and they are idempotent.
 
 ## Setup is automatic
 
@@ -28,10 +28,20 @@ Run `scripts/notes.sh` and read the learnings from past runs: prompts that worke
 3. **Review.** Read `<out-dir>/contact.png`. Look for a redesigned face, subject leaving the frame, green halos, or holes in the subject. A bad take is cheaper to regenerate than to fix. If keying ate parts of the subject, rerun with `--gentle-key`.
 4. **Encode.**
    ```bash
-   scripts/encode.sh --frames <out-dir>/frames/keyed --out-dir <project>/img --name mascot --width 300
+   scripts/encode.sh --frames <out-dir>/frames/keyed --out-dir <project>/img --name mascot --width 600
    ```
-   Produces `mascot.webm`, `mascot.mp4`, `mascot.webp`. `--width` is the display width in CSS pixels; the script refuses to upscale because upscaled mattes look jagged on retina. Other knobs: `--fps`, `--crf`, `--feather`, `--poster-frame`.
-5. **Embed.** Follow `references/embedding.md` for markup, play-once rules, and why Playwright (not Claude-in-Chrome) is the way to verify.
+   Produces `mascot.webm`, `mascot.mp4`, `mascot.webp`. Other knobs: `--fps`, `--crf`, `--feather`, `--poster-frame`.
+5. **Check the edges.** `scripts/py scripts/edge_check.py <project>/img/mascot.webm <scratch>/edge.png`, then Read the image and the printed `key_spill`. See "Transparent edges" below for what to look for.
+6. **Embed.** Follow `references/embedding.md` for markup, play-once rules, and why Playwright (not Claude-in-Chrome) is the way to verify.
+
+## Transparent edges
+
+A transparent subject is only as good as its edge: a stair-stepped matte, or a rim of key green or black around the subject, shows up on every background the site uses. `encode.sh` handles this through `scripts/matte.py` (its docstring has the measurements):
+
+- **Resize with premultiplied alpha, never with ffmpeg `scale`.** A straight-alpha resize blends the colour hidden under transparent pixels into the edge; with green hidden there, half the edge pixels came out green-tinted. So do not add `-vf scale` to the encode, and resize any RGBA image with `matte.py` or Pillow.
+- **Feather only when the edge is not already averaged.** sprite-gen's matte is nearly binary. At native size or a small downscale it would alias, so `--feather auto` softens it by 0.9px; a 1.5x+ downscale smooths it for free.
+- **Pick `--width` as the displayed CSS width x 2**, capped at the source width, so a retina screen draws it 1:1. Much larger and the browser downscales it with bilinear filtering, which re-aliases the edge; smaller and it upscales into blur. The script refuses to upscale.
+- **Read `edge_check.py` output before shipping.** It zooms into the busiest edge over white, black and magenta. Clean encodes measured `key_spill` <= 0.5%; a few percent or a visible green, dark or light rim means the key left colour behind: rerun `animate.sh` without `--gentle-key` (it turns decontamination off), or regenerate the take.
 
 ## Anything else
 
