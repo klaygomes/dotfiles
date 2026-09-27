@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# sprite-gen with install guaranteed and XAI_API_KEY loaded silently.
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+eval "$("$HERE/ensure.sh" | sed -n 's/^\(SPRITE_GEN=.*\)$/\1/p')"
+ENV_FILE="${SPRITE_GEN_ENV:-$HOME/personal/klaygomes.github.io/.env}"
+if [ -z "${XAI_API_KEY:-}" ] && [ -f "$ENV_FILE" ]; then
+  set -a; . "$ENV_FILE"; set +a
+fi
+exec "$SPRITE_GEN" "$@"

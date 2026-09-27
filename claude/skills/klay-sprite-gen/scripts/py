@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Python from the sprite-gen venv (has Pillow + NumPy).
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+"$HERE/ensure.sh" >/dev/null
+exec "${SPRITE_GEN_HOME:-$HOME/.local/share/sprite-gen}/.venv/bin/python" "$@"
