@@ -1,0 +1,19 @@
+scripts/claude-statusline.sh
+  s_85b1d86c5ee6be::t_57426273b2a0f8 52-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "11f47f78e3bbb9631e38007f7956f90b9c73f3f8",
+  "prompts": {},
+  "sessions": {
+    "s_85b1d86c5ee6be": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1db8d8ec-9d01-410b-9f3c-e3c73e94fde5",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
