@@ -49,9 +49,10 @@ model_name=$(echo "$input" | jq -r '.model.display_name // ""')
 [ -n "$model_name" ] && parts+=("${GRAY}󰚩 ${model_name}${R}")
 
 output="$(IFS=' | '; echo "${parts[*]}")"
-cols=$(cat /tmp/terminal_cols 2>/dev/null)
-cols=${cols:-${COLUMNS:-120}}
-visible=$(printf '%s' "$output" | sed 's/\033\[[0-9;]*m//g')
-pad=$(( cols - ${#visible} ))
-[ "$pad" -gt 0 ] && printf '%*s' "$pad" ""
+# Only right-align when Claude passes a valid COLUMNS value; otherwise output as-is
+if [ "${COLUMNS:-0}" -gt 0 ] 2>/dev/null; then
+  visible=$(printf '%s' "$output" | sed 's/\033\[[0-9;]*m//g')
+  pad=$(( COLUMNS - ${#visible} ))
+  [ "$pad" -gt 0 ] && printf '%*s' "$pad" ""
+fi
 printf '%s' "$output"
