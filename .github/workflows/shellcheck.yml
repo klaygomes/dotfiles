@@ -16,16 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
 
-      - name: Install ShellCheck
-        run: sudo apt-get install -y shellcheck
+      - name: Install lint tools
+        run: sudo apt-get update && sudo apt-get install -y shellcheck shfmt bats jq
 
-      - name: Run ShellCheck
-        run: |
-          find . -name "*.sh" \
-            -not -path "./.git/*" \
-            -not -path "./zsh/*" \
-            -not -name "gh-cp.sh" \
-            -not -name "tmux-fuzzy-session.sh" \
-            -not -name "tmux-task-menu.sh" \
-            | sort \
-            | xargs shellcheck
+      - name: Lint
+        run: make lint
+
+      - name: Test
+        run: make test

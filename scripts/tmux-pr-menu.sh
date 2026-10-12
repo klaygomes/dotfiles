@@ -1,121 +1,190 @@
 #!/usr/bin/env bash
-# Interactive GitHub PR menu (§ g). See docs/tmux-pr-menu.md
+# GitHub PR menu (§ g), the root screen of the tmux-pr stack. See docs/tmux-pr-menu.md
+# shellcheck enable=check-unassigned-uppercase,require-double-brackets,quote-safe-variables,deprecate-which
 
 set -u
+# shellcheck source-path=SCRIPTDIR source=tmux-pr-lib.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/tmux-pr-lib.sh" || exit 1
 
-DIR="${PR_MENU_DIR:-}"
-MEMBERS="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-pr-menu/members.tsv"
-GH_WEB="https://github.com/pulls"
-ACCENT=$'\033[1;30;48;5;173m'
-DIM=$'\033[2m'
-RESET=$'\033[0m'
-
-TAB_NAMES=("Review requested" "No review" "Approved" "By author")
-AUTHOR_TAB=3
-TAB_QUERIES=(
-  "review-requested=@me"
-  "author=@me review=none"
-  "author=@me review=approved"
-  ""
-)
-TAB_WEB=(
-  "reviews?q=is%3Apr+review-requested%3A%40me+state%3Aopen+archived%3Afalse+sort%3Aupdated-desc+-author%3Aapp%2Fdependabot"
-  "search?q=is%3Apr+author%3A%40me+state%3Aopen+archived%3Afalse+review%3Anone+sort%3Aupdated-desc"
-  "search?q=is%3Apr+author%3A%40me+state%3Aopen+archived%3Afalse+review%3Aapproved+sort%3Aupdated-desc"
-  ""
+readonly GH_WEB=https://github.com/pulls
+readonly MEMBERS=${XDG_CACHE_HOME:-$HOME/.cache}/tmux-pr-menu/members.tsv
+readonly LOGIN_RE='^[A-Za-z0-9-]+$'
+readonly AUTHOR_TAB=3
+readonly TAB_NAMES=('Review requested' 'No review' 'Approved' 'By author')
+readonly TAB_WEB=(
+  'reviews?q=is%3Apr+review-requested%3A%40me+state%3Aopen+archived%3Afalse+sort%3Aupdated-desc+-author%3Aapp%2Fdependabot'
+  'search?q=is%3Apr+author%3A%40me+state%3Aopen+archived%3Afalse+review%3Anone+sort%3Aupdated-desc'
+  'search?q=is%3Apr+author%3A%40me+state%3Aopen+archived%3Afalse+review%3Aapproved+sort%3Aupdated-desc'
 )
 
-current_tab() { cat "$DIR/tab" 2>/dev/null || echo 0; }
+screen_footer='⏎/o open  O files  h/l tab  p approve  a author  w GitHub page  r refresh'
+screen_binds=(
+  "start:reload($PR_RUN list)+execute-silent($PR_RUN prefetch >/dev/null 2>&1 &)"
+  "l,right,tab:execute-silent($PR_RUN step 1)+transform($PR_RUN after-step)"
+  "h,left,shift-tab:execute-silent($PR_RUN step -1)+transform($PR_RUN after-step)"
+  'o:accept'
+  "O:$(pr_push files)"
+  "w:execute-silent($PR_RUN open-list)"
+  "r,ctrl-r:reload($PR_RUN list force)"
+  "p:transform($PR_RUN approve {1})"
+  "a:transform($PR_RUN author-mode)"
+)
+screen_fzf_opts=(--no-hscroll)
 
-current_author() { cat "$DIR/author" 2>/dev/null; }
+state_file() {
+  printf '%s/menu/%s' "$PR_STATE" "$1"
+}
+
+read_state() {
+  local value=
+  { IFS= read -r value <"$(state_file "$1")"; } 2>/dev/null
+  printf '%s' "${value:-${2-}}"
+}
+
+write_state() {
+  printf '%s\n' "$2" >"$(state_file "$1")"
+}
+
+current_tab() {
+  read_state tab 0
+}
+
+current_author() {
+  read_state author
+}
+
+in_author_mode() {
+  [[ -f $(state_file author-mode) ]]
+}
 
 tab_name() {
   local author
   author=$(current_author)
-  if [ "$1" -eq "$AUTHOR_TAB" ] && [ -n "$author" ]; then
-    echo "@$author"
+  if (($1 == AUTHOR_TAB)) && [[ -n $author ]]; then
+    printf '@%s' "$author"
   else
-    echo "${TAB_NAMES[$1]}"
+    printf '%s' "${TAB_NAMES[$1]}"
   fi
 }
 
-tab_query() {
-  if [ "$1" -eq "$AUTHOR_TAB" ]; then
-    echo "author=$(current_author)"
-  else
-    echo "${TAB_QUERIES[$1]}"
-  fi
+tab_args() {
+  case $1 in
+    0) TAB_ARGS=(--review-requested=@me -- -author:app/dependabot) ;;
+    1) TAB_ARGS=(--author=@me --review=none) ;;
+    2) TAB_ARGS=(--author=@me --review=approved) ;;
+    "$AUTHOR_TAB") TAB_ARGS=(--author="$(current_author)") ;;
+  esac
 }
 
 tab_web() {
-  if [ "$1" -eq "$AUTHOR_TAB" ]; then
-    echo "search?q=is%3Apr+author%3A$(current_author)+state%3Aopen+archived%3Afalse+sort%3Aupdated-desc"
+  local tab
+  tab=$(current_tab)
+  if ((tab == AUTHOR_TAB)); then
+    printf 'search?q=is%%3Apr+author%%3A%s+state%%3Aopen+archived%%3Afalse+sort%%3Aupdated-desc' "$(current_author)"
   else
-    echo "${TAB_WEB[$1]}"
+    printf '%s' "${TAB_WEB[$tab]}"
   fi
-}
-
-cmd_step() {
-  local n=${#TAB_NAMES[@]}
-  echo $(( ($(current_tab) + $1 + n) % n )) > "$DIR/tab"
 }
 
 tab_count() {
-  local file="$DIR/list.$1"
-  [ -f "$file" ] || { echo "…"; return; }
-  grep -vc $'^x\t' "$file"
+  local file
+  file=$(state_file "list.$1")
+  if [[ -s $file ]]; then
+    grep -vc $'^x\t' -- "$file"
+  else
+    printf '…'
+  fi
 }
 
-cmd_header() {
-  local active i label out="${DIM}◀${RESET}  "
+screen_start() {
+  mkdir -p -- "$PR_STATE/menu" && write_state tab 0
+}
+
+screen_header() {
+  local active i last=$((${#TAB_NAMES[@]} - 1)) label out="${PR_DIM}◀${PR_RESET}  "
   active=$(current_tab)
   for i in "${!TAB_NAMES[@]}"; do
     label=" $(tab_name "$i") ($(tab_count "$i")) "
-    if [ "$i" -eq "$active" ]; then
-      out+="${ACCENT}${label}${RESET}"
+    if ((i == active)); then
+      out+="${PR_ACCENT}${label}${PR_RESET}"
     else
-      out+="${DIM}${label}${RESET}"
+      out+="${PR_DIM}${label}${PR_RESET}"
     fi
-    [ "$i" -lt $(( ${#TAB_NAMES[@]} - 1 )) ] && out+="${DIM}│${RESET}"
+    ((i < last)) && out+="${PR_DIM}│${PR_RESET}"
   done
-  printf '%s  %s▶%s' "$out" "$DIM" "$RESET"
+  printf '%s  %s▶%s' "$out" "$PR_DIM" "$PR_RESET"
 }
+
+# shellcheck disable=SC2016
+readonly ROWS_JQ='def ref: .repository.name + "#" + (.number | tostring);
+  (map(ref | length) | max) as $width | .[] | ref as $ref | [
+    .url,
+    ("\u001b[38;5;173m" + $ref + "\u001b[0m" + (" " * ($width - ($ref | length) + 2))
+      + (if .isDraft then "\u001b[2m[draft]\u001b[0m " else "" end)
+      + .title + "  \u001b[2m@" + .author.login + "\u001b[0m")
+  ] | @tsv'
 
 fetch_tab() {
-  local i=$1 kv out flags=() extra=()
-  for kv in $(tab_query "$i"); do flags+=("--${kv}"); done
-  [ "$i" -eq 0 ] && extra=(-- -author:app/dependabot)
-
-  if [ "$i" -eq "$AUTHOR_TAB" ] && [ -z "$(current_author)" ]; then
-    out=$(printf 'x\t%s(press a to pick an author)%s' "$DIM" "$RESET")
-  elif ! out=$(gh search prs "${flags[@]}" --state=open --archived=false --sort=updated --limit=100 \
-    --json url,repository,number,title,author,isDraft \
-    --jq 'def ref: .repository.name + "#" + (.number|tostring);
-      (map(ref | length) | max) as $width | .[] | ref as $ref | [
-      .url,
-      ("\u001b[38;5;173m" + $ref + "\u001b[0m" + (" " * ($width - ($ref|length) + 2))
-        + (if .isDraft then "\u001b[2m[draft]\u001b[0m " else "" end)
-        + .title + "  \u001b[2m@" + .author.login + "\u001b[0m")
-    ] | @tsv' ${extra[@]+"${extra[@]}"} 2>&1); then
-    out=$(printf 'x\t\033[31mgh failed: %s\033[0m' "$(printf '%s' "${out:-unknown error}" | head -1)")
-  elif [ -z "$out" ]; then
-    out=$(printf 'x\t%s(nothing here)%s' "$DIM" "$RESET")
+  local out
+  if (($1 == AUTHOR_TAB)) && [[ -z $(current_author) ]]; then
+    pr_row_empty 'press a to pick an author'
+    return 0
   fi
-  printf '%s\n' "$out" > "$DIR/list.$i.tmp"
-  mv "$DIR/list.$i.tmp" "$DIR/list.$i"
+  tab_args "$1"
+  if ! out=$(gh search prs --state=open --archived=false --sort=updated --limit=100 \
+    --json url,repository,number,title,author,isDraft --jq "$ROWS_JQ" \
+    "${TAB_ARGS[@]}" 2>&1); then
+    pr_row_error "gh failed: ${out%%$'\n'*}"
+  elif [[ -z $out ]]; then
+    pr_row_empty
+  else
+    printf '%s\n' "$out"
+  fi
 }
 
-cmd_list() {
-  local i
-  i=$(current_tab)
-  [ "${1:-}" = "force" ] && rm -f "$DIR/list.$i"
-  [ -f "$DIR/list.$i" ] || fetch_tab "$i"
-  cat "$DIR/list.$i"
+screen_list() {
+  local tab file
+  tab=$(current_tab)
+  file=$(state_file "list.$tab")
+  [[ ${1-} == force ]] && rm -f -- "$file"
+  pr_cached "$file" fetch_tab "$tab"
+}
+
+cmd_step() {
+  local count=${#TAB_NAMES[@]} tab
+  tab=$(current_tab)
+  write_state tab $(((tab + $1 + count) % count))
+}
+
+cmd_after_step() {
+  if (($(current_tab) == AUTHOR_TAB)) && [[ -z $(current_author) ]]; then
+    cmd_author_mode
+  else
+    printf 'transform-header(%s header)+reload(%s list)+first' "$PR_RUN" "$PR_RUN"
+  fi
+}
+
+cmd_prefetch() {
+  local i port=${FZF_PORT-}
+  fetch_members &
+  for i in "${!TAB_NAMES[@]}"; do
+    ((i == $(current_tab) || i == AUTHOR_TAB)) && continue
+    pr_cached "$(state_file "list.$i")" fetch_tab "$i" >/dev/null &
+  done
+  wait
+  [[ -n $port ]] || return 0
+  curl -s --noproxy '*' -XPOST "localhost:$port" -d "transform-header($PR_RUN header)" >/dev/null
+}
+
+cmd_open_list() {
+  open "$GH_WEB/$(tab_web)"
 }
 
 list_orgs() {
-  if [ -n "${PR_MENU_ORGS:-}" ]; then
-    printf '%s\n' $PR_MENU_ORGS
+  local -a orgs
+  if [[ -n ${PR_MENU_ORGS-} ]]; then
+    read -r -a orgs <<<"$PR_MENU_ORGS"
+    printf '%s\n' "${orgs[@]}"
   else
     gh api graphql -f query='{ viewer { organizations(first: 100) { nodes { login } } } }' \
       --jq '.data.viewer.organizations.nodes[].login'
@@ -123,6 +192,7 @@ list_orgs() {
 }
 
 fetch_org_members() {
+  # shellcheck disable=SC2016
   gh api graphql --paginate -f org="$1" -f query='
     query($org: String!, $endCursor: String) {
       organization(login: $org) {
@@ -137,34 +207,71 @@ fetch_org_members() {
 }
 
 fetch_members() {
-  local org
-  [ -n "$(find "$MEMBERS" -mtime -1 2>/dev/null)" ] && return
-  mkdir -p "$(dirname "$MEMBERS")"
-  for org in $(list_orgs 2>/dev/null); do
+  local org tmp
+  [[ -n $(find "$MEMBERS" -mtime -1 2>/dev/null) ]] && return 0
+  mkdir -p -- "${MEMBERS%/*}" || return 1
+  tmp=$(mktemp "$MEMBERS.XXXXXX") || return 1
+  while IFS= read -r org; do
     fetch_org_members "$org" 2>/dev/null
-  done | sort -u -t $'\t' -k2,2 | sort -f | cut -f2- > "$MEMBERS.tmp"
-  [ -s "$MEMBERS.tmp" ] && mv "$MEMBERS.tmp" "$MEMBERS"
-  rm -f "$MEMBERS.tmp"
+  done < <(list_orgs 2>/dev/null) \
+    | sort -u -t $'\t' -k2,2 | sort -f | cut -f2- >"$tmp"
+  if [[ -s $tmp ]]; then
+    mv -f -- "$tmp" "$MEMBERS"
+  else
+    rm -f -- "$tmp"
+  fi
 }
 
 cmd_members() {
   fetch_members
-  cat "$MEMBERS" 2>/dev/null
+  cat -- "$MEMBERS" 2>/dev/null
 }
 
-cmd_prefetch() {
-  local i
-  fetch_members &
-  for i in "${!TAB_NAMES[@]}"; do
-    [ "$i" -eq 0 ] || [ "$i" -eq "$AUTHOR_TAB" ] && continue
-    fetch_tab "$i" &
-  done
-  wait
-  curl -s --noproxy '*' -XPOST "localhost:${FZF_PORT}" -d "transform-header($SELF header)" >/dev/null
+cmd_author_mode() {
+  : >"$(state_file author-mode)"
+  printf '%s+clear-query+change-prompt(  author › )+change-footer-label( type a name or login, enter to pick, esc to cancel )+transform-header(%s header)+reload(%s members)+first' \
+    "$PR_FILTER" "$PR_RUN" "$PR_RUN"
 }
 
-read -r -d '' PREVIEW_JQ <<'JQ'
-def bucket: (.conclusion // .state // "") as $c
+commit_author() {
+  local login=$1
+  [[ $login =~ $LOGIN_RE ]] || login=${FZF_QUERY#@}
+  rm -f -- "$(state_file author-mode)"
+  if [[ ! $login =~ $LOGIN_RE ]]; then
+    printf 'reload(%s list)+%s' "$PR_RUN" "$PR_RESTORE"
+    return 0
+  fi
+  write_state author "$login"
+  write_state tab "$AUTHOR_TAB"
+  rm -f -- "$(state_file "list.$AUTHOR_TAB")"
+  printf '%s+transform-header(%s header)+reload(%s list)+first' "$PR_RESTORE" "$PR_RUN" "$PR_RUN"
+}
+
+screen_enter_hook() {
+  in_author_mode || return 1
+  commit_author "$1"
+}
+
+screen_esc_hook() {
+  in_author_mode || return 1
+  rm -f -- "$(state_file author-mode)"
+  printf 'reload(%s list)+%s' "$PR_RUN" "$PR_RESTORE"
+}
+
+cmd_approve() {
+  local url=$1 out
+  [[ $url == x ]] && return 0
+  if out=$(gh pr review "$url" --approve 2>&1); then
+    pr_forget "$url"
+    find "$PR_STATE/menu" -name 'list.*' ! -name "list.$(current_tab)" -delete
+    printf 'refresh-preview+transform-header(%s header)+change-footer-label: ✓ approved %s ' "$PR_RUN" "$(pr_ref "$url")"
+  else
+    printf 'change-footer-label: ✗ %s ' "${out%%$'\n'*}"
+  fi
+}
+
+# shellcheck disable=SC2016
+readonly SUMMARY_JQ='def bucket: (.conclusion // .state // "") as $c
   | if ($c | IN("SUCCESS", "NEUTRAL", "SKIPPED")) then "pass"
     elif ($c | IN("FAILURE", "ERROR", "TIMED_OUT", "CANCELLED", "ACTION_REQUIRED", "STARTUP_FAILURE")) then "fail"
     else "pending" end;
@@ -183,122 +290,22 @@ def review: {
 (if (.reviewRequests | length) > 0 then "- **Waiting on:** \([.reviewRequests[] | .login // .name] | join(", "))" else empty end),
 (if (.labels | length) > 0 then "- **Labels:** \([.labels[].name] | join(", "))" else empty end),
 "\n---\n",
-(if (.body | length) > 0 then .body else "_No description._" end)
-JQ
+(if (.body | length) > 0 then .body else "_No description._" end)'
 
-cmd_preview() {
-  [ "$1" = "x" ] || [ -f "$DIR/author-mode" ] && exit 0
-  local width=$(( ${FZF_PREVIEW_COLUMNS:-80} - 2 ))
-  local cache="$DIR/preview.${width}.$(printf '%s' "$1" | tr -c 'a-zA-Z0-9' '_')"
-  if [ ! -f "$cache" ]; then
-    gh pr view "$1" --json title,url,number,author,headRefName,baseRefName,state,isDraft,reviewDecision,statusCheckRollup,additions,deletions,changedFiles,reviewRequests,labels,body \
-      --jq "$PREVIEW_JQ" 2>&1 | CLICOLOR_FORCE=1 glow -s dark -w "$width" - > "$cache.tmp" \
-      && mv "$cache.tmp" "$cache"
-  fi
-  cat "$cache" 2>/dev/null || cat "$cache.tmp"
+render_summary() {
+  gh pr view "$1" --json title,url,number,author,headRefName,baseRefName,state,isDraft,reviewDecision,statusCheckRollup,additions,deletions,changedFiles,reviewRequests,labels,body \
+    --jq "$SUMMARY_JQ" 2>&1 \
+    | CLICOLOR_FORCE=1 glow -s dark -w "$2" -
 }
 
-VIM_KEYS="j,k,h,l,g,G,J,K,o,O,r,q,a,p,/"
-NORMAL="hide-input+rebind($VIM_KEYS)"
-RESTORE_INPUT="enable-search+clear-query+change-prompt(  / )+${NORMAL}+change-footer-label()"
-
-cmd_commit_author() {
-  local login=$1
-  [[ "$login" =~ ^[A-Za-z0-9-]+$ ]] || login=${FZF_QUERY#@}
-  rm -f "$DIR/author-mode"
-  if [[ ! "$login" =~ ^[A-Za-z0-9-]+$ ]]; then
-    echo "${RESTORE_INPUT}"
-    return
-  fi
-  echo "$login" > "$DIR/author"
-  echo "$AUTHOR_TAB" > "$DIR/tab"
-  rm -f "$DIR/list.$AUTHOR_TAB"
-  echo "${RESTORE_INPUT}+transform-header($SELF header)+reload($SELF list)+first"
+screen_preview() {
+  local width=$((${FZF_PREVIEW_COLUMNS:-80} - 2))
+  in_author_mode && return 0
+  pr_cached "$(pr_dir "$1")/summary.$width" render_summary "$1" "$width"
 }
 
-cmd_approve() {
-  [ "$1" = "x" ] && exit 0
-  local ref out
-  ref=$(printf '%s' "$1" | cut -d/ -f5,7 | tr / '#')
-  if out=$(gh pr review "$1" --approve 2>&1); then
-    rm -f "$DIR"/preview.*."$(printf '%s' "$1" | tr -c 'a-zA-Z0-9' '_')"
-    find "$DIR" -name 'list.*' ! -name "list.$(current_tab)" -delete
-    echo "refresh-preview+transform-header($SELF header)+change-footer-label: ✓ approved $ref "
-  else
-    echo "change-footer-label: ✗ $(printf '%s' "$out" | head -1) "
-  fi
+screen_on_accept() {
+  [[ $1 == https://* ]] && open "$1"
 }
 
-cmd_key_enter() {
-  if [ -f "$DIR/author-mode" ]; then
-    cmd_commit_author "${1:-}"
-  elif [ "$FZF_INPUT_STATE" != enabled ]; then
-    echo accept
-  elif [ -n "$FZF_QUERY" ]; then
-    echo "${NORMAL}+change-footer-label( filter: ${FZF_QUERY} )"
-  else
-    echo "${NORMAL}+change-footer-label()"
-  fi
-}
-
-cmd_key_esc() {
-  if [ -f "$DIR/author-mode" ]; then
-    rm -f "$DIR/author-mode"
-    echo "reload($SELF list)"
-    return 0
-  fi
-  [ "$FZF_INPUT_STATE" != enabled ] && [ -z "$FZF_QUERY" ] && echo abort
-  return 0
-}
-
-SELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
-
-case "${1:-}" in
-  step) cmd_step "$2"; exit 0 ;;
-  header) cmd_header; exit 0 ;;
-  list) cmd_list "${2:-}"; exit 0 ;;
-  prefetch) cmd_prefetch; exit 0 ;;
-  open-list) open "${GH_WEB}/$(tab_web "$(current_tab)")"; exit 0 ;;
-  approve) cmd_approve "$2"; exit 0 ;;
-  preview) cmd_preview "$2"; exit 0 ;;
-  key-enter) cmd_key_enter "${2:-}"; exit 0 ;;
-  members) cmd_members; exit 0 ;;
-  key-esc) cmd_key_esc; exit 0 ;;
-esac
-
-DIR=$(mktemp -d "${TMPDIR:-/tmp}/tmux-pr-menu.XXXXXX")
-export PR_MENU_DIR="$DIR"
-trap 'rm -rf "$DIR"' EXIT
-trap 'exit 1' HUP INT TERM
-echo 0 > "$DIR/tab"
-
-SWITCH="+transform-header($SELF header)+reload($SELF list)+first"
-FOOTER="${DIM}h/l tab  j/k move  J/K ^d/^u scroll preview  ⏎/o open  O GitHub page  p approve  a author  / filter  r refresh  esc clear/quit${RESET}"
-
-selected=$(
-  : | fzf --ansi --no-multi --layout=reverse --height=100% --listen --no-input \
-      --delimiter=$'\t' --with-nth=2.. \
-      --header-first --header "$("$SELF" header)" --header-border=bottom \
-      --footer "$FOOTER" --footer-border=top \
-      --prompt='  / ' --pointer='▸' --gutter=' ' --info=inline-right --no-hscroll \
-      --preview "$SELF preview {1}" \
-      --preview-window=right:55%:border-left \
-      --bind "start:reload($SELF list)+execute-silent($SELF prefetch >/dev/null 2>&1 &)" \
-      --bind "load:transform-header($SELF header)" \
-      --bind "l,right,tab:execute-silent($SELF step 1)${SWITCH}" \
-      --bind "h,left,shift-tab:execute-silent($SELF step -1)${SWITCH}" \
-      --bind 'j:down,k:up,g:first,G:last' \
-      --bind 'J:preview-down,K:preview-up' \
-      --bind 'ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up' \
-      --bind "o:accept,O:execute-silent($SELF open-list)" \
-      --bind "r,ctrl-r:reload($SELF list force)" \
-      --bind 'q:abort' \
-      --bind "p:transform($SELF approve {1})" \
-      --bind "a:execute-silent(touch $DIR/author-mode)+show-input+unbind($VIM_KEYS)+clear-query+change-prompt(  author › )+change-footer-label( type a name or login, enter to pick, esc to cancel )+reload($SELF members)+first" \
-      --bind "/:show-input+unbind($VIM_KEYS)" \
-      --bind "enter:transform:$SELF key-enter {1}" \
-      --bind "esc:transform($SELF key-esc)+show-input+clear-query+${NORMAL}+enable-search+change-prompt(  / )+change-footer-label()"
-)
-
-url=${selected%%$'\t'*}
-case "$url" in https://*) open "$url" ;; esac
+pr_main "$@"

@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+printf 'curl %s\n' "$*" >>"${GH_LOG:-/dev/null}"

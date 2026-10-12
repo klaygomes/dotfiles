@@ -18,7 +18,7 @@ while [ $# -gt 0 ]; do
     *) usage ;;
   esac
 done
-[ -n "$FRAMES" ] && [ -n "$OUT" ] && [ -n "$NAME" ] || usage
+if [ -z "$FRAMES" ] || [ -z "$OUT" ] || [ -z "$NAME" ]; then usage; fi
 mkdir -p "$OUT"
 WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
 
@@ -35,4 +35,6 @@ N=$(find "$WORK/f" -name '*.png' | wc -l | tr -d ' ')
 case "$POSTER" in first) P=0 ;; last) P=$((N - 1)) ;; *) P="$POSTER" ;; esac
 cwebp -quiet -q 85 -alpha_q 100 -exact -sharp_yuv "$WORK/f/$(printf %04d "$P").png" -o "$OUT/$NAME.webp"
 
-ls -l "$OUT/$NAME.webm" "$OUT/$NAME.mp4" "$OUT/$NAME.webp" | awk '{print $5"\t"$NF}'
+for f in "$OUT/$NAME.webm" "$OUT/$NAME.mp4" "$OUT/$NAME.webp"; do
+  printf '%s\t%s\n' "$(wc -c <"$f" | tr -d ' ')" "$f"
+done

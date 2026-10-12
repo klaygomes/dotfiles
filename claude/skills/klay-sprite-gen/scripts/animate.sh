@@ -27,7 +27,7 @@ while [ $# -gt 0 ]; do
     *) usage ;;
   esac
 done
-[ -n "$STILL" ] && [ -n "$PROMPT" ] && [ -n "$OUT" ] || usage
+if [ -z "$STILL" ] || [ -z "$PROMPT" ] || [ -z "$OUT" ]; then usage; fi
 mkdir -p "$OUT"
 
 FIT=(--fit tight); [ -n "$SHAPE" ] && FIT=(--fit state --shape "$SHAPE")

@@ -74,6 +74,9 @@ brew "stylua"
 # Shell formatter
 brew "shfmt"
 
+# Bash test framework
+brew "bats-core"
+
 # Python code formatter
 brew "black"
 

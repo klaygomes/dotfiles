@@ -1,0 +1,14 @@
+{
+  "data": {
+    "organization": {
+      "membersWithRole": {
+        "pageInfo": { "hasNextPage": false, "endCursor": null },
+        "nodes": [
+          { "login": "zed-acme", "name": null },
+          { "login": "alice", "name": "Alice Anders" },
+          { "login": "bob", "name": "Bob Berg" }
+        ]
+      }
+    }
+  }
+}

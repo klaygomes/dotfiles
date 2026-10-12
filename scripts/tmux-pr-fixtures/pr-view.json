@@ -1,0 +1,28 @@
+{
+  "title": "Add sprocket support",
+  "url": "https://github.com/acme/widgets/pull/7",
+  "number": 7,
+  "author": { "login": "alice" },
+  "headRefName": "feat/sprockets",
+  "baseRefName": "main",
+  "state": "OPEN",
+  "isDraft": false,
+  "reviewDecision": "REVIEW_REQUIRED",
+  "statusCheckRollup": [
+    { "conclusion": "SUCCESS" },
+    { "conclusion": "FAILURE" },
+    { "state": "PENDING" }
+  ],
+  "additions": 14,
+  "deletions": 3,
+  "changedFiles": 4,
+  "reviewRequests": [{ "login": "carol" }],
+  "labels": [{ "name": "feature" }],
+  "body": "Adds sprockets.",
+  "files": [
+    { "path": "src/app.ts", "additions": 5, "deletions": 1 },
+    { "path": "docs/my notes.md", "additions": 2, "deletions": 0 },
+    { "path": "new/name.ts", "additions": 1, "deletions": 1 },
+    { "path": "lib/src/app.ts", "additions": 6, "deletions": 1 }
+  ]
+}
