@@ -1,0 +1,19 @@
+scripts/notes_utils.py
+  s_85b1d86c5ee6be::t_d94883a38247fb 6-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "44d701949d8caec1159030e06153ca2d5f0448c7",
+  "prompts": {},
+  "sessions": {
+    "s_85b1d86c5ee6be": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1db8d8ec-9d01-410b-9f3c-e3c73e94fde5",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
