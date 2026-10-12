@@ -18,7 +18,7 @@ while [ $# -gt 0 ]; do
     *) usage ;;
   esac
 done
-[ -n "$FRAMES" ] && [ -n "$OUT" ] && [ -n "$NAME" ] || usage
+if [ -z "$FRAMES" ] || [ -z "$OUT" ] || [ -z "$NAME" ]; then usage; fi
 mkdir -p "$OUT"
 WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
 
