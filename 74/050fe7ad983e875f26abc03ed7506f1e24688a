@@ -1,0 +1,31 @@
+Makefile
+  s_85b1d86c5ee6be::t_22761ec10572f4 122,160-168
+README.md
+  s_85b1d86c5ee6be::t_5f715068458a07 50-54,79
+claude/CLAUDE.md
+  s_ad9192dad32b4a::t_b13b7e7fa093dc 1-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "74050fe7ad983e875f26abc03ed7506f1e24688a",
+  "prompts": {},
+  "sessions": {
+    "s_85b1d86c5ee6be": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1db8d8ec-9d01-410b-9f3c-e3c73e94fde5",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    },
+    "s_ad9192dad32b4a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f94a18b0-9229-46d7-8c5b-46c7f061a9bf",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
