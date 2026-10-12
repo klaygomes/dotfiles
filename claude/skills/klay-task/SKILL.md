@@ -77,7 +77,7 @@ task add "<description>" [due:<date>] [scheduled:due-4d] [project:X] [+tag] [pri
 
 If the user gives an ID:
 ```bash
-task <id> done
+task done <id>
 ```
 
 If the user names a task without an ID:
@@ -90,22 +90,22 @@ If the user names a task without an ID:
 ### postpone — shift due date forward
 
 ```bash
-task <id> modify due:due+<N>d
+task modify <id> due:due+<N>d
 ```
 
 For an absolute date:
 ```bash
-task <id> modify due:<date>
+task modify <id> due:<date>
 ```
 
 Also update scheduled to stay in sync with the new due date:
 ```bash
-task <id> modify scheduled:due-4d
+task modify <id> scheduled:due-4d
 ```
 
 Both `modify` calls can be combined:
 ```bash
-task <id> modify due:due+3d scheduled:due-4d
+task modify <id> due:due+3d scheduled:due-4d
 ```
 
 ---
@@ -113,8 +113,8 @@ task <id> modify due:due+3d scheduled:due-4d
 ### start / stop
 
 ```bash
-task <id> start
-task <id> stop
+task start <id>
+task stop <id>
 ```
 
 ---
@@ -122,7 +122,7 @@ task <id> stop
 ### annotate
 
 ```bash
-task <id> annotate "<note text>"
+task annotate <id> "<note text>"
 ```
 
 ---
@@ -131,7 +131,7 @@ task <id> annotate "<note text>"
 
 Ask for confirmation before deleting. Then:
 ```bash
-task <id> delete
+task delete <id>
 ```
 
 ---

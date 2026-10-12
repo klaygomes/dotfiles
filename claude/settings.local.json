@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(task add *)",
+      "Bash(task done *)",
+      "Bash(task modify *)",
+      "Bash(task start *)",
+      "Bash(task stop *)",
+      "Bash(task annotate *)",
+      "Bash(task delete *)",
+      "Bash(task next)",
+      "Bash(task next *)",
+      "Bash(task list)",
+      "Bash(task list *)",
+      "Skill(klay-task)",
+      "Bash(gh api *)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash $HOME/dotfiles/scripts/claude-statusline.sh"
+  }
+}

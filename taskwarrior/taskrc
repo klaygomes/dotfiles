@@ -52,7 +52,7 @@ urgency.user.tag.next.coefficient=15.0
 report.next.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
 report.next.labels=ID,Active,Age,Deps,P,Project,Tags,Recur,S,Due,Until,Description,Urg
 report.next.sort=urgency-
-report.next.filter=status:pending limit:30
+report.next.filter=+READY limit:30
 
 report.list.columns=id,priority,project,tags,due.relative,description,urgency
 report.list.labels=ID,P,Project,Tags,Due,Description,Urg
