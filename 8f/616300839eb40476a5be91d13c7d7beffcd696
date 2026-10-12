@@ -1,0 +1,63 @@
+.github/workflows/shellcheck.yml
+  s_85b1d86c5ee6be::t_d70746fbe650c2 19-20,22-26
+Makefile
+  s_85b1d86c5ee6be::t_af141320807168 35,164-172
+brew/Brewfile
+  s_85b1d86c5ee6be::t_3692e73fb8ff9e 77-79
+claude/skills/klay-sprite-gen/scripts/encode.sh
+  s_85b1d86c5ee6be::t_95eef338f70eca 38-40
+docs/tmux-pr-menu.md
+  s_85b1d86c5ee6be::t_f1e93f7e77a49f 3,6-11,16-21,24-31,33-37,46-109,112-139
+scripts/tmux-pr-files.sh
+  s_85b1d86c5ee6be::t_d5891824e4438f 1-84
+scripts/tmux-pr-fixtures/bin/curl
+  s_85b1d86c5ee6be::t_5e45b3a2564804 1-2
+scripts/tmux-pr-fixtures/bin/delta
+  s_85b1d86c5ee6be::t_9218762d35712d 1-2
+scripts/tmux-pr-fixtures/bin/gh
+  s_85b1d86c5ee6be::t_56d449c0be52b8 1-38
+scripts/tmux-pr-fixtures/bin/glow
+  s_85b1d86c5ee6be::t_7ab970d56bedce 1-2
+scripts/tmux-pr-fixtures/bin/open
+  s_85b1d86c5ee6be::t_954a0cf12e1fda 1-2
+scripts/tmux-pr-fixtures/empty.json
+  s_85b1d86c5ee6be::t_cdd08a1d2873be 1
+scripts/tmux-pr-fixtures/members.json
+  s_85b1d86c5ee6be::t_75cdc75f907225 1-14
+scripts/tmux-pr-fixtures/orgs.json
+  s_85b1d86c5ee6be::t_8eaad43767e54d 1
+scripts/tmux-pr-fixtures/pr-view.json
+  s_85b1d86c5ee6be::t_31eead774cff69 1-28
+scripts/tmux-pr-fixtures/pr.diff
+  s_85b1d86c5ee6be::t_285f81e8b1acb3 1-29
+scripts/tmux-pr-fixtures/search-prs.json
+  s_85b1d86c5ee6be::t_9aeabf53631021 1-18
+scripts/tmux-pr-lib.sh
+  s_85b1d86c5ee6be::t_fe1a777793bb9e 1-189
+scripts/tmux-pr-lint.sh
+  s_85b1d86c5ee6be::t_05620d02f80729 1-79
+scripts/tmux-pr-menu.sh
+  s_85b1d86c5ee6be::t_83076d8a4bdefb 2-3,6-17,19-30,32-42,44-46,48-58,63-64,66,70-76,80-83,85,89-96,99-100,103-104,108-109,111,113,115,118-126,128-131,133-176,179-180,184-187,195,210-214,216-222,227,230-270,273-274,293,295-298,301-304,307-308,311
+scripts/tmux-pr-smoke.sh
+  s_85b1d86c5ee6be::t_0fafb4c69f2025 1-95
+scripts/tmux-pr-test.bats
+  s_85b1d86c5ee6be::t_7ff52cc7c4cc15 1-281
+tmux/tmux.conf
+  s_85b1d86c5ee6be::t_943c4c914d113d 88-89,98-100,102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8f616300839eb40476a5be91d13c7d7beffcd696",
+  "prompts": {},
+  "sessions": {
+    "s_85b1d86c5ee6be": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1db8d8ec-9d01-410b-9f3c-e3c73e94fde5",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
