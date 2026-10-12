@@ -21,7 +21,5 @@ mkdir -p "$PLUGINS_DIR"
 
 clone_or_update "tmux-plugins/tpm"
 clone_or_update "tmux-plugins/tmux-sensible"
-clone_or_update "tmux-plugins/tmux-resurrect"
-clone_or_update "tmux-plugins/tmux-continuum"
 
 echo "- ok"
