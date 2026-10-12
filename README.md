@@ -47,6 +47,11 @@ You may also force a full update whenever you want by typing:
 make all -B
 ```
 
+`make all` asks for your sudo password once and keeps the ticket alive while it runs.
+Homebrew normally resets the sudo ticket on every `brew` call (`sudo --reset-timestamp` in
+`Library/Homebrew/utils/sudo.sh`), so `all` exports `HOMEBREW_SUDO_CHECKED=1` to skip that check.
+This relies on a Homebrew internal and may need revisiting after a Homebrew upgrade.
+
 If you need help type:
 
 ```bash
@@ -71,7 +76,7 @@ make help
 | ranger             | Install ranger configuration                           |
 | bat                | Install bat configuration                              |
 | launchd            | Install and load launchd agents                        |
-| claude             | Install Claude Code settings                           |
+| claude             | Install Claude Code settings and global CLAUDE.md      |
 | skills             | Install Claude Code skills                             |
 | help               | Show this help                                         |
 +--------------------+--------------------------------------------------------+

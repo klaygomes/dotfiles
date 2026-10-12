@@ -119,6 +119,7 @@ launchd: ;@ ## Install and load launchd agents
 
 claude: ;@ ## Install Claude Code settings (symlinks into ~/.claude)
 	@mkdir -p ${CLAUDE_PATH}
+	@ln -sf "$(CURDIR)/claude/CLAUDE.md" "${CLAUDE_PATH}CLAUDE.md"
 	@ln -sf "$(CURDIR)/claude/settings.local.json" "${CLAUDE_PATH}settings.local.json"
 	@chmod +x "$(CURDIR)/scripts/claude-statusline.sh"
 	@[ -f "${CLAUDE_PATH}settings.json" ] || echo '{}' > "${CLAUDE_PATH}settings.json"
@@ -156,10 +157,15 @@ skills: ;@ ## Install Claude Code skills (symlinks into ~/.claude/skills)
 	@echo "Skills installed"
 
 all: ;@ ## Run all configurations
-	@for target in mac zsh brew node git vim tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer agents; do \
-		echo "Running $$target..."; \
-		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
-	done
+	@export HOMEBREW_SUDO_CHECKED=1; sudo -v && { \
+		while kill -0 $$$$ 2>/dev/null; do sudo -n true 2>/dev/null; sleep 50; done & \
+		keepalive=$$!; \
+		trap 'kill $$keepalive 2>/dev/null' EXIT; \
+		for target in mac zsh brew node git vim tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer agents; do \
+			echo "Running $$target..."; \
+			$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
+		done; \
+	}
 
 lint: ;@ ## Lint shell scripts (shellcheck, shfmt, bash 3.2 guard)
 	@./scripts/tmux-pr-lint.sh
