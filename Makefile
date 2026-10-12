@@ -32,7 +32,7 @@ define LINK_CONFIG
 fi
 endef
 
-.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer agents all help
+.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer agents all help lint test smoke
 .SECONDEXPANSION:
 .DEFAULT_GOAL := help
 
@@ -160,6 +160,15 @@ all: ;@ ## Run all configurations
 		echo "Running $$target..."; \
 		$(MAKE) $$target || echo "Warning: $$target failed, continuing..."; \
 	done
+
+lint: ;@ ## Lint shell scripts (shellcheck, shfmt, bash 3.2 guard)
+	@./scripts/tmux-pr-lint.sh
+
+test: ;@ ## Run the tmux PR menu tests (bats, offline)
+	@bats scripts/tmux-pr-test.bats
+
+smoke: ;@ ## Drive the tmux PR menu in a throwaway tmux server (local only)
+	@./scripts/tmux-pr-smoke.sh
 
 # https://michaelgoerz.net/notes/self-documenting-makefiles.html
 help: ## Show this help

@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+printf 'open %s\n' "$*" >>"${GH_LOG:-/dev/null}"

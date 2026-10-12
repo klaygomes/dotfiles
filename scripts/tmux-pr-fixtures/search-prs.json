@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://github.com/acme/widgets/pull/7",
+    "repository": { "name": "widgets", "nameWithOwner": "acme/widgets" },
+    "number": 7,
+    "title": "Add sprocket support",
+    "author": { "login": "alice" },
+    "isDraft": false
+  },
+  {
+    "url": "https://github.com/acme/gadget-service/pull/123",
+    "repository": { "name": "gadget-service", "nameWithOwner": "acme/gadget-service" },
+    "number": 123,
+    "title": "Fix gizmo timeout",
+    "author": { "login": "bob" },
+    "isDraft": true
+  }
+]
