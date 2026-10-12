@@ -1,0 +1,19 @@
+claude/skills/klay-i-have-adhd/SKILL.md
+  s_ad9192dad32b4a::t_4e19eb205cd689 1-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bb2e1b55e9371c7b284c60b8c2f3fcae52cdf99e",
+  "prompts": {},
+  "sessions": {
+    "s_ad9192dad32b4a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f94a18b0-9229-46d7-8c5b-46c7f061a9bf",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
