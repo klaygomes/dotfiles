@@ -1,0 +1,23 @@
+claude/settings.local.json
+  s_85b1d86c5ee6be::t_72fa1e5bc165b9 1-23
+claude/skills/klay-task/SKILL.md
+  s_85b1d86c5ee6be::t_090ede9bd2a844 80,93,98,103,108,116-117,125,134
+taskwarrior/taskrc
+  s_85b1d86c5ee6be::t_d15d2bb6def12e 55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b2295d40e28ec281989c556022ba77268bbe60ad",
+  "prompts": {},
+  "sessions": {
+    "s_85b1d86c5ee6be": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1db8d8ec-9d01-410b-9f3c-e3c73e94fde5",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
