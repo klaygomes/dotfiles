@@ -12,6 +12,7 @@ setup() {
   export XDG_CACHE_HOME=$BATS_TEST_TMPDIR/cache
   export PR_FILES_URL=$PR_URL
   export PR_PREVIEW_DEBOUNCE=0
+  export PR_MENU_FAVORITES=$BATS_TEST_TMPDIR/favorites
   CACHE=$XDG_CACHE_HOME/tmux-pr-menu
   unset FZF_QUERY FZF_INPUT_STATE GH_FAIL GH_DELAY GH_SEARCH_FIXTURE PR_MENU_ORGS PR_CACHE_TTL PR_REFRESH_COOLDOWN
   mkdir -p "$PR_STATE/menu"
@@ -160,6 +161,25 @@ age_file() {
   [ "$(gh_calls 'api graphql --paginate -f org=other')" -eq 1 ]
   "$MENU" members >/dev/null
   [ "$(gh_calls 'api graphql')" -eq 2 ]
+}
+
+@test "menu: favorites come first, starred, without duplicates below" {
+  printf '%s\n' '# pinned' 'dave  # not an org member' '@acme/core' '@bob' 'not a login!' >"$PR_MENU_FAVORITES"
+  run "$MENU" members
+  [ "${#lines[@]}" -eq 4 ]
+  [[ ${lines[0]} == "dave"$'\t'"★ "*"@dave"* ]]
+  [[ ${lines[1]} == "bob"$'\t'"★ Bob Berg"* ]]
+  [[ ${lines[2]} == "zed-acme"$'\t'"★ "*"@zed-acme"* ]]
+  [[ ${lines[3]} == "alice"$'\t'"Alice Anders"* ]]
+  grep -q -- '-f org=acme -f team=core' "$GH_LOG"
+}
+
+@test "menu: favorite teams are cached for a day" {
+  printf '@acme/core\n' >"$PR_MENU_FAVORITES"
+  "$MENU" members >/dev/null
+  "$MENU" members >/dev/null
+  [ "$(gh_calls 'api graphql --paginate -f org=acme -f team=core')" -eq 1 ]
+  [ -f "$CACHE/teams/acme_core" ]
 }
 
 @test "menu: enter in the picker commits the highlighted login" {

@@ -8,7 +8,10 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/tmux-pr-lib.sh" || exit 1
 
 readonly GH_WEB=https://github.com/pulls
 readonly MEMBERS=${XDG_CACHE_HOME:-$HOME/.cache}/tmux-pr-menu/members.tsv
+readonly FAVORITES=${PR_MENU_FAVORITES:-${XDG_CONFIG_HOME:-$HOME/.config}/tmux-pr-menu/favorites}
+readonly TEAM_CACHE_TTL=86400
 readonly LOGIN_RE='^[A-Za-z0-9-]+$'
+readonly TEAM_RE='^@?([A-Za-z0-9-]+)/([A-Za-z0-9_.-]+)$'
 readonly AUTHOR_TAB=3
 readonly TAB_NAMES=('Review requested' 'No review' 'Approved' 'By author')
 readonly TAB_WEB=(
@@ -188,6 +191,7 @@ cmd_after_step() {
 cmd_prefetch() {
   local i port=${FZF_PORT-}
   fetch_members &
+  list_favorites >/dev/null 2>&1 &
   for i in "${!TAB_NAMES[@]}"; do
     ((i == $(current_tab) || i == AUTHOR_TAB)) && continue
     pr_cached "$(list_file "$i")" fetch-tab "$i" >/dev/null 2>&1 &
@@ -243,9 +247,56 @@ fetch_members() {
   fi
 }
 
+cmd_fetch_team() {
+  # shellcheck disable=SC2016
+  gh api graphql --paginate -f org="$1" -f team="$2" -f query='
+    query($org: String!, $team: String!, $endCursor: String) {
+      organization(login: $org) {
+        team(slug: $team) {
+          members(first: 100, after: $endCursor, membership: ALL) {
+            pageInfo { hasNextPage endCursor }
+            nodes { login }
+          }
+        }
+      }
+    }' --jq '.data.organization.team.members.nodes[].login' | sort -f
+}
+
+list_team() {
+  PR_CACHE_TTL=$TEAM_CACHE_TTL pr_cached "$PR_CACHE/teams/$1_$2" fetch-team "$1" "$2" 2>/dev/null
+}
+
+list_favorites() {
+  local line
+  [[ -f $FAVORITES ]] || return 0
+  while IFS= read -r line || [[ -n $line ]]; do
+    line=${line%%#*}
+    line=${line//[[:space:]]/}
+    if [[ $line =~ $TEAM_RE ]]; then
+      list_team "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+    elif [[ ${line#@} =~ $LOGIN_RE ]]; then
+      printf '%s\n' "${line#@}"
+    fi
+  done <"$FAVORITES"
+}
+
 cmd_members() {
   fetch_members
-  cat -- "$MEMBERS" 2>/dev/null
+  {
+    list_favorites | sed 's/^/F\t/'
+    sed 's/^/M\t/' -- "$MEMBERS" 2>/dev/null
+  } | awk -F '\t' -v star='★ ' -v dim="$PR_DIM" -v reset="$PR_RESET" '
+    $1 == "F" { if (!($2 in fav)) { fav[$2] = 1; order[++n] = $2 }; next }
+    { display[$2] = $3; logins[++m] = $2 }
+    END {
+      for (i = 1; i <= n; i++) {
+        login = order[i]
+        print login "\t" star (login in display ? display[login] : dim "@" login reset)
+      }
+      for (i = 1; i <= m; i++) {
+        if (!(logins[i] in fav)) print logins[i] "\t" display[logins[i]]
+      }
+    }'
 }
 
 cmd_author_mode() {

@@ -75,7 +75,7 @@ tm kill-server 2>/dev/null
 
 tm new-session -d -s "$SESSION" -x 160 -y 30 \
   env PATH="$HERE/tmux-pr-fixtures/bin:$PATH" GH_LOG="$LOG" \
-  XDG_CACHE_HOME="${TMPDIR:-/tmp}/tmux-pr-smoke-cache" \
+  XDG_CACHE_HOME="${TMPDIR:-/tmp}/tmux-pr-smoke-cache" PR_MENU_FAVORITES=/dev/null \
   "$HERE/tmux-pr-menu.sh"
 
 check 'menu opens on the review-requested tab' wait_for 'Add sprocket support'

@@ -1,0 +1,12 @@
+{
+  "data": {
+    "organization": {
+      "team": {
+        "members": {
+          "pageInfo": { "hasNextPage": false, "endCursor": null },
+          "nodes": [{ "login": "zed-acme" }, { "login": "bob" }]
+        }
+      }
+    }
+  }
+}

@@ -26,6 +26,8 @@ case "${1-} ${2-}" in
   'api graphql')
     if [[ $* == *organizations* ]]; then
       fixture=orgs.json
+    elif [[ $* == *'team(slug'* ]]; then
+      fixture=team.json
     else
       fixture=members.json
     fi

@@ -71,7 +71,17 @@ stateDiagram-v2
 | Approved         | `author:@me review:approved`                 |
 | By author        | `author:<login>`, picked with `a`            |
 
-The author picker lists members of every org you belong to (or only `$PR_MENU_ORGS`, space-separated). With no match, the typed text is used as a raw login. GitHub rejects approving your own PRs, so `p` is only useful on Review requested and By author.
+The author picker lists members of every org you belong to (or only `$PR_MENU_ORGS`, space-separated). With no match, the typed text is used as a raw login.
+
+Favorites are pinned to the top of the picker with a ★, in file order, and are not repeated below. They come from `~/.config/tmux-pr-menu/favorites` (or `$PR_MENU_FAVORITES`), which is local and never part of this repo:
+
+```
+# one GitHub login or one @org/team per line
+alice
+@acme/core
+```
+
+A team expands to all of its members, child teams included, cached for a day in `~/.cache/tmux-pr-menu/teams/`. GitHub rejects approving your own PRs, so `p` is only useful on Review requested and By author.
 
 ## Adding a screen
 
@@ -124,6 +134,7 @@ flowchart TD
   C["~/.cache/tmux-pr-menu/"] --> L["lists/: 0, 1, 2, author.&lt;login&gt;"]
   C --> PR["pr/&lt;owner&gt;_&lt;repo&gt;_&lt;n&gt;/: title, files, patch, summary.&lt;width&gt;"]
   C --> M["members.tsv (kept for a day)"]
+  C --> T["teams/&lt;org&gt;_&lt;team&gt; (favorite teams, kept for a day)"]
 ```
 
 Every read goes through `tmux-pr-cache.py get <file> -- <cmd>`:
