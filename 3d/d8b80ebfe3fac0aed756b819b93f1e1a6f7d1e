@@ -1,0 +1,25 @@
+scripts/tmux-pr-cache.py
+  s_b8101aa7bf337c::t_f5d5927aca4745 1-143
+scripts/tmux-pr-files.sh
+  s_b8101aa7bf337c::t_6881b093e53620 11-15,18,22,32,47,53,64,80-87
+scripts/tmux-pr-fixtures/bin/gh
+  s_b8101aa7bf337c::t_9d91e7befad8fd 9
+scripts/tmux-pr-lib.sh
+  s_b8101aa7bf337c::t_51505b5a00f209 11-13,18,52,59-69,71-77,79,107
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3dd8b80ebfe3fac0aed756b819b93f1e1a6f7d1e",
+  "prompts": {},
+  "sessions": {
+    "s_b8101aa7bf337c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0ab2c9d0-4cd8-4992-b941-6c94fb566413",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
