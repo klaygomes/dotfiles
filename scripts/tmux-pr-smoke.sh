@@ -79,6 +79,10 @@ tm new-session -d -s "$SESSION" -x 160 -y 30 \
   "$HERE/tmux-pr-menu.sh"
 
 check 'menu opens on the review-requested tab' wait_for 'Add sprocket support'
+tm send-keys -t "$SESSION" o
+check 'o opens the PR and keeps the menu' wait_for 'opened widgets#7'
+tm send-keys -t "$SESSION" Enter
+check 'enter opens the PR and keeps the menu' wait_log 'open https://github.com/acme/widgets/pull/7'
 tm send-keys -t "$SESSION" O
 check 'O pushes the files screen' wait_for 'my notes.md'
 tm send-keys -t "$SESSION" Enter

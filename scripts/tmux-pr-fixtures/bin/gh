@@ -6,6 +6,7 @@ set -u
 readonly FIXTURES=${BASH_SOURCE[0]%/*}/..
 
 printf '%s\n' "$*" >>"${GH_LOG:-/dev/null}"
+[[ -n ${GH_DELAY-} ]] && sleep "$GH_DELAY"
 if [[ -n ${GH_FAIL-} ]]; then
   printf '%s\nsecond line\n' "$GH_FAIL" >&2
   exit 1

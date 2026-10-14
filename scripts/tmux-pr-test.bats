@@ -11,7 +11,9 @@ setup() {
   export GH_LOG=$BATS_TEST_TMPDIR/gh.log
   export XDG_CACHE_HOME=$BATS_TEST_TMPDIR/cache
   export PR_FILES_URL=$PR_URL
-  unset FZF_QUERY FZF_INPUT_STATE GH_FAIL GH_SEARCH_FIXTURE PR_MENU_ORGS
+  export PR_PREVIEW_DEBOUNCE=0
+  CACHE=$XDG_CACHE_HOME/tmux-pr-menu
+  unset FZF_QUERY FZF_INPUT_STATE GH_FAIL GH_DELAY GH_SEARCH_FIXTURE PR_MENU_ORGS PR_CACHE_TTL PR_REFRESH_COOLDOWN
   mkdir -p "$PR_STATE/menu"
   printf '0\n' >"$PR_STATE/menu/tab"
   : >"$GH_LOG"
@@ -23,6 +25,10 @@ gh_calls() {
 
 set_tab() {
   printf '%s\n' "$1" >"$PR_STATE/menu/tab"
+}
+
+age_file() {
+  touch -t 202001010000 "$1"
 }
 
 @test "menu: review-requested tab lists url and display, excluding dependabot" {
@@ -43,12 +49,49 @@ set_tab() {
   grep -q -- '--author=@me --review=approved' "$GH_LOG"
 }
 
-@test "menu: list is cached until refreshed with force" {
+@test "menu: list is cached across popups until the TTL expires" {
   "$MENU" list >/dev/null
+  rm -rf "$PR_STATE"
+  mkdir -p "$PR_STATE/menu"
   "$MENU" list >/dev/null
   [ "$(gh_calls 'search prs')" -eq 1 ]
-  "$MENU" list force >/dev/null
+  age_file "$CACHE/lists/0"
+  "$MENU" list >/dev/null
   [ "$(gh_calls 'search prs')" -eq 2 ]
+}
+
+@test "menu: refresh drops the tab and its PR previews, then reloads" {
+  "$MENU" list >/dev/null
+  mkdir -p "$CACHE/pr/acme_widgets_7"
+  : >"$CACHE/pr/acme_widgets_7/summary.80"
+  PR_REFRESH_COOLDOWN=0 run "$MENU" refresh
+  [ "$output" = "reload($MENU list)+refresh-preview" ]
+  [ ! -e "$CACHE/lists/0" ]
+  [ ! -d "$CACHE/pr/acme_widgets_7" ]
+  "$MENU" list >/dev/null
+  [ "$(gh_calls 'search prs')" -eq 2 ]
+}
+
+@test "menu: refresh is throttled right after a fetch" {
+  "$MENU" list >/dev/null
+  run "$MENU" refresh
+  [[ $output == "change-footer-label: fetched "*"s ago, refresh again in "* ]]
+  [ -f "$CACHE/lists/0" ]
+}
+
+@test "menu: concurrent identical requests share one gh call" {
+  GH_DELAY=0.5 "$MENU" list >"$BATS_TEST_TMPDIR/a" &
+  GH_DELAY=0.5 "$MENU" list >"$BATS_TEST_TMPDIR/b" &
+  wait
+  [ "$(gh_calls 'search prs')" -eq 1 ]
+  cmp -s "$BATS_TEST_TMPDIR/a" "$BATS_TEST_TMPDIR/b"
+}
+
+@test "menu: a lock file left behind does not block a fetch" {
+  mkdir -p "$CACHE/lists"
+  : >"$CACHE/lists/0.lock"
+  run "$MENU" list
+  [[ ${lines[0]} == "https://"* ]]
 }
 
 @test "menu: gh failure becomes an error row with the first line only" {
@@ -56,6 +99,13 @@ set_tab() {
   [ "${#lines[@]}" -eq 1 ]
   [[ ${lines[0]} == x$'\t'*"gh failed: HTTP 502: bad gateway"* ]]
   [[ ${lines[0]} != *"second line"* ]]
+}
+
+@test "menu: gh failure is not cached" {
+  GH_FAIL='HTTP 502: bad gateway' "$MENU" list >/dev/null
+  run "$MENU" list
+  [[ ${lines[0]} == "https://"* ]]
+  [ "$(gh_calls 'search prs')" -eq 2 ]
 }
 
 @test "menu: empty result becomes a placeholder row" {
@@ -150,16 +200,28 @@ set_tab() {
   grep -q -- '--author=bob' "$GH_LOG"
 }
 
-@test "menu: approve drops the PR cache and other tabs' lists" {
-  mkdir -p "$PR_STATE/pr/acme_widgets_7"
-  : >"$PR_STATE/pr/acme_widgets_7/summary.80"
-  : >"$PR_STATE/menu/list.0"
-  : >"$PR_STATE/menu/list.1"
+@test "menu: author tab is cached per author" {
+  set_tab 3
+  printf 'bob\n' >"$PR_STATE/menu/author"
+  "$MENU" list >/dev/null
+  printf 'dave\n' >"$PR_STATE/menu/author"
+  "$MENU" list >/dev/null
+  printf 'bob\n' >"$PR_STATE/menu/author"
+  "$MENU" list >/dev/null
+  [ "$(gh_calls 'search prs')" -eq 2 ]
+  [ -f "$CACHE/lists/author.bob" ]
+  [ -f "$CACHE/lists/author.dave" ]
+}
+
+@test "menu: approve drops the PR and every list, then reloads" {
+  mkdir -p "$CACHE/pr/acme_widgets_7" "$CACHE/lists"
+  : >"$CACHE/pr/acme_widgets_7/summary.80"
+  : >"$CACHE/lists/0"
+  : >"$CACHE/lists/author.bob"
   run "$MENU" approve "$PR_URL"
-  [[ $output == *"✓ approved widgets#7"* ]]
-  [ ! -d "$PR_STATE/pr/acme_widgets_7" ]
-  [ -f "$PR_STATE/menu/list.0" ]
-  [ ! -f "$PR_STATE/menu/list.1" ]
+  [[ $output == "reload($MENU list)+refresh-preview+execute-silent($MENU prefetch"*"✓ approved widgets#7"* ]]
+  [ ! -d "$CACHE/pr/acme_widgets_7" ]
+  [ ! -d "$CACHE/lists" ]
 }
 
 @test "menu: approve failure is reported in the footer" {
@@ -172,7 +234,7 @@ set_tab() {
   [[ $output == *"# Add sprocket support"* ]]
   [[ $output == *"✓ 1  ✗ 1  ● 1"* ]]
   [[ $output == *"Waiting on:** carol"* ]]
-  [ -f "$PR_STATE/pr/acme_widgets_7/summary.80" ]
+  [ -f "$CACHE/pr/acme_widgets_7/summary.80" ]
 }
 
 @test "menu: preview is blank on placeholder rows and in the picker" {
@@ -193,9 +255,10 @@ set_tab() {
 
 @test "menu: prefetch fills the other tabs and pokes fzf" {
   FZF_PORT=6266 "$MENU" prefetch
-  [ -f "$PR_STATE/menu/list.1" ]
-  [ -f "$PR_STATE/menu/list.2" ]
-  [ ! -f "$PR_STATE/menu/list.3" ]
+  [ -f "$CACHE/lists/1" ]
+  [ -f "$CACHE/lists/2" ]
+  [ ! -f "$CACHE/lists/0" ]
+  [ -z "$(find "$CACHE/lists" -name 'author.*')" ]
   grep -q 'curl .*localhost:6266' "$GH_LOG"
 }
 
@@ -208,7 +271,8 @@ set_tab() {
 
 @test "keys: enter in normal mode runs the screen's action" {
   FZF_INPUT_STATE=disabled run "$MENU" key-enter "$PR_URL"
-  [ "$output" = accept ]
+  [ "$output" = "change-footer-label: ↗ opened widgets#7 " ]
+  grep -qx "open $PR_URL" "$GH_LOG"
   FZF_INPUT_STATE=disabled run "$FILES" key-enter src/app.ts
   [[ $output == "execute-silent("*"tmux-pr-files.sh open {1})" ]]
   FZF_INPUT_STATE=disabled run "$MENU" key-enter x
@@ -231,7 +295,7 @@ set_tab() {
   FZF_INPUT_STATE=enabled run "$MENU" key-enter "$PR_URL"
   [[ $output == *"rebind(j,k,g,G,J,K,q,/,l,h,o,O,w,r,p,a)"* ]]
   FZF_INPUT_STATE=enabled run "$FILES" key-enter src/app.ts
-  [[ $output == *"rebind(j,k,g,G,J,K,q,/,o)"* ]]
+  [[ $output == *"rebind(j,k,g,G,J,K,q,/,o,r)"* ]]
 }
 
 @test "files: list shows file name, counts, then the directory" {
@@ -263,6 +327,26 @@ set_tab() {
   "$FILES" preview src/app.ts >/dev/null
   "$FILES" preview new/name.ts >/dev/null
   [ "$(gh_calls 'pr diff')" -eq 1 ]
+}
+
+@test "files: refresh refetches the PR, throttled right after a fetch" {
+  "$FILES" list >/dev/null
+  run "$FILES" refresh
+  [[ $output == "change-footer-label: fetched "* ]]
+  PR_REFRESH_COOLDOWN=0 run "$FILES" refresh
+  [[ $output == "reload("*"list)+refresh-preview+transform-header("*"header)" ]]
+  [ ! -d "$CACHE/pr/acme_widgets_7" ]
+  "$FILES" list >/dev/null
+  [ "$(gh_calls 'pr view')" -eq 2 ]
+}
+
+@test "menu: o opens the PR in the browser and keeps the popup" {
+  # shellcheck disable=SC2016
+  run grep -F 'o:transform($PR_RUN open {1})' "$MENU"
+  [ "$status" -eq 0 ]
+  run "$MENU" open x
+  [ -z "$output" ]
+  [ ! -s "$GH_LOG" ]
 }
 
 @test "files: open goes to the file's anchor on GitHub" {

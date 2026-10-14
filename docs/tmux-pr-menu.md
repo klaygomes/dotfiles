@@ -16,8 +16,8 @@ flowchart LR
   G["§ g"] --> M["menu (root screen)"]
   M -- "O" --> F["files screen"]
   F -- "esc / q / exit" --> M
-  M -- "esc / q / exit" --> X["popup closes, state dir removed"]
-  M -- "enter / o" --> B["PR in browser"]
+  M -- "esc / q / exit" --> X["popup closes, UI state removed, cache kept"]
+  M -- "enter / o" --> B["PR in browser, menu stays open"]
   F -- "enter / o" --> D["file diff on GitHub"]
 ```
 
@@ -26,11 +26,12 @@ flowchart LR
 | `scripts/tmux-pr-lib.sh`         | screen runtime: fzf command, shared keys, dispatch, cache  |
 | `scripts/tmux-pr-menu.sh`        | root screen: tabs, author picker, approve, PR summary      |
 | `scripts/tmux-pr-files.sh`       | files-changed screen: file list and per-file `delta` diff  |
+| `scripts/tmux-pr-cache.py`       | response cache: TTL, single-flight lock, debounce, prune   |
 | `scripts/tmux-pr-lint.sh`        | `make lint`                                                |
 | `scripts/tmux-pr-test.bats`      | `make test`, offline, fake `gh` in `tmux-pr-fixtures/bin/` |
 | `scripts/tmux-pr-smoke.sh`       | `make smoke`, drives the real UI in a throwaway tmux       |
 
-Requires `gh` (authenticated), `fzf` 0.65+, `glow`, `delta` and `curl`. Runs on macOS's bash 3.2.
+Requires `gh` (authenticated), `fzf` 0.65+, `glow`, `delta`, `curl` and `python3` 3.8+ (stdlib only). Runs on macOS's bash 3.2.
 
 ## Keys
 
@@ -55,13 +56,13 @@ stateDiagram-v2
 | J / K, ^d / ^u  | scroll preview             |                                    |                      |
 | /               | filter                     |                                    |                      |
 | esc, q, `exit`  | pop the screen             |                                    |                      |
-| enter / o       |                            | open PR in browser                 | open file on GitHub  |
+| enter / o       |                            | open PR in browser (popup stays)   | open file on GitHub  |
 | O               |                            | push files screen                  |                      |
 | h / l, ← / →    |                            | previous / next tab                |                      |
 | p               |                            | approve (no confirmation)          |                      |
 | a               |                            | pick an author                     |                      |
 | w               |                            | open the tab's GitHub search page  |                      |
-| r               |                            | refetch the current tab            |                      |
+| r               |                            | refetch the tab and its previews   | refetch the PR       |
 
 | Tab              | Query                                        |
 | ---------------- | -------------------------------------------- |
@@ -111,19 +112,49 @@ sequenceDiagram
 
 Optional hooks: `screen_start` (root setup after the state dir exists), `screen_on_accept <key>` (after fzf exits with a selection), `screen_enter_hook` / `screen_esc_hook` (return 0 to take over the key, as the author picker does).
 
-Helpers: `pr_row_error`, `pr_row_empty` (rows with key `x` are ignored by every hook), `pr_cached <file> <cmd...>`, `pr_dir <url>`, `pr_forget <url>`, `pr_ref <url>`, and `PR_FILTER`, `PR_NORMAL`, `PR_RESTORE` for building mode-switching actions.
+Helpers: `pr_row_error`, `pr_row_empty` (rows with key `x` are ignored by every hook), `pr_cached <file> <subcommand> [args]` and `pr_cached_preview` (same, debounced; the fetcher is a `cmd_*` of the calling screen), `pr_refresh_cooling <file>`, `pr_dir <url>`, `pr_forget <url>`, `pr_ref <url>`, and `PR_FILTER`, `PR_NORMAL`, `PR_RESTORE` for building mode-switching actions.
 
 ## State and cache
 
+UI state (current tab, picked author, picker mode) lives in `$PR_STATE`, one temp dir per popup. GitHub responses live in `~/.cache/tmux-pr-menu/` and are shared by every popup, so reopening `§ g` within the TTL makes no `gh` calls.
+
 ```mermaid
 flowchart TD
-  S["$PR_STATE (one per popup, created by the root screen)"]
-  S --> MN["menu/: tab, author, author-mode, list.0 … list.3"]
-  S --> PR["pr/&lt;owner&gt;_&lt;repo&gt;_&lt;n&gt;/: title, files, patch, summary.&lt;width&gt;"]
-  C["~/.cache/tmux-pr-menu/members.tsv"] -. "kept for a day" .- S
+  S["$PR_STATE (one per popup, removed on close)"] --> MN["menu/: tab, author, author-mode"]
+  C["~/.cache/tmux-pr-menu/"] --> L["lists/: 0, 1, 2, author.&lt;login&gt;"]
+  C --> PR["pr/&lt;owner&gt;_&lt;repo&gt;_&lt;n&gt;/: title, files, patch, summary.&lt;width&gt;"]
+  C --> M["members.tsv (kept for a day)"]
 ```
 
-Writes go through `pr_cached` (temp file, then `mv`), so concurrent previews never see a partial file. Approving a PR removes its `pr/` directory and every other tab's list. A screen run directly from a shell becomes the root and creates its own state dir.
+Every read goes through `tmux-pr-cache.py get <file> -- <cmd>`:
+
+```mermaid
+flowchart TD
+  R["get file"] --> F{"fresh? (non-empty, younger than TTL)"}
+  F -- yes --> O["print file"]
+  F -- no --> D["debounce (previews only)"]
+  D --> K["flock file.lock (blocks while an identical fetch runs)"]
+  K --> F2{"fresh now?"}
+  F2 -- "yes, the other fetch filled it" --> O
+  F2 -- no --> G["run cmd into a temp file, mv on success"]
+  G -- ok --> O
+  G -- fails --> E["error row, nothing cached"]
+```
+
+| Setting                  | Default | Effect                                                                 |
+| ------------------------ | ------- | ---------------------------------------------------------------------- |
+| `PR_CACHE_TTL`           | 300 s   | how long a response is served without calling `gh`                     |
+| `PR_PREVIEW_DEBOUNCE`    | 0.3 s   | wait before an uncached preview fetch; fzf kills it if you move on     |
+| `PR_REFRESH_COOLDOWN`    | 10 s    | `r` within this long after a fetch only reports the age in the footer  |
+
+| Event          | Invalidates                                                         |
+| -------------- | ------------------------------------------------------------------- |
+| `r` on menu    | the current tab's list and the cached previews of every PR in it    |
+| `r` on files   | that PR's title, files, patch and summaries                         |
+| `p` approve    | that PR and every list, then reloads the tab and re-prefetches      |
+| popup start    | cache files older than a day                                        |
+
+The lock is a kernel `flock`, so a fetch killed mid-flight (fzf cancelling a preview) releases it immediately.
 
 ## Lint
 

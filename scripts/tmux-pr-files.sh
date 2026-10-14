@@ -8,15 +8,18 @@ source "$(dirname -- "${BASH_SOURCE[0]}")/tmux-pr-lib.sh" || exit 1
 
 URL=${PR_FILES_URL-}
 
-screen_footer='⏎/o open file on GitHub'
-screen_binds=("o:execute-silent($PR_RUN open {1})")
+screen_footer='⏎/o open file on GitHub  r refresh'
+screen_binds=(
+  "o:execute-silent($PR_RUN open {1})"
+  "r,ctrl-r:transform($PR_RUN refresh)"
+)
 screen_fzf_opts=(--preview-window=right:70%:border-left)
 
-fetch_title() {
+cmd_fetch_title() {
   gh pr view "$URL" --json title --jq .title
 }
 
-fetch_files() {
+cmd_fetch_files() {
   gh pr view "$URL" --json files --jq '.files[] | [
       .path,
       ((.path | split("/") | last)
@@ -26,7 +29,7 @@ fetch_files() {
     ] | @tsv'
 }
 
-fetch_patch() {
+cmd_fetch_patch() {
   gh pr diff "$URL" --color=never
 }
 
@@ -41,13 +44,13 @@ screen_init() {
 
 screen_header() {
   local title
-  title=$(pr_cached "$(pr_dir "$URL")/title" fetch_title 2>/dev/null)
+  title=$(pr_cached "$(pr_dir "$URL")/title" fetch-title 2>/dev/null)
   printf '%s %s %s  %s' "$PR_ACCENT" "$(pr_ref "$URL")" "$PR_RESET" "$title"
 }
 
 screen_list() {
   local out
-  if ! out=$(pr_cached "$(pr_dir "$URL")/files" fetch_files 2>&1); then
+  if ! out=$(pr_cached "$(pr_dir "$URL")/files" fetch-files 2>&1); then
     pr_row_error "gh failed: ${out%%$'\n'*}"
   elif [[ -z $out ]]; then
     pr_row_empty 'no files'
@@ -58,7 +61,7 @@ screen_list() {
 
 screen_preview() {
   local patch
-  patch=$(pr_cached "$(pr_dir "$URL")/patch" fetch_patch 2>&1) || {
+  patch=$(pr_cached_preview "$(pr_dir "$URL")/patch" fetch-patch 2>&1) || {
     printf 'gh pr diff failed: %s\n' "${patch%%$'\n'*}"
     return 0
   }
@@ -72,6 +75,14 @@ screen_preview() {
 
 screen_on_enter() {
   printf 'execute-silent(%s open {1})' "$PR_RUN"
+}
+
+cmd_refresh() {
+  local files
+  files=$(pr_dir "$URL")/files
+  [[ -f $files ]] && pr_refresh_cooling "$files" && return 0
+  pr_forget "$URL"
+  printf 'reload(%s list)+refresh-preview+transform-header(%s header)' "$PR_RUN" "$PR_RUN"
 }
 
 cmd_open() {

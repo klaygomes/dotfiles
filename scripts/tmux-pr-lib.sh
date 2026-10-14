@@ -8,10 +8,14 @@ readonly PR_RED=$'\033[31m'
 readonly PR_ACCENT=$'\033[1;30;48;5;173m'
 readonly PR_RESET=$'\033[0m'
 readonly PR_BASE_KEYS='j,k,g,G,J,K,q,/'
+readonly PR_CACHE=${XDG_CACHE_HOME:-$HOME/.cache}/tmux-pr-menu
+readonly PR_PREVIEW_DEBOUNCE=${PR_PREVIEW_DEBOUNCE:-0.3}
+readonly PR_REFRESH_COOLDOWN=${PR_REFRESH_COOLDOWN:-10}
 
 PR_HOME=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P) || exit 1
 PR_SELF=$(cd -- "$(dirname -- "$0")" && pwd -P)/${0##*/}
 printf -v PR_RUN '%q' "$PR_SELF"
+readonly PR_CACHE_PY=$PR_HOME/tmux-pr-cache.py
 readonly PR_HOME PR_SELF PR_RUN
 
 screen_footer=''
@@ -45,26 +49,34 @@ pr_ref() {
 }
 
 pr_dir() {
-  printf '%s/pr/%s' "$PR_STATE" "$(pr_key "$1")"
+  printf '%s/pr/%s' "$PR_CACHE" "$(pr_key "$1")"
 }
 
 pr_forget() {
   rm -rf -- "$(pr_dir "$1")"
 }
 
+pr_refresh_cooling() {
+  local age
+  age=$("$PR_CACHE_PY" age "$1") || return 1
+  ((age < PR_REFRESH_COOLDOWN)) || return 1
+  printf 'change-footer-label: fetched %ss ago, refresh again in %ss ' "$age" $((PR_REFRESH_COOLDOWN - age))
+}
+
+pr_prune_cache() {
+  "$PR_CACHE_PY" prune "$PR_CACHE/lists" "$PR_CACHE/pr"
+}
+
 pr_cached() {
-  local file=$1 tmp
+  local file=$1
   shift
-  if [[ ! -s $file ]]; then
-    mkdir -p -- "${file%/*}" || return 1
-    tmp=$(mktemp "$file.XXXXXX") || return 1
-    if ! "$@" >"$tmp"; then
-      rm -f -- "$tmp"
-      return 1
-    fi
-    mv -f -- "$tmp" "$file"
-  fi
-  cat -- "$file"
+  "$PR_CACHE_PY" get "$file" -- "$PR_SELF" "$@"
+}
+
+pr_cached_preview() {
+  local file=$1
+  shift
+  "$PR_CACHE_PY" get --debounce "$PR_PREVIEW_DEBOUNCE" "$file" -- "$PR_SELF" "$@"
 }
 
 pr_vim_keys() {
@@ -92,6 +104,7 @@ pr_init_state() {
   export PR_STATE
   trap 'rm -rf -- "$PR_STATE"' EXIT
   trap 'exit 1' HUP INT TERM
+  pr_prune_cache
 }
 
 cmd_list() {
