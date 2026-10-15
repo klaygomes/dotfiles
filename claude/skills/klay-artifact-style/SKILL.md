@@ -51,7 +51,7 @@ Section titles are plain phrases a reader would say aloud: "What goes wrong", "W
 4. Evidence is real: timestamps, ids, counts, a shortened log, and the query that finds it again. Mark shortened content as "(shortened)". Mask personal data.
 5. Code pairs show only the lines that change, with one comment per step. Highlight the failing line with `.bad` and the new line with `.ok`.
 6. Colors: one accent, one bad color, their soft tints, neutral surface and line. No other hues.
-7. Type: Manrope for text, JetBrains Mono for eyebrows, numbers in labels, code and facts. h1 weight 800, condensed.
+7. Type: Rubik for h1, h2, h3, stat numbers and step titles. Literata for body text. JetBrains Mono for eyebrows, numbers in labels, code and facts. h1 weight 800.
 8. One column, max 860px, 40px between sections. Works at phone width with no horizontal scroll.
 
 ## Pre-publish check

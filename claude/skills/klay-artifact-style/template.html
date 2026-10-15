@@ -6,7 +6,7 @@
 <title>Lost Uploads</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=Rubik:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 :root {
   --bg: #F8F8F5;
@@ -18,7 +18,8 @@
   --accent-soft: #E3EEE9;
   --bad: #B42318;
   --bad-soft: #FDE7E4;
-  --font-body: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-display: "Rubik", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Literata", ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
@@ -42,17 +43,17 @@ code { font-family: var(--font-mono); font-size: 0.85em; background: var(--accen
 
 header { padding-top: 40px; display: grid; gap: 14px; }
 .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-h1 { font-weight: 800; font-stretch: 80%; font-size: clamp(32px, 6vw, 48px); line-height: 1.05; margin: 0; text-wrap: balance; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(32px, 6vw, 48px); line-height: 1.05; margin: 0; text-wrap: balance; }
 .lede { margin: 0; max-width: 60ch; font-size: 18px; }
 
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 2px; }
-.stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat b { font-family: var(--font-display); font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .stat.bad b { color: var(--bad); }
 .stat span { font-size: 13px; color: var(--muted); }
 
 section { display: grid; gap: 14px; }
-h2 { font-weight: 700; font-stretch: 85%; font-size: 24px; line-height: 1.2; margin: 0; display: flex; gap: 12px; align-items: baseline; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1.2; margin: 0; display: flex; gap: 12px; align-items: baseline; }
 h2 .n { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 600; }
 p { margin: 0; max-width: 65ch; }
 
@@ -61,14 +62,14 @@ p { margin: 0; max-width: 65ch; }
 
 .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 .case { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--bad); border-radius: 6px; padding: 12px 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
-.case h3 { margin: 0; font-size: 15px; font-weight: 700; }
+.case h3 { margin: 0; font-family: var(--font-display); font-size: 15px; font-weight: 700; }
 .case p { font-size: 14px; color: var(--muted); }
 .case .where { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
 
 ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: s; }
 ol.steps li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
 ol.steps li::before { content: counter(s); font-family: var(--font-mono); font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 99px; width: 28px; height: 28px; display: grid; place-items: center; font-size: 13px; }
-ol.steps b { font-weight: 700; }
+ol.steps b { font-family: var(--font-display); font-weight: 600; }
 ol.steps span { display: block; font-size: 14px; color: var(--muted); }
 
 pre.code { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.55; }
