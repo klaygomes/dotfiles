@@ -1,0 +1,16 @@
+claude/skills/klay-artifact-style/template.html
+  h_10734bb5353887 114-117
+claude/skills/klay-artifact-style/tokens.css
+  h_10734bb5353887 5-15,33,36,38-43,46,48-49,55-66,71-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "57254d011ebd11591290ba71f5f07139af4b8a3a",
+  "prompts": {},
+  "humans": {
+    "h_10734bb5353887": {
+      "author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
