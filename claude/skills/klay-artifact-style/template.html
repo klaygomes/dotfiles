@@ -106,11 +106,11 @@ footer { margin-top: 64px; border-top: 3px solid var(--accent); padding-top: 14p
     <figure>
 <pre class="mermaid">
 flowchart LR
-  app["App<br/>sends file"]:::ext
-  api["API answers<br/>done"]:::step
+  app["App&lt;br/&gt;sends file"]:::ext
+  api["API answers&lt;br/&gt;done"]:::step
   store{"Store file"}:::step
   ok["File stored"]:::good
-  lost["File lost<br/>UPL-017"]:::bad
+  lost["File lost&lt;br/&gt;UPL-017"]:::bad
   app --> api --> store
   store -- ok --> ok
   store -- fails --> lost
