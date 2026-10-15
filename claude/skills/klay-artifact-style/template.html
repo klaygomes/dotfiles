@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lost Uploads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #F8F8F5;
+  --surface: #ffffff;
+  --fg: #161616;
+  --muted: #5B5B57;
+  --line: rgba(22, 22, 22, .16);
+  --accent: #2F5D50;
+  --accent-soft: #E3EEE9;
+  --bad: #B42318;
+  --bad-soft: #FDE7E4;
+  --font-body: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1C1D1B; --surface: #232422; --fg: #EDEEEA; --muted: #A6A7A1; --line: rgba(237, 238, 234, .18);
+    --accent: #9CC7B8; --accent-soft: #283430; --bad: #F0958A; --bad-soft: #3D1612;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1C1D1B; --surface: #232422; --fg: #EDEEEA; --muted: #A6A7A1; --line: rgba(237, 238, 234, .18);
+  --accent: #9CC7B8; --accent-soft: #283430; --bad: #F0958A; --bad-soft: #3D1612;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 16px 64px; display: grid; gap: 40px; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+code { font-family: var(--font-mono); font-size: 0.85em; background: var(--accent-soft); padding: 1px 5px; border-radius: 3px; overflow-wrap: anywhere; }
+
+header { padding-top: 40px; display: grid; gap: 14px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-weight: 800; font-stretch: 80%; font-size: clamp(32px, 6vw, 48px); line-height: 1.05; margin: 0; text-wrap: balance; }
+.lede { margin: 0; max-width: 60ch; font-size: 18px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 2px; }
+.stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat.bad b { color: var(--bad); }
+.stat span { font-size: 13px; color: var(--muted); }
+
+section { display: grid; gap: 14px; }
+h2 { font-weight: 700; font-stretch: 85%; font-size: 24px; line-height: 1.2; margin: 0; display: flex; gap: 12px; align-items: baseline; }
+h2 .n { font-family: var(--font-mono); font-size: 13px; color: var(--accent); font-weight: 600; }
+p { margin: 0; max-width: 65ch; }
+
+.diagram { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; overflow-x: auto; }
+.diagram pre.mermaid { margin: 0; background: transparent; }
+
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.case { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--bad); border-radius: 6px; padding: 12px 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.case h3 { margin: 0; font-size: 15px; font-weight: 700; }
+.case p { font-size: 14px; color: var(--muted); }
+.case .where { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--bad); }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: s; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+ol.steps li::before { content: counter(s); font-family: var(--font-mono); font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 99px; width: 28px; height: 28px; display: grid; place-items: center; font-size: 13px; }
+ol.steps b { font-weight: 700; }
+ol.steps span { display: block; font-size: 14px; color: var(--muted); }
+
+pre.code { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.55; }
+pre.code .c { color: var(--muted); }
+pre.code .bad { color: var(--bad); font-weight: 600; }
+pre.code .ok { color: var(--accent); font-weight: 600; }
+.code-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.code-label.before { color: var(--bad); }
+.code-label.after { color: var(--accent); }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.pair > div { display: grid; gap: 6px; align-content: start; min-width: 0; }
+
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font-size: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; font-family: var(--font-mono); font-size: 13px; overflow-wrap: anywhere; min-width: 0; }
+
+footer { border-top: 1px solid var(--line); padding-top: 16px; font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; }
+@media (max-width: 520px) { body { font-size: 15px; } .lede { font-size: 16px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Platform · File storage</div>
+    <div class="eyebrow">Error <code>UPL-017</code> · <a href="#">TICKET-123</a></div>
+    <h1>Lost Uploads</h1>
+    <p class="lede">The client uploads a document and sees "done". We never store it. Support then asks the client to upload again.</p>
+    <div class="stats">
+      <div class="stat bad"><b>~40</b><span>lost files per day</span></div>
+      <div class="stat bad"><b>281</b><span>lost files in 7 days</span></div>
+      <div class="stat"><b>Web · iOS</b><span>apps hit</span></div>
+    </div>
+  </header>
+
+  <section>
+    <h2><span class="n">1</span>What goes wrong</h2>
+    <p>We answer "done" before the file is stored. If storing fails after that, nobody knows.</p>
+    <div class="diagram">
+<pre class="mermaid">
+flowchart LR
+  app["App<br/>sends file"]:::ext
+  api["API answers<br/>done"]:::step
+  store{"Store file"}:::step
+  ok["File stored"]:::good
+  lost["File lost<br/>UPL-017"]:::bad
+  app --> api --> store
+  store -- ok --> ok
+  store -- fails --> lost
+  classDef step fill:#2F5D50,stroke:#1F3E35,color:#ffffff
+  classDef ext fill:#7D7A73,stroke:#57554F,color:#ffffff
+  classDef good fill:#4F7A5A,stroke:#36553E,color:#ffffff
+  classDef bad fill:#B42318,stroke:#7A170F,color:#ffffff
+</pre>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Real example</h2>
+    <p>One client uploaded 3 files in one minute. Only the first was stored.</p>
+    <dl class="facts">
+      <dt>When</dt><dd>14 Oct 2026, 15:31 UTC</dd>
+      <dt>Request</dt><dd>e812c39c-92db-5d2e-b1ae-a0d530492028</dd>
+      <dt>Lost</dt><dd>2 files, 4.1 MB</dd>
+    </dl>
+    <div class="code-label before">Log (shortened)</div>
+<pre class="code">{
+  "level": "ERROR",
+  "errorCode": <span class="bad">"UPL-017"</span>,
+  "message": <span class="bad">"Upload stream closed before write finished"</span>
+}</pre>
+    <div class="code-label">Find it again</div>
+<pre class="code"><span class="c">-- log group: /app/uploads</span>
+filter errorCode = "UPL-017"
+| stats count(*) by bin(1d)</pre>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Why the file is not stored</h2>
+    <div class="cases">
+      <article class="case">
+        <span class="where">Web</span>
+        <h3>Tab closes early</h3>
+        <p>The client closes the tab after "done". The upload stops halfway.</p>
+      </article>
+      <article class="case">
+        <span class="where">iOS</span>
+        <h3>App goes to background</h3>
+        <p>The phone pauses the app. The connection drops.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>The fix</h2>
+    <p>We answer "done" only after the file is stored.</p>
+    <div class="pair">
+      <div>
+        <div class="code-label before">Before</div>
+<pre class="code"><span class="c">// 1. Answer first</span>
+<span class="bad">res.status(200).send()</span>
+<span class="c">// 2. Store later</span>
+await storage.put(file)</pre>
+      </div>
+      <div>
+        <div class="code-label after">After</div>
+<pre class="code"><span class="c">// 1. Store first</span>
+await storage.put(file)
+<span class="c">// 2. Then answer</span>
+<span class="ok">res.status(200).send()</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>Release steps</h2>
+    <ol class="steps">
+      <li><div><b>Deploy the API change</b><span><a href="#">PR #12</a>. No downtime.</span></div></li>
+      <li><div><b>Check</b><span><code>UPL-017</code> stays at zero for one full day.</span></div></li>
+    </ol>
+  </section>
+
+  <footer>
+    <span>Ticket <a href="#">TICKET-123</a></span>
+    <span>Data checked in production, 14 Oct 2026</span>
+  </footer>
+</div>
+</body>
+</html>

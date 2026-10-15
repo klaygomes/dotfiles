@@ -58,6 +58,17 @@ ERD, state) rather than paragraphs of prose.
 **How to apply:** for any process, dependency direction, decision flow, or failure mode, draw
 the diagram first and keep the surrounding prose short.
 
+## Artifacts
+
+### One house style
+
+Every Artifact follows the `klay-artifact-style` skill: plain short sentences, one reading
+column, numbered sections (what goes wrong, real example, why, the fix, steps), one visual per
+section.
+
+**How to apply:** load `klay-artifact-style` before writing or republishing any Artifact and
+start from its `template.html`.
+
 ## Pull requests
 
 ### Concise descriptions, caller-side examples
