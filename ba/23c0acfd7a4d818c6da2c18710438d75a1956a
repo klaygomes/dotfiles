@@ -1,0 +1,16 @@
+claude/skills/klay-artifact-style/SKILL.md
+  h_10734bb5353887 62,82
+claude/skills/klay-artifact-style/template.html
+  h_10734bb5353887 109-110,113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ba23c0acfd7a4d818c6da2c18710438d75a1956a",
+  "prompts": {},
+  "humans": {
+    "h_10734bb5353887": {
+      "author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
