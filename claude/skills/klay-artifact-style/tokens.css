@@ -2,16 +2,17 @@
 
 /* 1. Primitives: raw values with no meaning attached */
 :root {
-  --palette-1: #FAF7F3;
-  --palette-2: #F0E4D3;
-  --palette-3: #DCC5B2;
-  --palette-4: #D9A299;
-  --palette-4-deep: #A8655A;
-  --ink: #3A2E28;
-  --ink-muted: #7A6A5F;
-  --paper: #FFFDFB;
-  --danger: #A4463A;
-  --danger-tint: #F3DCD6;
+  --palette-1: #F8F4EC;
+  --palette-2: #FF8FB7;
+  --palette-3: #E83C91;
+  --palette-4: #43334C;
+  --ink: var(--palette-4);
+  --ink-muted: #7A6C82;
+  --paper: #FFFFFF;
+  --paper-sunken: #EFE8DE;
+  --plum-rule: #E0D8DB;
+  --pink-tint: #FFC7DB;
+  --magenta-tint: #FDE3EE;
 
   --font-display: "Rubik", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Literata", ui-serif, Georgia, serif;
@@ -29,55 +30,55 @@
 /* 2. Semantic roles: what the page actually uses */
 :root {
   --bg: var(--palette-1);
-  --surface: var(--palette-2);
+  --surface: var(--paper-sunken);
   --fg: var(--ink);
   --muted: var(--ink-muted);
-  --rule: var(--palette-3);
+  --rule: var(--plum-rule);
   --rule-strong: var(--ink);
-  --accent: var(--palette-4);
-  --accent-ink: var(--palette-4-deep);
-  --accent-soft: var(--palette-2);
-  --bad: var(--danger);
-  --bad-soft: var(--danger-tint);
-  --selection: var(--palette-4);
+  --accent: var(--palette-2);
+  --accent-ink: var(--palette-3);
+  --accent-soft: var(--pink-tint);
+  --bad: var(--palette-3);
+  --bad-soft: var(--magenta-tint);
+  --selection: var(--pink-tint);
 
   /* Mermaid node fills, mirrored in each diagram's classDef lines */
-  --node-step: var(--palette-2);
+  --node-step: var(--paper-sunken);
   --node-ext: var(--paper);
-  --node-good: var(--palette-3);
-  --node-bad: var(--danger);
+  --node-good: var(--pink-tint);
+  --node-bad: var(--palette-3);
 }
 
 /* 3. Dark overrides: only the semantic layer changes */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #221C19;
-    --surface: #2E2622;
-    --fg: var(--palette-2);
-    --muted: #B9A897;
-    --rule: #4A3D35;
-    --rule-strong: var(--palette-2);
-    --accent: var(--palette-4);
-    --accent-ink: #E4B4AB;
-    --accent-soft: #3B2E2A;
-    --bad: #E99A8C;
-    --bad-soft: #432420;
-    --selection: #6E4B44;
+    --bg: #2A2032;
+    --surface: #372C40;
+    --fg: var(--palette-1);
+    --muted: #B3A7BB;
+    --rule: #4E4258;
+    --rule-strong: var(--palette-1);
+    --accent: var(--palette-2);
+    --accent-ink: var(--palette-2);
+    --accent-soft: #4A2F3E;
+    --bad: #FF6AAB;
+    --bad-soft: #4A2238;
+    --selection: #6B3A56;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #221C19;
-  --surface: #2E2622;
-  --fg: var(--palette-2);
-  --muted: #B9A897;
-  --rule: #4A3D35;
-  --rule-strong: var(--palette-2);
-  --accent: var(--palette-4);
-  --accent-ink: #E4B4AB;
-  --accent-soft: #3B2E2A;
-  --bad: #E99A8C;
-  --bad-soft: #432420;
-  --selection: #6E4B44;
+  --bg: #2A2032;
+  --surface: #372C40;
+  --fg: var(--palette-1);
+  --muted: #B3A7BB;
+  --rule: #4E4258;
+  --rule-strong: var(--palette-1);
+  --accent: var(--palette-2);
+  --accent-ink: var(--palette-2);
+  --accent-soft: #4A2F3E;
+  --bad: #FF6AAB;
+  --bad-soft: #4A2238;
+  --selection: #6B3A56;
   color-scheme: dark;
 }
