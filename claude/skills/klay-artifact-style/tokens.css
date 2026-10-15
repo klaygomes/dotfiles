@@ -17,31 +17,34 @@
   --font-body: "Literata", ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --measure: 65ch;
-  --column: 860px;
-  --gutter: 16px;
-  --section-gap: 40px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
+  --measure: 66ch;
+  --column: 760px;
+  --gutter: 20px;
+  --section-gap: 56px;
+  --block-gap: 20px;
+  --radius: 6px;
+  --tracking-display: -0.02em;
 }
 
 /* 2. Semantic roles: what the page actually uses */
 :root {
   --bg: var(--palette-1);
-  --surface: var(--paper);
+  --surface: var(--palette-2);
   --fg: var(--ink);
   --muted: var(--ink-muted);
-  --line: var(--palette-3);
+  --rule: var(--palette-3);
+  --rule-strong: var(--ink);
   --accent: var(--palette-4);
   --accent-ink: var(--palette-4-deep);
   --accent-soft: var(--palette-2);
   --bad: var(--danger);
   --bad-soft: var(--danger-tint);
+  --selection: var(--palette-4);
 
   /* Mermaid node fills, mirrored in each diagram's classDef lines */
-  --node-step: var(--palette-3);
-  --node-ext: var(--palette-2);
-  --node-good: var(--palette-4);
+  --node-step: var(--palette-2);
+  --node-ext: var(--paper);
+  --node-good: var(--palette-3);
   --node-bad: var(--danger);
 }
 
@@ -49,28 +52,32 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #221C19;
-    --surface: #2A2320;
+    --surface: #2E2622;
     --fg: var(--palette-2);
     --muted: #B9A897;
-    --line: #4A3D35;
+    --rule: #4A3D35;
+    --rule-strong: var(--palette-2);
     --accent: var(--palette-4);
     --accent-ink: #E4B4AB;
     --accent-soft: #3B2E2A;
     --bad: #E99A8C;
     --bad-soft: #432420;
+    --selection: #6E4B44;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #221C19;
-  --surface: #2A2320;
+  --surface: #2E2622;
   --fg: var(--palette-2);
   --muted: #B9A897;
-  --line: #4A3D35;
+  --rule: #4A3D35;
+  --rule-strong: var(--palette-2);
   --accent: var(--palette-4);
   --accent-ink: #E4B4AB;
   --accent-soft: #3B2E2A;
   --bad: #E99A8C;
   --bad-soft: #432420;
+  --selection: #6E4B44;
   color-scheme: dark;
 }

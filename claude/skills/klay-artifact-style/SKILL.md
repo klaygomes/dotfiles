@@ -1,11 +1,11 @@
 ---
 name: klay-artifact-style
-description: 'House style for every Artifact page: plain short sentences, one reading column, numbered sections that tell problem, evidence, cause, fix, steps, each with one visual. Automatically invoke, without waiting for the user to ask, before writing or republishing any Artifact (HTML page, report, explainer, incident write-up, design note, plan page). Load after artifact-design; this skill sets voice and layout on top of its page contract.'
+description: 'House style for every Artifact page: a well-typeset engineering memo. Plain short sentences, one reading column, sections that tell problem, evidence, cause, fix, steps, each with one visual, ruled lines instead of cards. Automatically invoke, without waiting for the user to ask, before writing or republishing any Artifact (HTML page, report, explainer, incident write-up, design note, plan page). Load after artifact-design; this skill sets voice and layout on top of its page contract.'
 ---
 
 # Artifact style
 
-Every Artifact uses this style. Same voice, same skeleton, same visual language.
+Every Artifact reads like a well-typeset engineering memo. Same voice, same skeleton, same visual language.
 
 Files in this folder:
 
@@ -37,42 +37,45 @@ Good: "We save the account first. Then we look for it again. If we do not find i
 ## Skeleton
 
 ```
-eyebrow     area · sub-area                     (mono, uppercase, muted)
-eyebrow     identifier · ticket link            (optional)
-h1          2 to 4 word name of the thing
-lede        1 to 2 sentences: what happens, what the reader sees
-stats       2 to 4 tiles: number + short label; bad numbers in the bad color
+h1          2 to 4 word name of the thing, small: it is a label
+meta        area · identifier · ticket link, one muted line under the title
+lede        1 to 2 sentences, large: this is the hero, what happens and what the reader sees
+figures     2 to 4 key numbers in one ruled band; bad numbers in the bad color
 
-1  What goes wrong        paragraph + flow diagram
-2  Real example           paragraph + facts list + sequence diagram + shortened evidence + query to find it again
-3  Why it happens         cause cards (where · title · one or two sentences)
-4  The fix                one-sentence principle + target diagram + before/after code pair
-5  Steps                  numbered cards: bold action + one muted detail line
+What goes wrong        paragraph + flow diagram with a caption
+Real example           paragraph + facts table + sequence diagram + shortened evidence + query to find it again
+Why it happens         cause list: where (bad color) · title · one or two sentences
+The fix                one-sentence principle + target diagram + before/after code pair
+Steps                  ruled numbered list: hanging numeral, bold action, one muted detail line
 
 footer      links + "Data checked <where>, <date>"
 ```
 
 Adapt section titles to the topic, keep the arc: what, proof, why, fix, how to ship. Drop a section that has nothing real in it. Never pad one.
 
-Section titles are plain phrases a reader would say aloud: "What goes wrong", "Why the account is not found", "The fix", "Release steps".
+Section titles are plain phrases a reader would say aloud: "What goes wrong", "Why the account is not found", "The fix", "Release steps". No section numbers. Numbers appear only where order is information: the steps list.
 
 ## Visual rules
 
-1. Every section is one short paragraph plus one visual. Visual choices: Mermaid flowchart, Mermaid sequence, facts list (`dl.facts`), cause cards, before/after code, step cards.
-2. Diagrams use 3 to 6 nodes. Node labels are short plain phrases with `<br/>` breaks. Color nodes by role with `classDef`: `step`, `ext`, `good`, `bad`.
-3. Use the same diagram shape for the problem and the fix so the reader sees what changed.
-4. Evidence is real: timestamps, ids, counts, a shortened log, and the query that finds it again. Mark shortened content as "(shortened)". Mask personal data.
-5. Code pairs show only the lines that change, with one comment per step. Highlight the failing line with `.bad` and the new line with `.ok`.
-6. Colors come from the semantic tokens only: `--bg`, `--surface`, `--fg`, `--muted`, `--line`, `--accent` (fills, borders), `--accent-ink` (text, links), `--accent-soft`, `--bad`, `--bad-soft`. No other hues. Mermaid cannot read CSS variables, so each diagram repeats the `--node-*` values from `tokens.css` in its `classDef` lines.
-7. Type comes from `--font-display` (h1, h2, h3, stat numbers, step titles), `--font-body` (text) and `--font-mono` (eyebrows, numbers in labels, code, facts). Load the matching Google Fonts link from `template.html`. h1 weight 800.
-8. One column, `--column` wide, `--section-gap` between sections. Works at phone width with no horizontal scroll.
+1. Every section is one short paragraph plus one visual. Visual choices: Mermaid flowchart, Mermaid sequence, facts table (`dl.facts`), cause list (`dl.causes`), before/after code (`.pair`), steps (`ol.steps`).
+2. Rules, not boxes. Content is separated by 1px hairlines (`--rule`, `--rule-strong`) and white space. The only boxed element is code, because code is a different material. No cards, no borders thicker than 1px, no eyebrows, no chips, no shadows.
+3. Diagrams use 3 to 6 nodes. Node labels are short plain phrases with `<br/>` breaks. Color nodes by role with `classDef`: `step`, `ext`, `good`, `bad`. Diagrams sit on the page with a one-line `figcaption`.
+4. Use the same diagram shape for the problem and the fix so the reader sees what changed.
+5. Evidence is real: timestamps, ids, counts, a shortened log, and the query that finds it again. Label shortened content "shortened". Mask personal data.
+6. Code pairs show only the lines that change, with one comment per step. Mark the failing line with `.bad` and the new line with `.ok`.
+7. Color has one job each. `--bad` marks what went wrong: the lost path, the failing line, the bad number, the "where" of a cause. `--accent` is the underline on links and the mark on fixed lines. Everything else is ink on paper. Mermaid cannot read CSS variables, so each diagram repeats the `--node-*` values from `tokens.css` in its `classDef` lines.
+8. Type: `--font-display` for h1, h2, cause titles, figure numbers, step numerals and labels, weight 600 to 700, tracking `--tracking-display`. `--font-body` for everything readable, including the lede. `--font-mono` only for code, ids and values in the facts table. Never mono for labels.
+9. Browser surfaces are themed from tokens: selection, caret, focus ring, scrollbar, tabular numerals. Keep them when you copy the template.
+10. One column, `--column` wide, `--section-gap` between sections. Works at phone width with no horizontal scroll.
 
 ## Pre-publish check
 
-1. Read only the h1, lede and stats. Does the reader know what broke and how bad it is?
+1. Read only the h1, lede and figures. Does the reader know what broke and how bad it is?
 2. Read only the section titles. Do they tell the story in order?
 3. Any sentence over 20 words? Split it.
 4. Any paragraph without a visual next to it? Add one or merge it.
 5. Any claim without a number, id or link behind it? Add the evidence or cut the claim.
-6. `grep -n "—"` on the file returns nothing.
-7. `grep -nE "#[0-9A-Fa-f]{6}" <page>` matches only `classDef` lines.
+6. Any box that is not code? Replace it with a rule or white space.
+7. `grep -n "—"` on the file returns nothing.
+8. `grep -nE "#[0-9A-Fa-f]{6}" <page>` matches only `classDef` lines.
+9. `npx -y impeccable detect <page>` reports no anti-patterns.
