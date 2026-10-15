@@ -1,0 +1,18 @@
+claude/skills/klay-artifact-style/SKILL.md
+  h_10734bb5353887 3,8,40-49,56,60-69,73,78-81
+claude/skills/klay-artifact-style/template.html
+  h_10734bb5353887 13-23,25-30,32-38,40-43,45-48,50-54,56-61,63-67,70-71,73,75-81,83-84,91,93-96,101,103,114-117,119-120,124,131-132,138-140,144,148-158,162,183
+claude/skills/klay-artifact-style/tokens.css
+  h_10734bb5353887 20-26,32,35-36,42,45-47,55,58-59,65,71,74-75,81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "818b7598f03087f18695caa4c0024c23e89b7bf6",
+  "prompts": {},
+  "humans": {
+    "h_10734bb5353887": {
+      "author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
