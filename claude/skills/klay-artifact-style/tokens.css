@@ -43,9 +43,9 @@
   --selection: var(--pink-tint);
 
   /* Mermaid node fills, mirrored in each diagram's classDef lines */
-  --node-step: var(--paper-sunken);
-  --node-ext: var(--paper);
-  --node-good: var(--pink-tint);
+  --node-step: var(--pink-tint);
+  --node-ext: var(--paper-sunken);
+  --node-good: var(--palette-2);
   --node-bad: var(--palette-3);
 }
 

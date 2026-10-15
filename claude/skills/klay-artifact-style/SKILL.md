@@ -58,12 +58,12 @@ Section titles are plain phrases a reader would say aloud: "What goes wrong", "W
 ## Visual rules
 
 1. Every section is one short paragraph plus one visual. Visual choices: Mermaid flowchart, Mermaid sequence, facts table (`dl.facts`), cause list (`dl.causes`), before/after code (`.pair`), steps (`ol.steps`).
-2. Rules, not boxes. Content is separated by 1px hairlines (`--rule`, `--rule-strong`) and white space. The only boxed element is code, because code is a different material. No cards, no borders thicker than 1px, no eyebrows, no chips, no shadows.
+2. Rules, not boxes. Content is separated by hairlines (`--rule`) and white space; the figures band and footer open with a 3px `--accent` rule. The only boxed element is code, because code is a different material. No cards, no eyebrows above the title, no shadows.
 3. Diagrams use 3 to 6 nodes. Node labels are short plain phrases with `<br/>` breaks. Color nodes by role with `classDef`: `step`, `ext`, `good`, `bad`. Diagrams sit on the page with a one-line `figcaption`.
 4. Use the same diagram shape for the problem and the fix so the reader sees what changed.
 5. Evidence is real: timestamps, ids, counts, a shortened log, and the query that finds it again. Label shortened content "shortened". Mask personal data.
 6. Code pairs show only the lines that change, with one comment per step. Mark the failing line with `.bad` and the new line with `.ok`.
-7. Color has one job each. `--bad` marks what went wrong: the lost path, the failing line, the bad number, the "where" of a cause. `--accent` is the underline on links and the mark on fixed lines. Everything else is ink on paper. Mermaid cannot read CSS variables, so each diagram repeats the `--node-*` values from `tokens.css` in its `classDef` lines.
+7. Distribute the whole palette, each color with one job. `--accent` (pink) marks structure: section bars, the figures rule, step numerals, inline code, fixed lines, flow nodes. `--bad` (magenta) marks evidence and what went wrong: labels, bad numbers, failing lines, the lost node, the "where" of a cause. `--fg` (plum) is ink. `--bg` and `--surface` (cream) are paper and code. Use the `-soft` tints for backgrounds, the full colors for text and marks. Mermaid cannot read CSS variables, so each diagram repeats the `--node-*` values from `tokens.css` in its `classDef` lines.
 8. Type: `--font-display` for h1, h2, cause titles, figure numbers, step numerals and labels, weight 600 to 700, tracking `--tracking-display`. `--font-body` for everything readable, including the lede. `--font-mono` only for code, ids and values in the facts table. Never mono for labels.
 9. Browser surfaces are themed from tokens: selection, caret, focus ring, scrollbar, tabular numerals. Keep them when you copy the template.
 10. One column, `--column` wide, `--section-gap` between sections. Works at phone width with no horizontal scroll.
