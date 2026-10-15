@@ -5,7 +5,20 @@ description: 'House style for every Artifact page: plain short sentences, one re
 
 # Artifact style
 
-Every Artifact uses this style. Same voice, same skeleton, same visual language. Start from `template.html` in this folder.
+Every Artifact uses this style. Same voice, same skeleton, same visual language.
+
+Files in this folder:
+
+- `tokens.css`: design tokens. Palette, fonts, spacing, radii, dark mode. The only place the look is defined.
+- `template.html`: page skeleton and components. It links `tokens.css` and uses no raw colors or font names.
+
+Start a new page from `template.html`. Publish it with the tokens file next to it:
+
+```
+Artifact(file_path: "<page>.html", files: {"tokens.css": "<skill folder>/tokens.css"})
+```
+
+To change the look of all future pages, edit `tokens.css` only. Never put a color or font name inside a page.
 
 ## Voice
 
@@ -50,9 +63,9 @@ Section titles are plain phrases a reader would say aloud: "What goes wrong", "W
 3. Use the same diagram shape for the problem and the fix so the reader sees what changed.
 4. Evidence is real: timestamps, ids, counts, a shortened log, and the query that finds it again. Mark shortened content as "(shortened)". Mask personal data.
 5. Code pairs show only the lines that change, with one comment per step. Highlight the failing line with `.bad` and the new line with `.ok`.
-6. Colors: one accent, one bad color, their soft tints, neutral surface and line. No other hues.
-7. Type: Rubik for h1, h2, h3, stat numbers and step titles. Literata for body text. JetBrains Mono for eyebrows, numbers in labels, code and facts. h1 weight 800.
-8. One column, max 860px, 40px between sections. Works at phone width with no horizontal scroll.
+6. Colors come from the semantic tokens only: `--bg`, `--surface`, `--fg`, `--muted`, `--line`, `--accent` (fills, borders), `--accent-ink` (text, links), `--accent-soft`, `--bad`, `--bad-soft`. No other hues. Mermaid cannot read CSS variables, so each diagram repeats the `--node-*` values from `tokens.css` in its `classDef` lines.
+7. Type comes from `--font-display` (h1, h2, h3, stat numbers, step titles), `--font-body` (text) and `--font-mono` (eyebrows, numbers in labels, code, facts). Load the matching Google Fonts link from `template.html`. h1 weight 800.
+8. One column, `--column` wide, `--section-gap` between sections. Works at phone width with no horizontal scroll.
 
 ## Pre-publish check
 
@@ -62,3 +75,4 @@ Section titles are plain phrases a reader would say aloud: "What goes wrong", "W
 4. Any paragraph without a visual next to it? Add one or merge it.
 5. Any claim without a number, id or link behind it? Add the evidence or cut the claim.
 6. `grep -n "—"` on the file returns nothing.
+7. `grep -nE "#[0-9A-Fa-f]{6}" <page>` matches only `classDef` lines.

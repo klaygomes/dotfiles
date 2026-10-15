@@ -1,0 +1,76 @@
+/* Design tokens for every Artifact. Change the look here only. See SKILL.md. */
+
+/* 1. Primitives: raw values with no meaning attached */
+:root {
+  --palette-1: #FAF7F3;
+  --palette-2: #F0E4D3;
+  --palette-3: #DCC5B2;
+  --palette-4: #D9A299;
+  --palette-4-deep: #A8655A;
+  --ink: #3A2E28;
+  --ink-muted: #7A6A5F;
+  --paper: #FFFDFB;
+  --danger: #A4463A;
+  --danger-tint: #F3DCD6;
+
+  --font-display: "Rubik", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Literata", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --measure: 65ch;
+  --column: 860px;
+  --gutter: 16px;
+  --section-gap: 40px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+}
+
+/* 2. Semantic roles: what the page actually uses */
+:root {
+  --bg: var(--palette-1);
+  --surface: var(--paper);
+  --fg: var(--ink);
+  --muted: var(--ink-muted);
+  --line: var(--palette-3);
+  --accent: var(--palette-4);
+  --accent-ink: var(--palette-4-deep);
+  --accent-soft: var(--palette-2);
+  --bad: var(--danger);
+  --bad-soft: var(--danger-tint);
+
+  /* Mermaid node fills, mirrored in each diagram's classDef lines */
+  --node-step: var(--palette-3);
+  --node-ext: var(--palette-2);
+  --node-good: var(--palette-4);
+  --node-bad: var(--danger);
+}
+
+/* 3. Dark overrides: only the semantic layer changes */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #221C19;
+    --surface: #2A2320;
+    --fg: var(--palette-2);
+    --muted: #B9A897;
+    --line: #4A3D35;
+    --accent: var(--palette-4);
+    --accent-ink: #E4B4AB;
+    --accent-soft: #3B2E2A;
+    --bad: #E99A8C;
+    --bad-soft: #432420;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #221C19;
+  --surface: #2A2320;
+  --fg: var(--palette-2);
+  --muted: #B9A897;
+  --line: #4A3D35;
+  --accent: var(--palette-4);
+  --accent-ink: #E4B4AB;
+  --accent-soft: #3B2E2A;
+  --bad: #E99A8C;
+  --bad-soft: #432420;
+  color-scheme: dark;
+}
