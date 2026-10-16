@@ -20,13 +20,13 @@ parts+=("${c}󰍛 ${ctx_int}%${R}")
 
 # Rate limits
 _rate_segment() {
-  local pct_used=$1 resets_at=$2 icon=$3 show_day=${4:-0}
+  local pct_used=$1 resets_at=$2 icon=$3
   local used
   used=$(printf '%.0f' "$pct_used")
   local reset_str=""
   if [ "$resets_at" -gt 0 ]; then
     local fmt="%H:%M"
-    [ "$show_day" = "1" ] && fmt="%a %H:%M"
+    [ "$(date -r "$resets_at" +%F)" != "$(date +%F)" ] && fmt="%a %H:%M"
     reset_str=" ${GRAY}→$(date -r "$resets_at" +"$fmt")${R}"
   fi
   if   [ "$used" -ge 80 ]; then c=$RED
@@ -42,7 +42,7 @@ parts+=("$(_rate_segment "$five_pct" "$five_reset" "󱑿")")
 
 week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // 0')
 week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // 0')
-parts+=("$(_rate_segment "$week_pct" "$week_reset" "󰃭" 1)")
+parts+=("$(_rate_segment "$week_pct" "$week_reset" "󰃭")")
 
 # Model display name
 model_name=$(echo "$input" | jq -r '.model.display_name // ""')
