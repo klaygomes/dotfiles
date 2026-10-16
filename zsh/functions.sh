@@ -314,6 +314,10 @@ function _tmux_new_session() {
     if [[ ! -d "$session_dir" ]]; then
       mkdir -p "${session_dir:h}"
       gh repo clone "$org/$repo" "$session_dir"
+    elif ! git -C "$session_dir" rev-parse --git-dir &>/dev/null; then
+      echo "$session_dir exists but is not a git repository. Move or remove it to clone $org/$repo."
+      read -rs -k1 "?Press any key to close."
+      return 1
     fi
   else
     session_name="$input"
