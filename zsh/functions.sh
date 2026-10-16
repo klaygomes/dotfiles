@@ -271,11 +271,11 @@ function kp() {
 function _tmux_attach() {
   local session_name="$1"
   local session_dir="$2"
-  if tmux has-session -t "=$session_name" 2>/dev/null; then
-    tmux switch-client -t "$session_name"
+  if tmux has-session -t "=$session_name:" 2>/dev/null; then
+    tmux switch-client -t "=$session_name:"
   else
     tmux new-session -d -s "$session_name" -c "$session_dir"
-    tmux switch-client -t "$session_name"
+    tmux switch-client -t "=$session_name:"
   fi
 }
 
