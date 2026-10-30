@@ -122,6 +122,9 @@ brew "chafa"
 # PDF text extraction (provides pdftotext)
 brew "poppler"
 
+# Audio and video converter (needed by klay-learning-ladder and klay-sprite-gen)
+brew "ffmpeg"
+
 # A terminal UI for git commands
 brew "lazygit"
 

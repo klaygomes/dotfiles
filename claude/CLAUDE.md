@@ -37,6 +37,13 @@ already uses. When a repository has none, prefer one focused file per domain und
 instruction file, so each domain has an obvious home and the index stays a map rather than a
 dumping ground.
 
+### No decorative comments
+
+Never write section banners, dividers, labels such as `/* S1 HOOK */` or `# --- helpers ---`,
+or comments and docstrings that restate what the code does. Code is self-documenting. The only
+comments allowed explain a non-obvious constraint, edge case or business rule the syntax cannot
+express, in one line, or are required by a license (such as an MIT attribution).
+
 ### No journal comments
 
 Never write comments that narrate a change's history or the reasoning of the review that
@@ -68,6 +75,9 @@ section.
 
 **How to apply:** load `klay-artifact-style` before writing or republishing any Artifact and
 start from its `template.html`.
+
+**Exception:** learning material made with `klay-learning-ladder` uses that skill's own lesson
+style, because the memo arc is written for stakeholders and makes a lesson harder to follow.
 
 ## Pull requests
 

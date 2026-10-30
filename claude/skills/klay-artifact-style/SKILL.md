@@ -1,6 +1,6 @@
 ---
 name: klay-artifact-style
-description: 'House style for every Artifact page: a well-typeset engineering memo. Plain short sentences, one reading column, sections that tell problem, evidence, cause, fix, steps, each with one visual, ruled lines instead of cards. Automatically invoke, without waiting for the user to ask, before writing or republishing any Artifact (HTML page, report, explainer, incident write-up, design note, plan page). Load after artifact-design; this skill sets voice and layout on top of its page contract.'
+description: 'House style for every Artifact page: a well-typeset engineering memo. Plain short sentences, one reading column, sections that tell problem, evidence, cause, fix, steps, each with one visual, ruled lines instead of cards. Automatically invoke, without waiting for the user to ask, before writing or republishing any Artifact (HTML page, report, explainer, incident write-up, design note, plan page). Load after artifact-design; this skill sets voice and layout on top of its page contract. Not for learning material made with klay-learning-ladder, which has its own lesson style.'
 ---
 
 # Artifact style
