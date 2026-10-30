@@ -1,0 +1,49 @@
+brew/Brewfile
+  s_cb8ca733027661::t_9ad8450f92f4b9 125-127
+claude/skills/klay-artifact-style/SKILL.md
+  s_cb8ca733027661::t_8a008c663151e1 3
+claude/skills/klay-learning-ladder/scripts/look.sh
+  s_cb8ca733027661::t_d1fb176c0f4f32 1-14
+Makefile
+  s_cb8ca733027661::t_04954f6afa42b7 23-24
+claude/CLAUDE.md
+  s_cb8ca733027661::t_af91f7537d1240 40-46,79-81
+claude/skills/klay-learning-ladder/SKILL.md
+  s_cb8ca733027661::t_f7a3b89694e24d 1-95
+claude/skills/klay-learning-ladder/assets/lesson.css
+  s_cb8ca733027661::t_6114ab7b6d3736 1-97
+claude/skills/klay-learning-ladder/references/page.md
+  s_cb8ca733027661::t_19b0baa3ff0835 1-77
+claude/skills/klay-learning-ladder/references/series.md
+  s_cb8ca733027661::t_d92010a86a23f5 1-38
+claude/skills/klay-learning-ladder/references/tools.md
+  s_cb8ca733027661::t_6c36e48290d527 1-40
+claude/skills/klay-learning-ladder/references/verification.md
+  s_cb8ca733027661::t_e02b4e5d96f64b 1-37
+claude/skills/klay-learning-ladder/references/video.md
+  s_cb8ca733027661::t_f34a0ed456a80f 1-98
+claude/skills/klay-learning-ladder/references/writing.md
+  s_cb8ca733027661::t_8dc1b2039b06fc 1-66
+claude/skills/klay-learning-ladder/scripts/ensure.sh
+  s_cb8ca733027661::t_14a44433adbebc 1-61
+claude/skills/klay-learning-ladder/scripts/math.mjs
+  s_cb8ca733027661::t_5a7f31ce68f573 1-31
+claude/skills/klay-learning-ladder/scripts/schedule.py
+  s_cb8ca733027661::t_0f18898c956bb0 1-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0083f34b3127c530e92f09a5de0bc5e465b96a72",
+  "prompts": {},
+  "sessions": {
+    "s_cb8ca733027661": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbc1b77e-0aaf-440f-80ad-a9c3c501e287",
+        "model": "unknown"
+      },
+      "human_author": "Cleiton Loiola <klaygomes@gmail.com>"
+    }
+  }
+}
