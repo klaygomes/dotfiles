@@ -1,6 +1,6 @@
 ---
 name: klay-learning-ladder
-description: 'Turns a topic into a deep, story-driven lesson built as four representations that each must improve understanding: the lesson prose in a natural teacher-storyteller voice, one diagram, a 15-20 minute interactive page where the learner fixes a bug with their own hands, and a 2-3 minute narrated explainer video, then cross-checks that all four teach the same mental model. Lessons from one source form a series with one story world. Uses diagram-design for the diagram, its own lesson style plus the iwrzwr visual archive for the page, motionmaxxing for the film and agent-voice (local OmniVoice) for the narration. Use when the user asks to teach, explain, or make a lesson, explainer, tutorial, course, learning page, or explainer video about a topic (a concept, a paper, a book or a chapter), asks for "the next topic" or "the next lesson" in a series, or asks for "the learning ladder" on something. Also when asked for only the prose, only the diagram, only the page, or only the video of an explanation.'
+description: 'Turns a topic into a deep, story-driven lesson built as four representations that each must improve understanding: the lesson prose in a natural teacher-storyteller voice, one diagram, a 15-20 minute interactive page where the learner fixes a bug with their own hands, and a 2-3 minute narrated explainer video, then cross-checks that all four teach the same mental model. Lessons from one source form a series with one story world. Uses diagram-design for rule diagrams and, when an idea is best seen as a working machine, anatomy for isometric figures, its own lesson style plus the iwrzwr visual archive for the page, motionmaxxing for the film and agent-voice (local OmniVoice) for the narration. Use when the user asks to teach, explain, or make a lesson, explainer, tutorial, course, learning page, or explainer video about a topic (a concept, a paper, a book or a chapter), asks for "the next topic" or "the next lesson" in a series, or asks for "the learning ladder" on something. Also when asked for only the prose, only the diagram, only the page, or only the video of an explanation.'
 ---
 
 # Learning ladder
@@ -58,9 +58,16 @@ Follow `references/writing.md`. Write `1-prose.md`, the full lesson text (15 to 
 
 **Gate:** read-aloud pass with `agent-voice`, then a fresh-reader subagent. Then **stop and show the user the prose and the sheet** before building anything else.
 
-## Stage 2: diagram
+## Stage 2: figures
 
-Read `$DIAGRAM_SKILL/SKILL.md` and follow it. For its style-guide gate, choose "paste tokens" with the colors from `assets/lesson.css`. Typography: Instrument Serif for the title and callouts, Geist for names, Geist Mono for labels. Never JetBrains Mono. Pick the one type that fits, or a custom figure on its primitives when the idea is geometric (say which, and why).
+Every new concept gets its own picture, placed where the prose first needs it: an image, an illustration or an animation. When the idea is a process or a motion (a turning wheel, copies sliding into a sum, a pole moving toward the circle), the figure animates it, plays on its own, and still reads as a still under reduced motion. The prose marks each one with a `[[diagram:<name>]]` slot, and the sheet says what each shows and whether it moves.
+
+Two tools, chosen per figure by what the idea needs:
+
+- **diagram-design** for a relationship or a rule: a chart, a flow, a geometric picture. Every lesson has at least one.
+- **anatomy** for an idea that is best understood as a mechanism: a real machine whose working *is* the concept, with parts that move and a gauge that reads the true number. It is very expressive and costs about an hour at its "Figure" size, so use it only where it earns its place, at most once per lesson. Say why in the sheet. When you use it, read `$ANATOMY/SKILL.md` and follow its workflow (truth model first, the object, the parts list, its audits), with the colors from `assets/lesson.css`.
+
+For diagram-design, read `$DIAGRAM_SKILL/SKILL.md` and follow it. For its style-guide gate, choose "paste tokens" with the colors from `assets/lesson.css`. Typography: Instrument Serif for the title and callouts, Geist for names, Geist Mono for labels. Never JetBrains Mono. Pick the one type that fits, or a custom figure on its primitives when the idea is geometric (say which, and why).
 
 - One reading direction. At most seven primary elements. Every arrow has one stated meaning.
 - Labels work without narration and read in grayscale. Separate series by line style as well as color.
@@ -78,7 +85,7 @@ Render it once in each theme and look for label masks hiding chart lines, which 
 
 Follow `references/page.md`: the prose's order, the two-act lab (explore, then fix the bug), sound or images the learner can perceive when the topic is perceptible, MathML math via `scripts/math.mjs`, the color jobs. Load `artifact-design` for the page contract only. For drawing code, adapt a study from the iwrzwr archive. Use img2threejs only for a physical object the learner must see in 3D.
 
-**Gate:** the checks at the end of `references/page.md`, including the learner judge. Publish with `lesson.css` alongside. Store the page link in `series.md` right after the first publish. The rest of `series.md` is updated at delivery.
+**Gate:** the checks at the end of `references/page.md`, including the learner judge. The page ships as files in the series folder (`3-page/3-page.html` beside `lesson.css`), which is a git repository: never publish it as an Artifact unless the user asks for one. Store the page's repo path in `series.md`. The rest of `series.md` is updated at delivery.
 
 ## Stage 4: explainer video
 
@@ -92,4 +99,4 @@ Follow `references/verification.md`: four views, one mental model, judges with n
 
 ## Delivery
 
-**Stop and show the user** the published page and the video. Then report: the page link, every file as a full path, the storyboard, the narration and voice, motion and sound notes, accessibility notes, export specs, judge findings and what changed, sources and asset licenses. Update `series.md`: the lesson row, new glossary terms, the next bug.
+**Stop and show the user** the page and the video (open the local files). Then report: the page path, every file as a full path, the storyboard, the narration and voice, motion and sound notes, accessibility notes, export specs, judge findings and what changed, sources and asset licenses. Update `series.md`: the lesson row, new glossary terms, the next bug.

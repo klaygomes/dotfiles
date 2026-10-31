@@ -18,8 +18,9 @@ Never write in ASD-STE100 or controlled English. Short one-fact sentences in a r
 1. **One term for one thing.** Choose the key nouns and verbs on the teacher's sheet, and never swap in a synonym on any rung.
 2. **Define every term before you use it**, in a sentence a newcomer can follow, with an example right after.
 3. **Concrete before abstract.** Real numbers first, the general rule second, the notation last.
-4. **Every claim is checkable.** Numbers are computed, not guessed. Run the arithmetic before you write it.
-5. **No em dashes.**
+4. **Introduce every picture before anything uses it.** A model the lesson leans on (a wheel, a circle, a curve) gets its own short section that builds it from something the reader already has, before any lab, figure or sentence relies on it. Ask "why this picture?" and answer it in the text. A lab that draws a picture the prose has not introduced yet is a bug.
+5. **Every claim is checkable.** Numbers are computed, not guessed. Run the arithmetic before you write it.
+6. **No em dashes.**
 
 ## The story
 
@@ -60,7 +61,7 @@ Assumptions: ...
 
 ## Gates
 
-1. **Read it aloud.** Synthesize each section with `agent-voice speak "<section>" --out <wav> --words`. In the returned words, look for what a listener trips on: words Whisper heard differently from the text (mispronounced or ambiguous), gaps over 0.6 s inside a sentence, and stretches where the pace jumps. Rewrite those sentences. Also rewrite any sentence over about 30 words that has no natural place to breathe. If the user declined the model download, read the prose sentence by sentence as if speaking it, and apply the same test.
-2. **A fresh reader.** Spawn a subagent with no context. Brief it only as the audience ("a software engineer with no signal processing background who did lesson 1"). Give it only the prose. Ask it: where did you get lost, where were you bored, which sentence sounded unnatural, and what is the answer to the opening bug? Fix every point it raises, or say why not.
+1. **Read it aloud.** Synthesize each section with `agent-voice speak "<section>" --out <wav> --words`. In the returned words, look for what a listener trips on: words Whisper heard differently from the text (mispronounced or ambiguous), gaps over 0.6 s inside a sentence, and stretches where the pace jumps. Rewrite those sentences. Also rewrite any sentence over about 30 words that has no natural place to breathe. Two findings matter for the narration only: homophones of key words (a "whine" next to a "wine glass" is one word to a listener, so change the simile), and symbols or digits (`÷`, `√`, `≈`, "1,500"), which speech mangles, so the narration spells them out in words. If the user declined the model download, read the prose sentence by sentence as if speaking it, and apply the same test.
+2. **A fresh reader.** Spawn a subagent with no context. Brief it only as the audience ("a software engineer with no signal processing background who did lesson 1"). Give it only the prose. Ask it: where did you get lost, where were you bored, which sentence sounded unnatural, which concept had no picture when it needed one, and what is the answer to the opening bug? Fix every point it raises, or say why not.
 3. **Grep the key words** from the sheet for their synonyms.
 4. **Review stop.** Show the user the prose and the sheet before building the page. The text is cheapest to change here.

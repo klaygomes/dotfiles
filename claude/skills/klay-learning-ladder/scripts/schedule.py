@@ -51,7 +51,7 @@ def main():
 
     for p in placed:
         print("line %02d  %6.2f-%6.2f s  frame %5d  %s" % (p["line"], p["start"], p["end"], p["start_frame"], p["text"][:60]))
-    print("duration %.2f s  %d words  %d wpm%s" % (total, word_count, wpm, "  (outside 125-145)" if not 125 <= wpm <= 145 else ""))
+    print("duration %.2f s  %d words  %d wpm%s" % (total, word_count, wpm, "  (unusually fast or slow for narration)" if not 120 <= wpm <= 210 else ""))
     print("mix: --duration %s " % total + " ".join("--vo %s@%s" % (p["clip"], p["at"]) for p in placed))
     print("wrote %s (per-word frames in lines[].words)" % os.path.abspath(a.out))
     return 0

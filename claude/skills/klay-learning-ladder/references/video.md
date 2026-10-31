@@ -28,28 +28,30 @@ Write `4-video/storyboard.md` first: the PAGE header from motionmaxxing `referen
 
 Scene order follows the story: the bug, the familiar situation, worked example 1 on screen, the mechanism, the reveal (the hero frame at 60 to 75% of the film), the fix, the recap and the next bug.
 
-- Diagram elements become scene objects with the same color and position.
+- Diagram elements become scene objects with the same color and position. An anatomy figure enters as its static SVG (`figureSvg`), animated by the film timeline, not by its own live script.
 - On-screen text labels values, names and units. It never repeats the narration.
 
 ## 2. Voice
 
-Cut the narration from the prose. Do not write it fresh. Keep the teacher's voice, and shorten it for the ear: 300 to 400 words, one scene per line in `vo.txt`. A line may hold several sentences. Write numbers as words.
+Cut the narration from the prose. Do not write it fresh. Keep the teacher's voice, and shorten it for the ear: 300 to 450 words, one scene per line in `vo.txt`. At speed 1.3 the voice runs at about 240 to 250 words per minute of speech; the film is as long as the story needs, and is never padded to reach a length. A line may hold several sentences. Write numbers as words.
 
 Choose the speaker and write it in the storyboard header:
 
-- English or Chinese: design a voice that fits the lesson, for example `--voice "female, middle-aged, low pitch, american accent"`. The user's request wins if it names a voice.
+- English or Chinese: design a lively young voice, for example `--voice "female, young adult, high pitch, american accent"`. Younger, higher designed voices measured the widest pitch range (about 18 semitones against 7 for a middle-aged low voice). The user's request wins if it names a voice.
 - Any other language: no voice option, so OmniVoice picks one.
 
 ```bash
 agent-voice doctor                                   # if ready is false: tell the user download_gb and ask once
-agent-voice script 4-video/vo.txt --out 4-video/vo --voice "<description>"
+agent-voice script 4-video/vo.txt --out 4-video/vo --voice "<description>" --speed 1.3 --temperature 0.8
 python3 -I "$LADDER_SKILL/scripts/schedule.py" --index 4-video/vo/lines.json \
   --gap 0.5,1.2,0.5,0.6,1.4,0.5,0.6,1.0 --vtt 4-video/final.vtt --out 4-video/schedule.json
 python3 -I "$MOTIONMAXXING/scripts/mix.py" --out 4-video/mix.wav <the arguments schedule.py prints>
 ```
 
+- Make it sound engaged, not read. OmniVoice speaks inline non-verbal tags: `[laughter]`, `[sigh]`, `[surprise-oh]`, `[surprise-ah]`, `[question-en]`, `[confirmation-en]`, `[dissatisfaction-hnn]`. Use two or three per film, only where a teacher would really react: a soft `[surprise-oh]` at the reveal, a `[sigh]` when the next ticket arrives, `[laughter]` after a joke that lands. Never two in one scene.
+- Fix jargon the model mispronounces with a CMU phoneme spelling in brackets, for example `[OW1 P AH0 N HH AY2 M]` for Oppenheim. The read-aloud gate's "heard differently" list shows which words need it.
 - If `agent-voice` is missing or the user declines the model download, stop at the storyboard and say so. There is no fallback voice.
-- Speed stays at 1.0. The pace is the voice's own.
+- Pace and expression: `--speed 1.3 --temperature 0.8`, the setting the user chose by ear. Speed alone flattens the pitch at temperature 0; temperature 0.8 brings the expression back, and above about 1.2 it fades again. To compare voices, render one line several ways and measure pace (Whisper words per minute) and pitch range (librosa `pyin`, semitones between the 5th and 95th percentile), then let the user listen.
 - Pauses follow meaning, as a teacher would: about 0.5 s when the thought continues into the next scene, 1 to 1.5 s after a question or before a reveal. `--gap` takes one value per scene boundary.
 - Word times in `words.json` are measured on the audio, so labels can land 1 to 2 frames before their word.
 - No music or SFX generator works offline yet. Record an intended tempo in the notes.

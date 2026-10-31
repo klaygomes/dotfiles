@@ -6,6 +6,7 @@
 |---|---|---|---|
 | 2 | [diagram-design](https://github.com/cathrynlavery/diagram-design) (MIT) | `$DIAGRAM_SKILL/SKILL.md`, then the `references/` file it names for the chosen type | picking the diagram type, editorial SVG, `self_check.py` (in the skill) and `verify-geometry.py` (in the repo root `scripts/`), PNG/SVG export |
 | 3 | [iwrzwr visual archive](https://github.com/kaganin/iwrzwr-visual-archive) (MIT) | `dist/catalog.json` (groups and study names), then the study's source under `sources/` | drawing and motion code to adapt for the one interaction: waveforms, particles, mechanical motion, rhythm, memory |
+| 2, 3 | [anatomy](https://github.com/wheresryan22/anatomy) (MIT) | `SKILL.md` ("The one idea that matters", "Workflow"), then the closest of its `examples/`, `references/craft.md` | an isometric machine whose working is the idea: interactive SVG with a live readout, at "Figure" size (40 to 80 parts) |
 | 3 | [img2threejs](https://github.com/img2threejs/img2threejs) (Apache-2.0) | `SKILL.md` | a procedural Three.js model, only when the idea is a physical object the learner must rotate to understand |
 | 4 | [motionmaxxing](https://github.com/Tejashmakwana/motionmaxxing) (Apache-2.0) | `SKILL.md`, `references/director.md`, `references/sound-sync.md` sections 3 to 6 | storyboard, GSAP film page, `render.mjs`, `look.py` gates, `mix.py` |
 | 4 | [awesome-claude-video-skills](https://github.com/zhuyansen/awesome-claude-video-skills) | the README "Explainers" table | a different renderer when motionmaxxing does not fit (see below) |

@@ -8,6 +8,7 @@ REPOS=(
   "motionmaxxing https://github.com/Tejashmakwana/motionmaxxing.git 8c8ec0f2a6f6c9a0da15cd24f7b1298ab298368c"
   "iwrzwr-visual-archive https://github.com/kaganin/iwrzwr-visual-archive.git 794af320e89ebb1db545de5a977ad4cfda3628f0"
   "img2threejs https://github.com/img2threejs/img2threejs.git 3e7099e1b7fe93e187e06db4bdbe1e1906c21a28"
+  "anatomy https://github.com/wheresryan22/anatomy.git 1482e8469b0a9e0d8cc18ea2740a01423d29ae80"
 )
 
 need() { command -v "$1" >/dev/null 2>&1 || { echo "missing dependency: $1 ($2)" >&2; exit 1; }; }

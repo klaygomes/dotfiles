@@ -23,7 +23,7 @@ Fix each at the earliest rung that has it, then regenerate the rungs above it.
 
 ## Judges
 
-Use subagents with no context as judges, never yourself alone. Give each only the artifact and the audience description:
+Use subagents with no context as judges, never yourself alone. Give each only the artifact and the audience description, and always ask every judge to list each picture, term or symbol it met before the lesson explained it, and where:
 
 1. **Fresh reader** on the prose (stage 1 gate).
 2. **Diagram reader** on `2-diagram.html` rendered in grayscale, with no caption: states the main relationship, or says what it cannot read.

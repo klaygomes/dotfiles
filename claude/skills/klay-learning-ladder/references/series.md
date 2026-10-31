@@ -35,4 +35,4 @@ Language: <lesson language>
 ```
 
 - A term keeps the meaning and wording it got in its first lesson. Later lessons reuse it, they do not redefine it.
-- The page link is stored so a rebuild republishes to the same URL. The Artifact tool only reads from the scratchpad or the repo, so copy the page and `lesson.css` into the scratchpad, then publish with `url` set to the stored link.
+- The Page column holds the page's path in the repo (for example `01-signals-and-systems/3-page/3-page.html`). Pages are not published as Artifacts unless the user asks.
