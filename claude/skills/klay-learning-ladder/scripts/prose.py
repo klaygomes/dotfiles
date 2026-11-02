@@ -66,12 +66,21 @@ def blocks(lines, slots):
             ordered = line[0].isdigit()
             j, items = i, []
             while j < len(lines) and re.match(r"(\d+\.|-) ", lines[j]):
-                items.append(re.sub(r"^(\d+\.|-) ", "", lines[j]))
+                item = inline(re.sub(r"^(\d+\.|-) ", "", lines[j]))
                 j += 1
+                sub = []
+                while j < len(lines) and re.match(r"\s+(\d+\.|-) ", lines[j]):
+                    sub.append(lines[j].strip())
+                    j += 1
+                if sub:
+                    subtag = "ol" if sub[0][0].isdigit() else "ul"
+                    subitems = "".join("<li>" + inline(re.sub(r"^(\d+\.|-) ", "", s)) + "</li>" for s in sub)
+                    item += f"<{subtag}>{subitems}</{subtag}>"
+                items.append(item)
             tag = "ol" if ordered else "ul"
             first = int(line.split(".", 1)[0]) if ordered else 1
             start = f' start="{first}"' if first != 1 else ""
-            out.append(f"<{tag}{start}>" + "".join(f"<li>{inline(t)}</li>" for t in items) + f"</{tag}>")
+            out.append(f"<{tag}{start}>" + "".join(f"<li>{t}</li>" for t in items) + f"</{tag}>")
             i = j
         elif line.startswith("\\["):
             j = i
