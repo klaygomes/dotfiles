@@ -33,7 +33,7 @@ Scene order follows the story: the bug, the familiar situation, worked example 1
 
 ## 2. Voice
 
-Cut the narration from the prose. Do not write it fresh. Keep the teacher's voice, and shorten it for the ear: 300 to 450 words, one scene per line in `vo.txt`. At speed 1.3 the voice runs at about 240 to 250 words per minute of speech; the film is as long as the story needs, and is never padded to reach a length. A line may hold several sentences. Write numbers as words.
+Cut the narration from the prose. Do not write it fresh. Keep the teacher's voice, and shorten it for the ear: 300 to 450 words, one scene per line in `vo.txt`. At speed 1.1 the voice runs at about 200 to 210 words per minute of speech; the film is as long as the story needs, and is never padded to reach a length. A line may hold several sentences. Write numbers as words.
 
 Choose the speaker and write it in the storyboard header:
 
@@ -42,7 +42,7 @@ Choose the speaker and write it in the storyboard header:
 
 ```bash
 agent-voice doctor                                   # if ready is false: tell the user download_gb and ask once
-agent-voice script 4-video/vo.txt --out 4-video/vo --voice "<description>" --speed 1.3 --temperature 0.8
+agent-voice script 4-video/vo.txt --out 4-video/vo --voice "<description>" --speed 1.1 --temperature 0.8
 python3 -I "$LADDER_SKILL/scripts/schedule.py" --index 4-video/vo/lines.json \
   --gap 0.5,1.2,0.5,0.6,1.4,0.5,0.6,1.0 --vtt 4-video/final.vtt --out 4-video/schedule.json
 python3 -I "$MOTIONMAXXING/scripts/mix.py" --out 4-video/mix.wav <the arguments schedule.py prints>
@@ -51,7 +51,7 @@ python3 -I "$MOTIONMAXXING/scripts/mix.py" --out 4-video/mix.wav <the arguments 
 - Make it sound engaged, not read. OmniVoice speaks inline non-verbal tags: `[laughter]`, `[sigh]`, `[surprise-oh]`, `[surprise-ah]`, `[question-en]`, `[confirmation-en]`, `[dissatisfaction-hnn]`. Use two or three per film, only where a teacher would really react: a soft `[surprise-oh]` at the reveal, a `[sigh]` when the next ticket arrives, `[laughter]` after a joke that lands. Never two in one scene.
 - Fix jargon the model mispronounces with a CMU phoneme spelling in brackets, for example `[OW1 P AH0 N HH AY2 M]` for Oppenheim. The read-aloud gate's "heard differently" list shows which words need it.
 - If `agent-voice` is missing or the user declines the model download, stop at the storyboard and say so. There is no fallback voice.
-- Pace and expression: `--speed 1.3 --temperature 0.8`, the setting the user chose by ear. Speed alone flattens the pitch at temperature 0; temperature 0.8 brings the expression back, and above about 1.2 it fades again. To compare voices, render one line several ways and measure pace (Whisper words per minute) and pitch range (librosa `pyin`, semitones between the 5th and 95th percentile), then let the user listen.
+- Pace and expression: `--speed 1.1 --temperature 0.8`, the setting the user chose by ear (1.3 sounded too fast). Speed alone flattens the pitch at temperature 0; temperature 0.8 brings the expression back, and above about 1.2 it fades again. To compare voices, render one line several ways and measure pace (Whisper words per minute) and pitch range (librosa `pyin`, semitones between the 5th and 95th percentile), then let the user listen.
 - Pauses follow meaning, as a teacher would: about 0.5 s when the thought continues into the next scene, 1 to 1.5 s after a question or before a reveal. `--gap` takes one value per scene boundary.
 - Word times in `words.json` are measured on the audio, so labels can land 1 to 2 frames before their word.
 - No music or SFX generator works offline yet. Record an intended tempo in the notes.
