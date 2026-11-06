@@ -138,7 +138,7 @@ $(TASKWARRIOR): taskwarrior/taskrc
 
 plan-reviewer: ;@ ## Build plan-reviewer tool and install to ~/bin
 	@echo "Building plan-reviewer..."
-	@export NVM_DIR="$$HOME/.nvm" && \. "$$NVM_DIR/nvm.sh" && \
+	@export NVM_DIR="$${NVM_DIR:-$${XDG_CONFIG_HOME:-$$HOME/.config}/nvm}" && \. "$$NVM_DIR/nvm.sh" && \
 		cd tools/plan-reviewer && nvm install && nvm use && npm install && npm run build
 	@ln -sf "$(CURDIR)/tools/plan-reviewer/dist/cli.js" "${BIN_PATH}plan-reviewer"
 	@chmod +x "${BIN_PATH}plan-reviewer"

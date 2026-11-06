@@ -124,7 +124,7 @@ test -f .nvmrc && cat .nvmrc || (test -f .node-version && cat .node-version || e
 
 If a version file exists, source nvm and switch (nvm is a shell function — must be sourced):
 ```bash
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="${NVM_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/nvm}"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 nvm install   # installs the version if missing
 nvm use       # switches to .nvmrc / .node-version

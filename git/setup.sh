@@ -34,7 +34,7 @@ do
         echo "> File ${LEAF}/.gitconfig was created"
         if ! grep "${LEAF}/.gitconfig" "${GITCONFIG_ROOT}" -q &> /dev/null; then
             # include leaf gitconfig in root
-            echo -e "\n[includeIf \"gitdir:${LEAF}/**\"]\n\tpath = ${LEAF}/.gitconfig\n" >> "${GITCONFIG_ROOT}"
+            printf '\n[includeIf "gitdir:%s/**"]\n\tpath = %s/.gitconfig\n' "${LEAF}" "${LEAF}" >> "${GITCONFIG_ROOT}"
             echo "> ${LEAF}/.gitconfig was included in ${GITCONFIG_ROOT}"
         else
             echo "> ${LEAF}/.gitconfig is already included in ${GITCONFIG_ROOT}"

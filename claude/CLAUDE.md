@@ -105,7 +105,7 @@ Check for `.nvmrc` or `.node-version` and run `nvm install && nvm use` before an
 `nvm` is a shell function, not a binary, so it has to be sourced in the same shell session:
 
 ```bash
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="${NVM_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/nvm}"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 nvm install && nvm use
 ```
