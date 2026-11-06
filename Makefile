@@ -33,7 +33,7 @@ define LINK_CONFIG
 fi
 endef
 
-.PHONY: ghostty vim zsh mac brew git node tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer agents all help lint test smoke
+.PHONY: ghostty vim zsh mac server brew git node tmux ranger bat bin launchd claude skills taskwarrior plan-reviewer agents all help lint test smoke
 .SECONDEXPANSION:
 .DEFAULT_GOAL := help
 
@@ -85,6 +85,9 @@ $(MAC): $$(subst ${CONFIG_PATH},, $$@)
 	@$(call CREATE_TARGET_DIR)
 	@ln -sf "$(CURDIR)/${^}" ${@}
 	@${@} || :
+
+server: ;@ ## Keep this Mac awake and logged in as a homelab host
+	@./mac/server.sh
 
 brew: $(BREW) ;@ ## Install brew packages
 $(BREW): brew/Brewfile

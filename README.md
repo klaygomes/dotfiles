@@ -69,6 +69,7 @@ make help
 | ghostty            | Install ghostty configuration                         |
 | zsh                | Configure zsh default alias, functions and etc.        |
 | mac                | Configure mac settings                                 |
+| server             | Keep this Mac awake and logged in as a homelab host    |
 | brew               | Install brew packages                                  |
 | git                | Install git configuration                              |
 | node               | Install nvm, node lts and global packages              |
