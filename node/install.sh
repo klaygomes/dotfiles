@@ -39,8 +39,13 @@ done < ./node/globals
 # wait for the installation to finish
 wait
 
+SYSTEM_NODE="${SYSTEM_NODE:-22}"
+echo "> Installing node $SYSTEM_NODE as the default and system-wide version..."
+nvm install "$SYSTEM_NODE"
+nvm alias default "$SYSTEM_NODE"
+
 echo "> Setting up system-wide node PATH via /etc/paths.d/..."
-NODE_BIN_DIR="$(dirname "$(nvm which node)")"
+NODE_BIN_DIR="$(dirname "$(nvm which "$SYSTEM_NODE")")"
 sudo ln -sfn "$NODE_BIN_DIR" /usr/local/nvm-node
 echo "/usr/local/nvm-node" | sudo tee /etc/paths.d/nvm-node > /dev/null
 echo "- ok (node available system-wide at /usr/local/nvm-node -> $NODE_BIN_DIR)"

@@ -72,7 +72,7 @@ make help
 | server             | Keep this Mac awake and logged in as a homelab host    |
 | brew               | Install brew packages                                  |
 | git                | Install git configuration                              |
-| node               | Install nvm, node lts and global packages              |
+| node               | Install nvm, node lts, node 22 as default and system-wide |
 | tmux               | Install tmux configuration                             |
 | ranger             | Install ranger configuration                           |
 | bat                | Install bat configuration                              |
