@@ -146,6 +146,25 @@ brew "btop"
 # Container platform
 cask "docker-desktop"
 
+# Secrets manager CLI (quickpipe-platform reads OPENROUTER and service keys from it)
+tap "dopplerhq/cli"
+cask "dopplerhq/cli/doppler"
+
+# Secret scanner run by the quickpipe-platform pre-commit hook
+brew "gitleaks"
+
+# Prose linter run by the quickpipe-platform pre-push hook
+brew "vale"
+
+# HTTP test runner for the quickpipe-platform end-to-end tests
+brew "hurl"
+
+# Infrastructure as code (quickpipe-platform ci:tofu)
+brew "opentofu"
+
+# Dependency vulnerability scanner (quickpipe-platform security:osv)
+brew "osv-scanner"
+
 # Monospace font with programming ligatures and Nerd Font icons
 cask "font-jetbrains-mono-nerd-font"
 
